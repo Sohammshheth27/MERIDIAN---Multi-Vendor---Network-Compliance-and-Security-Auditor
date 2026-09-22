@@ -1,0 +1,26 @@
+id: MERIDIAN-EXT-006
+title: SSH idle sessions must time out
+field: management.ssh.timeout
+operator: lte
+expected: 120
+severity: medium
+tier: extended
+rationale: >-
+  An idle authenticated SSH session is an unattended path to the control plane.
+frameworks:
+  nist_800_53: ["AC-12", "SC-10"]
+  iso_27001_2022: ["A.8.20"]
+  # Threshold-profiled (crosswalks/profiles.yaml): these STIG rules ask for
+  # 5 minutes; the STIG score judges them by that, not by MERIDIAN's own value.
+  stig_by_platform:
+    cisco_asa: [V-239920]
+  # STIG/CIS ids intentionally omitted: they are per-platform and
+  # belong in the vendor pack. An invented id is worse
+  # than none.
+
+remediation:
+  cisco_asa:
+    commands:
+    - ssh timeout 2
+    phase: 30
+    verify: show running-config ssh

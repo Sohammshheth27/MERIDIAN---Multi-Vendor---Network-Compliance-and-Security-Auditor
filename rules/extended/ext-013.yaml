@@ -1,0 +1,35 @@
+id: MERIDIAN-EXT-013
+title: Account lockout must be enabled
+field: authentication.lockout.enabled
+operator: equals
+expected: true
+severity: high
+tier: extended
+rationale: >-
+  Without lockout, credential guessing is limited only by network bandwidth.
+frameworks:
+  nist_800_53: ["AC-7"]
+  iso_27001_2022: ["A.8.5"]
+  # STIG/CIS ids intentionally omitted: they are per-platform and
+  # belong in the vendor pack. An invented id is worse
+  # than none.
+
+remediation:
+  sonicwall_sonicos:
+    commands:
+    - configure
+    - administration
+    - login-lockout enable
+    - login-lockout-threshold 5
+    - login-lockout-period 5
+    - commit
+    phase: 20
+    verify: show administration | grep lockout
+  fortios:
+    commands:
+    - config system global
+    - set admin-lockout-threshold 3
+    - set admin-lockout-duration 900
+    - end
+    phase: 30
+    verify: show system global

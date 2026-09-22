@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Gilroy', 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  
+  /* Colors - as specified in design.md */
+  --color-ink-navy: #0b3558;
+  --color-signal-blue: #006bff;
+  --color-slate-gray: #476788;
+  --color-mist-gray: #a6bbd1;
+  --color-cloud: #f8f9fb;
+  --color-paper: #ffffff;
+  --color-pebble: #f0f3f8;
+  --color-hairline: #d4e0ed;
+  --color-carbon: #0a0a0a;
+  --color-coral-magenta: #e55cff;
+  --color-sky-cyan: #0099ff;
+  --color-deep-cobalt: #004eba;
+
+  /* Typography Scale */
+  --text-caption: 12px;
+  --leading-caption: 1.5;
+  --text-body-sm: 14px;
+  --leading-body-sm: 1.4;
+  --text-body: 16px;
+  --leading-body: 1;
+  --text-button: 18px;
+  --leading-button: 1.6;
+  --text-body-lg: 20px;
+  --leading-body-lg: 1.4;
+  --text-subheading: 28px;
+  --leading-subheading: 1.4;
+  --text-heading-sm: 38px;
+  --leading-heading-sm: 1.21;
+  --text-heading: 50px;
+  --leading-heading: 1.2;
+  --text-heading-lg: 68px;
+  --leading-heading-lg: 1.2;
+  --text-display: 80px;
+  --leading-display: 1.2;
+
+  /* Spacing */
+  --spacing-8: 8px;
+  --spacing-16: 16px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-64: 64px;
+  --spacing-72: 72px;
+  --spacing-96: 96px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Semantic / Legacy mappings (mapped to new light theme) */
+  --color-meridian-bg: var(--color-cloud);
+  --color-meridian-surface: var(--color-paper);
+  --color-meridian-border: var(--color-hairline);
+  --color-meridian-text: var(--color-ink-navy);
+  --color-meridian-text-secondary: var(--color-slate-gray);
+  --color-meridian-text-muted: var(--color-mist-gray);
+
+  /* Semantic Risk Colors */
+  --color-meridian-positive: #10B981; /* Restrained green */
+  --color-meridian-warning: #F59E0B;  /* Restrained amber */
+  --color-meridian-critical: #EF4444; /* Restrained red */
+  --color-meridian-info: #006bff;     /* Signal Blue */
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cloud);
+    color: var(--color-ink-navy);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* MERIDIAN Card & Surface Treatments - Light Editorial Theme */
+.meridian-shell {
+  background: var(--color-cloud);
+  /* No border or shadow for the main shell, it occupies the viewport naturally */
+}
+
+.meridian-card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-hairline);
+  box-shadow: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, 
+              rgba(71, 103, 136, 0.03) 0px 8px 15px 0px, 
+              rgba(71, 103, 136, 0.06) 0px 15px 30px 0px;
+  border-radius: var(--radius-xl); /* 16px or 24px based on use case */
+}
+
+.meridian-card-interactive {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.meridian-card-interactive:hover {
+  box-shadow: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, 
+              rgba(71, 103, 136, 0.03) 0px 8px 15px 0px, 
+              rgba(71, 103, 136, 0.08) 0px 30px 50px 0px;
+  transform: translateY(-1px);
+}
+
+.meridian-panel {
+  background: var(--color-paper);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-xl);
+}
+
+.meridian-btn-primary {
+  background: var(--color-signal-blue);
+  border-radius: var(--radius-md); /* 8px */
+  color: var(--color-paper);
+  transition: background-color 0.15s ease;
+}
+
+.meridian-btn-primary:hover {
+  background: #0056cc;
+}
+
+.meridian-btn-secondary {
+  background: var(--color-ink-navy);
+  border-radius: var(--radius-md); /* 8px */
+  color: var(--color-paper);
+  transition: background-color 0.15s ease;
+}
+
+.meridian-btn-secondary:hover {
+  background: #07223b;
+}
+
+/* Custom scrollbar for data tables & lists */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-pebble);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-mist-gray);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-slate-gray);
+}
+
+/* Base utility for scroll masking */
+.mask-fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 32px,
+    black calc(100% - 32px),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 32px,
+    black calc(100% - 32px),
+    transparent
+  );
+}
+
+/* Page Transition Animation */
+@keyframes page-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-page-transition {
+  animation: page-appear 500ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-transition {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Indeterminate progress */
+@keyframes meridian-indeterminate {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+@keyframes marquee {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

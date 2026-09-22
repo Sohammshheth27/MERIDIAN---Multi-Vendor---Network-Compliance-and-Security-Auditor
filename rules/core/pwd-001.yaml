@@ -1,0 +1,56 @@
+id: MERIDIAN-PWD-001
+title: Minimum password length must be enforced
+field: authentication.min_password_length
+operator: gte
+expected: 15
+severity: high
+tier: core
+rationale: >-
+  Short passwords are trivially brute-forced offline once a hash is obtained. 15 characters matches the current DISA baseline.
+frameworks:
+  nist_800_53: [IA-5, IA-5.1]
+  iso_27001_2022: [A.5.16, A.5.17]
+  # STIG Vuln IDs are per-platform. Derived from the downloaded
+  # XCCDF files, not recalled -- a control may map to several.
+  stig_by_platform:
+    cisco_iosxe_router: [V-215826]
+    cisco_iosxe_switch: [V-220537]
+    juniper_srx: [V-223217]
+    paloalto_panos: [V-228648]
+    cisco_asa: [V-239914]
+  # CIS recommendation numbers live in the vendor pack.
+
+remediation:
+  cisco_iosxe_router:
+    commands:
+    - aaa common-criteria policy MERIDIAN-PWD
+    - ' min-length 15'
+    - ' exit'
+    - '! apply: username <n> common-criteria-policy MERIDIAN-PWD'
+    phase: 30
+    verify: show aaa common-criteria policy all
+
+  sonicwall_sonicos:
+    commands:
+    - configure
+    - administration password-policy
+    - minimum-length 15
+    - commit
+    phase: 20
+    verify: show administration password-policy
+  fortios:
+    commands:
+    - config system password-policy
+    - set status enable
+    - set apply-to admin-password ipsec-preshared-key
+    - set minimum-length 15
+    - end
+    phase: 30
+    verify: show system password-policy
+  panos:
+    commands:
+    - set mgt-config password-complexity enabled yes
+    - set mgt-config password-complexity minimum-length 15
+    - commit
+    phase: 30
+    verify: show mgt-config password-complexity

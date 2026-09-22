@@ -1,0 +1,109 @@
+# ---------------------------------------------------------------- licensing
+# CIS Benchmarks and ISO/IEC 27001 are copyrighted. Local reference is fine;
+# redistribution is not, and a git push is redistribution. Everything below
+# either IS that content or is derived closely enough from it to carry the
+# prose forward. See meridian/rag/guard.py, which enforces the same line in code.
+reference/cis_benchmarks/
+reference/iso/
+reference/**/_body_cache.jsonl
+reference/mapping_proposals.jsonl        # carries CIS/ISO titles for local review
+
+# ------------------------------------------------------------ build outputs
+reference/.embed_cache*.npz
+reference/.framework_cache*
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+downloads/
+
+# ------------------------------------------------------------ customer data
+# Never commit a real configuration. Run netconan on anything real first.
+# data/ holds every uploaded or collected configuration and the assessment
+# database (meridian/api/store.py) -- customer data by definition.
+data/
+samples/**/*.exp
+samples/**/real_*
+*.exp
+
+# ------------------------------------------------- assessed-device history
+# Snapshots taken by the change-tracking feature. They key on REAL device
+# identity -- hostname, serial number and the config's SHA256 -- so the
+# directory names alone disclose a live appliance (serial_<device-serial>).
+# Local history is the point of the feature; publishing it is not.
+corpus/history/
+
+# ------------------------------------------------------------ node / build
+node_modules/
+frontend/dist/
+frontend/node_modules/
+web/node_modules/
+web/.next/
+web/out/
+.playwright/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------- scratch
+# Every dotted directory at the root: per-machine editor, tooling and cache
+# state. Matched by shape rather than listed by name, so a tool added later
+# is covered without anyone remembering to add a line -- and so this file
+# does not become an inventory of whatever happens to be installed.
+#
+# These must stay ignored. The directories hold local session and cache data,
+# and this rule is the only thing between them and an accidental `git add -A`.
+.*/
+!.github/
+*.log
+
+# ------------------------------------------------ vendor documentation
+# Crawled copies of Check Point, Juniper, Fortinet, F5, A10 and Arista
+# documentation. Same reasoning as the CIS/ISO block at the top: keeping a
+# local copy to write mappings against is fair use; republishing a vendor's
+# CLI reference PDF on a public repo is redistribution.
+#
+# SOURCES.md is kept -- it records WHERE each document came from, so anyone
+# cloning can fetch their own copy. tools/fetch_vendor_docs.py re-downloads
+# them.
+reference/vendor_docs/*
+!reference/vendor_docs/SOURCES.md
+
+# NIST OSCAL is public domain and legitimately redistributable, but it is
+# 121 MB of machine-generated JSON that tools/ can re-fetch on demand.
+reference/nist/
+
+# Generated assessment reports. They carry real device identity -- hostname,
+# serial number and the config digest -- exactly like corpus/history.
+reports/
+
+# MITRE ATLAS and NIST AI 100-1. Third-party corpora, republished by their
+# authors and retrievable on demand, so they are referenced rather than
+# vendored -- the same treatment as the NIST OSCAL and ATT&CK bundles below.
+#   ATLAS:  https://github.com/mitre-atlas/atlas-navigator-data
+#   AI RMF: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
+reference/ai_security/
+
+# MITRE ATT&CK STIX bundle (54 MB). Re-download:
+#   curl -L https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json -o reference/attack/enterprise-attack.json
+reference/attack/
+
+# Real-device artefacts. The assessment report names the device (hostname,
+# serial, tunnel names); the training queue holds real object names from it.
+docs/MERIDIAN_Assessment_Report.pdf
+docs/_t*.pdf
+reference/training_queue.jsonl
+
+# Knowledge taught through the training interface stays on the machine that
+# taught it: learned packs carry setting names from real devices, and a
+# committed pack would pre-teach the tool on someone else's estate.
+packs/*.learned.yaml
+reference/training_decisions.jsonl
+
+# Per-machine tooling assets (fonts, icon catalogues, editor extensions). Not
+# part of the product, and large enough to dominate a diff.
+.agents/
+
+# Nested application repository -- tracked separately, never part of this one.
+web/
+
+# Agent tooling scratch, not part of the product.
+docs/superpowers/

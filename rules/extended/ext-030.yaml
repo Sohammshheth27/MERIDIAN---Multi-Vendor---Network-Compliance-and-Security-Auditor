@@ -1,0 +1,28 @@
+id: MERIDIAN-EXT-030
+title: A MOTD banner should be present
+field: banner.motd
+operator: is_set
+severity: low
+tier: extended
+rationale: >-
+  The MOTD banner carries the monitoring notice on pre-login connection.
+frameworks:
+  nist_800_53: ["AC-8"]
+  iso_27001_2022: ["A.8.5"]
+  # STIG/CIS ids intentionally omitted: they are per-platform and
+  # belong in the vendor pack. An invented id is worse
+  # than none.
+
+remediation:
+  cisco_asa:
+    commands:
+    - banner motd <LEGAL NOTICE>
+    phase: 30
+    verify: show running-config banner
+  fortios:
+    commands:
+    - config system global
+    - set post-login-banner enable
+    - end
+    phase: 30
+    verify: show system global

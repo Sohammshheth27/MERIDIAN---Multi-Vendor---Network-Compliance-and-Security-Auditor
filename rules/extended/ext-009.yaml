@@ -1,0 +1,18 @@
+id: MERIDIAN-EXT-009
+title: The auxiliary port must not offer an EXEC session
+field: management.aux.exec_disabled
+operator: equals
+expected: true
+severity: medium
+tier: extended
+rationale: >-
+  The aux port is a documented back door that survives most hardening reviews.
+frameworks:
+  nist_800_53: ["AC-17"]
+  iso_27001_2022: ["A.5.14", "A.6.7"]
+  stig_by_platform:
+    cisco_iosxe_router: [V-216661]
+    cisco_iosxe_switch: [V-221006]
+  # STIG/CIS ids intentionally omitted: they are per-platform and
+  # belong in the vendor pack. An invented id is worse
+  # than none.

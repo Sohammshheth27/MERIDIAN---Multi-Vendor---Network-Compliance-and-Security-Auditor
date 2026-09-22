@@ -1,0 +1,40 @@
+id: MERIDIAN-EXT-022
+title: Remote syslog must be configured
+field: logging.remote_syslog
+operator: equals
+expected: true
+severity: high
+tier: extended
+rationale: >-
+  Logs held only on the device are lost precisely when they matter.
+frameworks:
+  nist_800_53: ["AU-4", "AU-9"]
+  iso_27001_2022: ["A.5.33", "A.8.15", "A.8.6"]
+  stig_by_platform:
+    cisco_asa: [V-239862]
+  # STIG/CIS ids intentionally omitted: they are per-platform and
+  # belong in the vendor pack. An invented id is worse
+  # than none.
+
+remediation:
+  sonicwall_sonicos:
+    commands:
+    - configure
+    - log syslog
+    - add server <SYSLOG-IP> port 514
+    - commit
+    phase: 30
+    verify: show log syslog server
+  cisco_asa:
+    commands:
+    - logging host <INTERFACE> <SYSLOG-IP>
+    phase: 20
+    verify: show running-config logging
+  fortios:
+    commands:
+    - config log syslogd setting
+    - set status enable
+    - set server <SYSLOG-IP>
+    - end
+    phase: 20
+    verify: show log syslogd setting

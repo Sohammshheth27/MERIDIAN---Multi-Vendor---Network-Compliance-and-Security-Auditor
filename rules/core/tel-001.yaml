@@ -1,0 +1,56 @@
+id: MERIDIAN-TEL-001
+title: Telnet must be disabled
+field: management.telnet.enabled
+operator: equals
+expected: false
+severity: critical
+tier: core
+rationale: >-
+  Telnet transmits credentials and session content in cleartext on the management path.
+frameworks:
+  nist_800_53: [AC-17.2, SC-8, SC-8.1]
+  iso_27001_2022: [A.5.10, A.5.14, A.5.33, A.6.7, A.8.20, A.8.26]
+  # STIG Vuln IDs are per-platform. Derived from the downloaded
+  # XCCDF files, not recalled -- a control may map to several.
+  stig_by_platform:
+    paloalto_panos: [V-228655, V-228669]
+    cisco_asa: [V-239911, V-239859]
+  # CIS recommendation numbers live in the vendor pack.
+
+remediation:
+  cisco_iosxe_router:
+    commands:
+    - line vty 0 15
+    - ' transport input ssh'
+    - ' exit'
+    phase: 40
+    management_impact: disables_telnet
+    verify: show running-config | section line vty
+  juniper_srx:
+    commands:
+    - delete system services telnet
+    phase: 40
+    management_impact: disables_telnet
+    verify: show configuration system services
+  cisco_asa:
+    commands:
+    - no telnet <NET> <MASK> <INTERFACE>
+    phase: 40
+    management_impact: disables_telnet
+    verify: show running-config telnet
+  fortios:
+    commands:
+    - config system interface
+    - edit <PORT>
+    - set allowaccess ssh https ping
+    - end
+    phase: 40
+    management_impact: disables_telnet
+    verify: show system interface <PORT>
+  panos:
+    commands:
+    - set deviceconfig system service disable-telnet yes
+    - commit
+    phase: 40
+    management_impact: disables_telnet
+    verify: show deviceconfig system service

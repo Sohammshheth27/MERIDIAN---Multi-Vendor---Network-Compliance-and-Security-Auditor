@@ -1,0 +1,49 @@
+id: MERIDIAN-BAN-001
+title: A login banner must be displayed
+field: banner.login
+operator: is_set
+severity: medium
+tier: core
+rationale: >-
+  A banner establishes the legal basis for monitoring and for prosecuting unauthorised access.
+frameworks:
+  nist_800_53: [AC-8]
+  iso_27001_2022: [A.8.5]
+  # STIG Vuln IDs are per-platform. Derived from the downloaded
+  # XCCDF files, not recalled -- a control may map to several.
+  # CIS recommendation numbers live in the vendor pack.
+
+remediation:
+  cisco_iosxe_router:
+    commands:
+    - banner login ^C
+    - Authorised access only. Activity is monitored and logged.
+    - ^C
+    phase: 30
+    verify: show running-config | begin banner
+  juniper_srx:
+    commands:
+    - set system login message "Authorised access only. Activity is monitored and logged."
+    phase: 30
+    verify: show configuration system login message
+
+  sonicwall_sonicos:
+    commands:
+    - configure
+    - administration
+    - login-banner "Authorised access only. Activity is monitored."
+    - commit
+    phase: 10
+    verify: show administration | grep banner
+  cisco_asa:
+    commands:
+    - banner login <LEGAL NOTICE>
+    phase: 30
+    verify: show running-config banner
+  fortios:
+    commands:
+    - config system global
+    - set pre-login-banner enable
+    - end
+    phase: 30
+    verify: show system global
