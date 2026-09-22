@@ -4,7 +4,7 @@ A report is the deliverable an auditor actually reads and signs against, so it
 carries two obligations the console does not:
 
   * EVERY figure is computed from the assessment at render time. Nothing is
-    passed in, cached or written by hand -- a report that quotes a number the
+    passed in, cached or written by hand. A report that quotes a number the
     engine no longer produces is worse than no report.
 
   * Every claim is traceable. Findings carry the file and line; exclusions

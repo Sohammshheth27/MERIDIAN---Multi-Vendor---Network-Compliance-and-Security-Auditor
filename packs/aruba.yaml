@@ -1,4 +1,4 @@
-# HPE Aruba AOS-CX mapping pack -- Reader 1 (indented)
+# HPE Aruba AOS-CX mapping pack. Reader 1, indented.
 #
 # Source artifact: `show running-config`.
 #
@@ -7,8 +7,8 @@
 #   * services are bound to a VRF: `ssh server vrf mgmt`, `https-server vrf
 #     mgmt`. The VRF is part of the statement, so a bare `^ssh server$` regex
 #     never matches a real switch.
-#   * users are `user <name> group <group> password ciphertext ...` -- no
-#     `privilege 15`, no `secret`.
+#   * users are `user <name> group <group> password ciphertext ...`, with
+#     no `privilege 15` and no `secret`.
 #   * interfaces are `interface 1/1/1` (member/slot/port), not `GigabitEthernet0/1`.
 #   * NTP needs an explicit `ntp enable`; configuring a server does not start it.
 #     That distinction is real and worth a separate field.
@@ -36,7 +36,7 @@ supported_domains: [device, platform, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
+# in OUR pack, not a fact about the device. It now resolves to UNKNOWN,
 # which keeps it in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
@@ -155,8 +155,8 @@ mappings:
     value: {group: 1, as: str}
 
 not_applicable_fields:
-  # {field: reason}. The reason is published as the finding's justification --
-  # an auditor asked to accept an exclusion needs to know why, and "verified
+  # {field: reason}. The reason becomes the finding's justification, and an
+  # auditor asked to accept an exclusion needs to know why. "Verified
   # against the setting inventory" asserts a check without stating its result.
   authentication.enable_secret: "no enable-secret concept on AOS-CX"
   management.aux.exec_disabled: "no AUX port"

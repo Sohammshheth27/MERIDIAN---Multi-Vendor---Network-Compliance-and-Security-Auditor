@@ -1,4 +1,4 @@
-"""The golden corpus -- the only thing that makes an accuracy claim falsifiable.
+"""The golden corpus: the only thing that makes an accuracy claim falsifiable.
 
 TWO ARTIFACTS, TWO DIFFERENT CLAIMS. Conflating them is how a project ends up
 believing its own output.
@@ -12,7 +12,7 @@ believing its own output.
 
   mapping_snapshots.json  CHANGE DETECTION, and nothing more. What each pack
                           mapping currently produces against the sample set. It
-                          does NOT prove a mapping is right -- it proves that
+                          does NOT prove a mapping is right. It proves that
                           what it does today is what it did yesterday, and
                           makes any drift visible in a diff instead of
                           silently changing a customer's report.

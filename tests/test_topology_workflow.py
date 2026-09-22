@@ -53,8 +53,8 @@ def test_indented_extractor_reads_address_zone_and_shutdown():
 def test_a_redacted_upload_still_yields_its_interfaces():
     """Redaction hides WHICH addresses, never THAT there are interfaces.
 
-    It used to blank the last octet, so `203.0.113.45` became `10.0.113.x` --
-    not an address. Every address then failed to parse, this returned an empty
+    It used to blank the last octet, so `203.0.113.45` became `10.0.113.x`,
+    which is not an address. Every address then failed to parse, this returned an empty
     list, and a firewall with ten live interfaces was indistinguishable from
     one with none. Redaction is now prefix-preserving pseudonymisation, so the
     whole structure survives and only the numbers change.
@@ -214,7 +214,7 @@ def test_logs_can_refute_a_zero_counter():
 
 def test_traffic_with_no_log_entries_is_itself_a_finding():
     """An unlogged permit is a gap in the audit trail several frameworks
-    require -- so the absence of logs is not treated as the absence of a
+    require, so the absence of logs is not treated as the absence of a
     problem."""
     g = ObjectGraph()
     g.add_rule(SecurityRule(id="r1", name="r1", order=1, action="allow",

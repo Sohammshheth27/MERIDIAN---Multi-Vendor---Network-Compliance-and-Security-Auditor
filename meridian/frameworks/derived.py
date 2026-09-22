@@ -1,13 +1,13 @@
 """CMMC and NERC CIP.
 
 Both are real, in-scope frameworks. Neither is populated here, and the reason
-is recorded rather than papered over — an empty catalogue that says why is
+is recorded rather than papered over: an empty catalogue that says why is
 worth more than a plausible catalogue that is wrong.
 
 CMMC
 ----
-CMMC Level 2 is **NIST SP 800-171 Revision 2** — 110 requirements, incorporated
-by reference in 32 CFR Part 170. It is *not* Revision 3.
+CMMC Level 2 is **NIST SP 800-171 Revision 2** (110 requirements),
+incorporated by reference in 32 CFR Part 170. It is *not* Revision 3.
 
 We hold Rev 3 (130 requirements, different identifiers). NIST publishes OSCAL
 for Rev 3 only, so there is no machine-readable Rev 2 to derive from. Deriving
@@ -91,7 +91,7 @@ def load_cmmc(path: str | Path) -> Catalog:
 def load_nerc(path: str | Path) -> Catalog:
     """NERC CIP from a supplied JSON control list.
 
-    Expected shape — a list of ``{"id": "CIP-005-7 R1", "title": "..."}``.
+    The expected shape is a list of ``{"id": "CIP-005-7 R1", "title": "..."}``.
     Absent or malformed, this returns an empty catalogue rather than a guess.
     """
     path = Path(path)

@@ -1,9 +1,9 @@
-/* MERIDIAN — the rendered firewall appliance.
+/* MERIDIAN: the rendered firewall appliance.
  *
  * A 1U rack appliance drawn in canvas with a hand-rolled perspective
  * projection. Restored after being cut, and rebuilt rather than pasted back:
  * the first version was flat-shaded polygons, which is what made it read as
- * crude. This one adds the things that actually sell a rendered object --
+ * crude. This one adds the things that actually sell a rendered object:
  *
  *   BEVELS.        A bright top edge and a dark bottom edge on the front face.
  *                  Real metal has a lit rim; a flat quad never does.
@@ -69,7 +69,7 @@
     S = Math.min(W / 430, H / 215);
   }
 
-  /* The chassis -- faces, grain, vents, port cavities, ears -- never changes
+  /* The chassis (faces, grain, vents, port cavities, ears) never changes
    * except when the cursor nudges yaw/pitch. Redrawing its ~200 operations
    * every frame (twice, once through a blur filter for the reflection) is what
    * pinned this to 355ms frames. It is now rendered once into an offscreen
@@ -243,7 +243,7 @@
 
     /* Floor reflection: a flipped blit of the cached bitmap. The old version
      * re-ran the whole unit through ctx.filter='blur(6px)' every frame, which
-     * is what took the page to 3fps -- a canvas filter applies to each drawing
+     * is what took the page to 3fps. A canvas filter applies to each drawing
      * operation, so ~200 of them were being blurred individually. Blitting one
      * finished image and letting the CSS mask soften it costs a single
      * composite. */
@@ -267,7 +267,7 @@
   }
 
   /* Capped at 30fps. Nothing in this object needs 60: the specular sweeps at
-   * t*0.0002, the LEDs phase at t*0.0016 and the status blinks at t*0.003 --
+   * t*0.0002, the LEDs phase at t*0.0016 and the status blinks at t*0.003,
    * all far below the point where a dropped frame is visible. Halving the
    * draw rate halves what the page spends here, and the cursor parallax is
    * still smooth because it eases per drawn frame rather than per rAF tick.

@@ -12,12 +12,12 @@ import { useApi } from '../lib/useApi';
  * Rendered as its own section, BELOW the compliance catalogues and visually
  * separated, because it answers a different question. NIST 800-53, CIS, STIG
  * and ISO describe how a firewall should be configured. ATLAS and the AI RMF
- * describe how an AI system should be governed -- and the AI system here is
+ * describe how an AI system should be governed, and the AI system here is
  * MERIDIAN's own mapping suggester.
  *
  * Listing them in the same table would imply we audit firewalls against ATLAS.
- * That claim would be meaningless -- ATLAS catalogues attacks on
- * machine-learning systems, not misconfigurations on an appliance -- and it is
+ * That claim would be meaningless. ATLAS catalogues attacks on
+ * machine-learning systems, not misconfigurations on an appliance, and it is
  * exactly the sort of thing a knowledgeable reviewer catches.
  */
 
@@ -117,7 +117,7 @@ export const AiGovernance: FC = () => {
           </h3>
           <p className="mt-0.5 text-[12px] text-[var(--color-slate-gray)]">
             Each defence, and the ATLAS technique it answers. Process controls
-            carry no technique — a two-person rule constrains people, not an
+            carry no technique. A two-person rule constrains people, not an
             adversary's method, and inventing a mapping for it would be worse
             than leaving it blank.
           </p>
@@ -154,7 +154,7 @@ export const AiGovernance: FC = () => {
                       ))
                     ) : (
                       <span className="text-[11px] italic text-[var(--color-mist-gray)]">
-                        process control — no attack technique
+                        process control: no attack technique
                       </span>
                     )}
                     <span className="text-[11px] text-[var(--color-mist-gray)]">

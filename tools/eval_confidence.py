@@ -5,8 +5,8 @@ to look at all. That second question is what decides whether 442 unmapped
 settings can be worked through by a person, because it is the difference
 between:
 
-    "here are 442 guesses, all scored 1.639"          -- useless
-    "these 60 are probably right; these 380 need you" -- a work plan
+    "here are 442 guesses, all scored 1.639"          (useless)
+    "these 60 are probably right; these 380 need you" (a work plan)
 
 The old score was the reciprocal-rank constant 1/(RRF_K+1), identical for every
 top-1 hit, so no such split was possible. This measures whether the replacement
@@ -15,7 +15,7 @@ actually separates right answers from wrong ones.
 WHY THE HEADLINE DIFFERS FROM tools.eval_matching
 -------------------------------------------------
 eval_matching reports 59.0% top-1; this reports 68.8% on the same 378 pairs.
-Neither is wrong -- they use different denominators, and the numbers reconcile
+Neither is wrong. They use different denominators, and the numbers reconcile
 exactly.
 
 eval_matching restricts the candidate fields to those the TRAINING vendors map,
@@ -25,13 +25,13 @@ offered and the item is unanswerable by construction. That is 54 of 378
 and 59.0% of 378 is the same 223 correct as 68.8% of 324.
 
 Use eval_matching's figure for "can we generalise to a field no pack has ever
-mapped" -- the harder question. Use this one for the deployment question, where
+mapped", the harder question. Use this one for the deployment question, where
 the full schema is always on offer. Do not quote them as before/after.
 
 WHAT THIS DOES NOT DO
 ---------------------
 It does not license auto-approval. Precision here is measured against mappings
-a human already wrote, on held-out vendors -- which is the right test for
+a human already wrote, on held-out vendors, which is the right test for
 ranking and a generous one for deployment: a real unmapped setting may have NO
 correct field, and this set contains no such case. Every proposal still goes
 through the training queue and the golden-corpus regression gate.
@@ -68,7 +68,7 @@ def run() -> dict:
         #
         # There is no vendor leakage to guard against in that arm. The dense
         # index embeds SCHEMA FIELD DESCRIPTIONS, which are vendor-independent
-        # and contain no pack mapping -- so the matcher cannot retrieve the
+        # and contain no pack mapping, so the matcher cannot retrieve the
         # answer it is being asked for. The held-out loop is kept anyway so the
         # split matches eval_matching exactly and the two are comparable.
         sem = SemanticMatcher(lexical=None).fit()

@@ -1,4 +1,4 @@
-"""Field registry -- reconciles the declared SBM against what can actually be produced.
+"""Field registry: reconciles the declared SBM against what can actually be produced.
 
 THE PROBLEM THIS SOLVES
 -----------------------
@@ -8,7 +8,7 @@ were computed against a field space half of which was unreachable:
 
   * control coverage divided by a fictional denominator
   * guardrail 3 handed the model an enum containing fields no reader can emit,
-    inviting it to pick one (and it does -- it never abstains by preference)
+    inviting it to pick one (and it does, never abstaining by preference)
   * three controls read fields no pack writes, so they returned UNKNOWN on every
     vendor, forever, and looked like parser gaps rather than dead wiring
 
@@ -16,7 +16,7 @@ STATUS IS DERIVED, NOT DECLARED
 -------------------------------
 A second hand-maintained list would drift from the packs within a week. Instead
 ``reconcile()`` reads the packs and the rules at load time and computes status.
-The only thing a human maintains is the ROADMAP set below -- fields we have
+The only thing a human maintains is the ROADMAP set below: fields we have
 deliberately not implemented, which must be justified rather than merely absent.
 """
 from __future__ import annotations
@@ -35,8 +35,8 @@ RULES_DIR = PROJECT_ROOT / "rules"
 
 class FieldStatus(str, Enum):
     ACTIVE = "ACTIVE"        # at least one pack can populate it
-    ORPHAN = "ORPHAN"        # a control reads it, no pack writes it -- BROKEN
-    UNUSED = "UNUSED"        # a pack writes it, no control reads it -- collected, unchecked
+    ORPHAN = "ORPHAN"        # a control reads it, no pack writes it. BROKEN
+    UNUSED = "UNUSED"        # a pack writes it, no control reads it (collected, unchecked)
     ROADMAP = "ROADMAP"      # declared deliberately, not yet implemented
     DEAD = "DEAD"            # nothing writes it, nothing reads it, not on the roadmap
 
@@ -74,7 +74,7 @@ class FieldRegistry(BaseModel):
     # ------------------------------------------------------------------ views
     def active(self) -> list[str]:
         """Fields a reader can actually produce. THIS is the LLM enum and the
-        denominator for coverage -- not the full declared list."""
+        denominator for coverage (not the full declared list)."""
         return sorted(f.name for f in self.fields.values()
                       if f.status in (FieldStatus.ACTIVE, FieldStatus.UNUSED))
 
@@ -124,7 +124,7 @@ def reconcile(packs_dir: Path = PACKS_DIR, rules_dir: Path = RULES_DIR) -> Field
             written.setdefault(m["field"], []).append(p.stem)
 
     # The graph bridge is a writer too. Counting only YAML packs marked every
-    # bridge-populated field DEAD -- a defect in the metric, not the schema.
+    # bridge-populated field DEAD. That is a metric defect, not a schema one.
     from ..graph import bridge as _bridge
     import inspect
     bridge_src = inspect.getsource(_bridge)

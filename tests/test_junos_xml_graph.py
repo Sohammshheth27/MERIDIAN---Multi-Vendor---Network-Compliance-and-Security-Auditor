@@ -3,7 +3,7 @@
 Two samples, testing opposite defaults. That pairing is the point: the braces
 builder's own docstring warns that `set security policies default-policy
 permit-all` is valid and documented, and that assuming deny would report a
-permit-all device as compliant -- a false PASS on a high-severity control.
+permit-all device as compliant: a false PASS on a high-severity control.
 srx-display-xml-weak.xml is exactly that device.
 
 The builder also REFUSES to produce a graph it cannot produce correctly. Junos
@@ -41,7 +41,7 @@ def test_the_xml_reader_does_not_reach_the_braces_builder(strong):
 
     junos_builder reads `cfg.multi`, which XmlConfig does not have. Handing it
     an XML document raised AttributeError inside the builder, and every Juniper
-    XML device silently got no graph -- invisible until the pipeline's bare
+    XML device silently got no graph, invisible until the pipeline's bare
     `except` became a logged one.
     """
     assert strong is not None
@@ -67,7 +67,7 @@ def test_a_deny_all_default_is_also_read(strong):
 
 @samples_only
 def test_the_permit_all_device_actually_permits(weak):
-    """The default is not decoration -- it decides unmatched traffic."""
+    """The default is not decoration. It decides unmatched traffic."""
     a = ask(weak, Query(source="10.0.0.5", destination="8.8.8.8", port=3389,
                         protocol="tcp", source_zone="trust",
                         destination_zone="untrust"))
@@ -85,7 +85,7 @@ def test_the_zone_pair_scopes_the_rule(strong):
 
 @samples_only
 def test_an_empty_then_element_is_read_as_the_action(strong):
-    """Junos writes the action as an empty element -- <permit/>.
+    """Junos writes the action as an empty element: <permit/>.
 
     Its PRESENCE is the value; there is no text to read.
     """

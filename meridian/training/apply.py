@@ -1,4 +1,4 @@
-"""Apply an approved mapping -- and refuse it if it breaks what already worked.
+"""Apply an approved mapping, and refuse it if it breaks what already worked.
 
 THE GAP THIS CLOSES. `MappingRegistry.approve()` hash-chains a decision and
 `RegressionGuard` re-runs a corpus, but an entry in the registry changed
@@ -16,7 +16,7 @@ follow, and each was chosen over an easier alternative:
   * THE WRITE HAPPENS BEFORE THE CHECK, and is reverted if the check fails.
     Evaluating a hypothetical is not possible here: the only honest way to
     know what a mapping does to 35 verified results is to run them with it.
-  * A BLOCKED APPROVAL LEAVES NOTHING BEHIND -- no file change, no registry
+  * A BLOCKED APPROVAL LEAVES NOTHING BEHIND: no file change, no registry
     entry. Otherwise the gate itself becomes a way to poison the tool.
 
 Poisoning always makes things look BETTER, so a rise in the corpus pass rate is
@@ -36,7 +36,7 @@ PACKS_DIR = Path("packs")
 LEARNED_SUFFIX = ".learned.yaml"
 
 HEADER = (
-    "# LEARNED MAPPINGS -- written by approvals in the training interface.\n"
+    "# LEARNED MAPPINGS, written by approvals in the training interface.\n"
     "# Not hand-authored. Every entry passed the golden corpus at the moment\n"
     "# it was approved, and carries who approved it and when.\n"
     "# Safe to delete: the device simply returns to its pre-approval coverage.\n"
@@ -97,7 +97,7 @@ def validate_bootstrap(platform: str, vendor, reader, signature) -> str | None:
                 "signature that recognises its files")
     if not _SLUG.match(platform or "") or platform.lower() == "unknown":
         return ("platform id must be lower-case letters, digits and "
-                "underscores, e.g. acme_os -- and cannot be 'unknown'")
+                "underscores, e.g. acme_os, and cannot be 'unknown'")
     if reader not in BOOTSTRAP_READERS:
         return f"file format must be one of {', '.join(BOOTSTRAP_READERS)}"
     sig = [str(s) for s in (signature or []) if str(s).strip()]
@@ -124,14 +124,14 @@ def _mapping_entry(setting_name: str, field: str, reader: str,
 
     A path reader addresses a setting by name; an indented reader matches a
     line. Writing the wrong dialect produces a mapping that silently never
-    matches -- which would look exactly like an approval that did nothing.
+    matches. It would look exactly like an approval that did nothing.
     """
     entry: dict = {"field": field}
     target = FIELD_TYPES.get(field, "str")
 
     if reader == "json":
-        # The JSON reader reads `jsonpath:`. Writing `path:` here -- which the
-        # first version did for every path-style reader -- produced a mapping
+        # The JSON reader reads `jsonpath:`. Writing `path:` here (which the
+        # first version did for every path-style reader) produced a mapping
         # the JSON reader ignores: an approval that reported success and
         # changed nothing, on every AWS, Azure and GCP device.
         entry["jsonpath"] = _jsonpath(setting_name)
@@ -149,8 +149,8 @@ def _mapping_entry(setting_name: str, field: str, reader: str,
     # A LINE reader must CAPTURE the value it claims to coerce. The first
     # version emitted `^console timeout\b` with `as: int` and no capture
     # group, so the extractor fell back to the whole line and tried to coerce
-    # "console timeout 0" to an integer -- UNPARSED, on the very setting the
-    # approval had just claimed to teach.
+    # "console timeout 0" to an integer. The result was UNPARSED, on the very
+    # setting the approval had just claimed to teach.
     if target == "bool":
         # For a flag, the PRESENCE of the directive is the whole signal.
         entry["regex"] = f"^{re.escape(setting_name)}\\b"
@@ -192,7 +192,7 @@ def write_learned(platform: str, setting_name: str, field: str, reader: str,
                        if m.get("_setting") != setting_name] + [entry]
     if doc.get("version") == BOOTSTRAP_VERSION:
         # Documentary: the domains this taught pack now speaks for. Every
-        # other domain stays UNKNOWN -- we have not been taught it.
+        # other domain stays UNKNOWN: we have not been taught it.
         doc["supported_domains"] = sorted({m["field"].split(".")[0]
                                            for m in doc["mappings"]})
 
@@ -266,7 +266,7 @@ def approve(setting_name: str, field: str, platform: str, approved_by: str,
     bootstrap = None
     if base is None:
         # A vendor the tool has never seen. The approval creates its first
-        # pack -- but only with enough to recognise the NEXT file from this
+        # pack, but only with enough to recognise the NEXT file from this
         # vendor, or the device would simply be refused again.
         problem = validate_bootstrap(platform, vendor, reader, signature)
         if problem:
@@ -331,7 +331,7 @@ def approve(setting_name: str, field: str, platform: str, approved_by: str,
 
     result.reason = result.reason or (
         "approved; the golden corpus still holds"
-        + (" (pass rate rose -- worth a look)" if result.direction_alert else ""))
+        + (" (pass rate rose, worth a look)" if result.direction_alert else ""))
     return result
 
 
@@ -342,7 +342,7 @@ def reject(setting_name: str, platform: str, rejected_by: str,
     """Record that a person looked at a setting and declined to map it.
 
     Kept apart from the mapping registry: a rejection changes no pack and no
-    result, so it needs no regression gate -- but it must be attributable,
+    result, so it needs no regression gate, though it must be attributable,
     and it takes the setting out of the queue for good.
     """
     import json

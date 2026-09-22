@@ -39,7 +39,7 @@ def test_secrets_are_still_redacted(key, val):
 
 def test_an_address_becomes_a_valid_pseudonym():
     """Not `10.168.10.x`. That was not an address, and everything that parsed
-    addressing broke on it -- see `_pseudonym`. The /24 is hashed into 10/8 and
+    addressing broke on it (see `_pseudonym`). The /24 is hashed into 10/8 and
     the host octet carries across."""
     out = _redact_value("iface_lan_ip", "192.168.10.1")
     assert out == "10.38.159.1"
@@ -74,7 +74,7 @@ def test_redacted_sonicwall_equals_unredacted():
     red = _sw(True)
     # 41.3 / 68.7 since 20 Sep, deliberately. Four controls rested on mappings
     # that match none of the 92,635 records, so the engine ruled on silence:
-    # two FAILs asserting a violation it had no evidence for, and -- worse --
+    # two FAILs asserting a violation it had no evidence for and, worse still,
     # `max_count 1` on local accounts PASSING because a dead `adminName*`
     # returned zero accounts. They are UNKNOWN now, which is why coverage FELL
     # while the score rose: four controls left the decided set.

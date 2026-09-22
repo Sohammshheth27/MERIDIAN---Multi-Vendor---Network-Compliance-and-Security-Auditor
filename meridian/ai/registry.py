@@ -1,23 +1,23 @@
-"""The mapping registry -- approved knowledge, and the defences around it.
+"""The mapping registry: approved knowledge, and the defences around it.
 
 The threat here is more dangerous than injection and almost nobody addresses
 it: a MISTAKEN APPROVAL poisons the registry permanently.
 
     admin approves:  `ip ssh version 1`  ->  management.ssh.version = 2
 
-Every future Cisco scan now passes a control it should fail -- silently,
+Every future Cisco scan now passes a control it should fail. Silently,
 permanently, surviving every restart. No attacker required.
 
 Defences implemented here:
-  #3  semantic sanity check   -- deterministic, no AI
+  #3  semantic sanity check   (deterministic, no AI)
   #4  cross-vendor consistency
   #5  version pinning
   #8  tamper-evident log (hash-chained)
-  #9  scoped approvals -- vendor+platform, never global
+  #9  scoped approvals: vendor+platform, never global
   #10 confidence floor  (enforced in router.py)
 
-#1 the regression guard is the strongest of all and lives in regression.py --
-it must be BUILT FIRST and is the only one that can block an approval outright.
+#1 the regression guard is the strongest of all and lives in regression.py.
+It must be BUILT FIRST and is the only one that can block an approval outright.
 """
 from __future__ import annotations
 
@@ -38,11 +38,11 @@ class ApprovedMapping(BaseModel):
     field: str
     value: object = None
     vendor: str = ""
-    platform: str = ""          # #9 -- scoped, never global
+    platform: str = ""          # #9: scoped, never global
     approved_by: str = ""
     approved_at: str = ""
     source_tier: str = ""
-    prev_hash: str = ""         # #8 -- hash chain
+    prev_hash: str = ""         # #8 hash chain
     record_hash: str = ""
 
     def compute_hash(self) -> str:
@@ -61,7 +61,7 @@ class SanityResult(BaseModel):
 
 
 def semantic_sanity(line: str, field: str, value: object) -> SanityResult:
-    """Defence #3 -- deterministic, no AI involved.
+    """Defence #3. Deterministic, no AI involved.
 
     Two cheap questions that catch most bad approvals:
       * does the raw line contain a token related to the field?
@@ -92,7 +92,7 @@ def semantic_sanity(line: str, field: str, value: object) -> SanityResult:
 
 
 class MappingRegistry:
-    """Approved mappings. Approval makes the system smarter immediately --
+    """Approved mappings. Approval makes the system smarter immediately:
     no retraining, no GPU, no waiting."""
 
     def __init__(self, path: str | Path | None = None):
@@ -115,7 +115,7 @@ class MappingRegistry:
         return None
 
     def cross_vendor_conflicts(self, line: str, field: str) -> list[str]:
-        """Defence #4 -- eleven other vendors map the same field. Flag disagreement."""
+        """Defence #4: eleven other vendors map the same field. Flag disagreement."""
         key = " ".join(normalize(tokenize(line)))
         out = []
         for e in self.entries:
@@ -165,7 +165,7 @@ class MappingRegistry:
 
     # ----------------------------------------------------------------- audit
     def verify_chain(self) -> tuple[bool, int]:
-        """Defence #8 -- each record includes the previous record's hash.
+        """Under defence #8, each record includes the previous record's hash.
 
         Editing or deleting any past approval breaks every hash after it, so
         tampering is detectable rather than merely discouraged.
@@ -179,7 +179,7 @@ class MappingRegistry:
 
     @property
     def version(self) -> str:
-        """Defence #5 -- pinned into every assessment so a later approval can
+        """Defence #5, pinned into every assessment so a later approval can
         never retroactively change a past report."""
         if not self.entries:
             return "registry-empty"

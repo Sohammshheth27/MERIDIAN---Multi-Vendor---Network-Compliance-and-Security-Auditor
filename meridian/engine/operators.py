@@ -54,7 +54,7 @@ def _every(observed: Any, expected: Any, ok) -> ResultState:
 
     Junos sets the idle timeout per login class, so the observation is a list
     of timeouts. One class at 60 minutes leaves an unattended session open
-    whatever the other classes say -- the same worst-of rule the engine applies
+    whatever the other classes say, the same worst-of rule the engine applies
     to scoped instances. Comparing the list itself raised TypeError, which
     made a single compliant class UNKNOWN.
     """
@@ -84,7 +84,7 @@ def op_lte(observed: Any, expected: Any) -> ResultState:
 def op_contains_all(observed: Any, expected: Any) -> ResultState:
     """All required members present. Missing some is PARTIAL, not FAIL.
 
-    This is exactly what PARTIAL is for -- "syslog configured but only
+    This is exactly what PARTIAL is for: "syslog configured but only
     one server". Forcing it to PASS would be dishonest; forcing it to FAIL would
     be unhelpful.
     """
@@ -97,13 +97,13 @@ def op_contains_all(observed: Any, expected: Any) -> ResultState:
 
 
 def op_contains_none(observed: Any, expected: Any) -> ResultState:
-    """No forbidden member present -- weak ciphers, telnet in transport.
+    """No forbidden member present (weak ciphers, telnet in transport).
 
     A PROHIBITION, so any forbidden member present is a FAIL. Partial credit
     for also offering something safe is not how an attacker experiences the
     device: `transport input telnet ssh` accepts telnet, and the presence of
     ssh alongside it changes nothing about that. This returned PARTIAL, which
-    on a report sorts below FAIL and gets remediated later -- so a
+    on a report sorts below FAIL and gets remediated later. So a
     telnet-reachable router was quietly downgraded because it ALSO supported
     ssh. The same reasoning applies to a cipher list offering aes256 and des:
     the device accepts des.
@@ -113,7 +113,7 @@ def op_contains_none(observed: Any, expected: Any) -> ResultState:
 
 
 def op_min_count(observed: Any, expected: Any) -> ResultState:
-    """At least N entries -- two syslog servers, two NTP sources.
+    """At least N entries: two syslog servers, two NTP sources.
 
     One when two are required is genuinely partial compliance.
     """
@@ -132,7 +132,7 @@ def op_max_count(observed: Any, expected: Any) -> ResultState:
     """At most N entries. ``expected: 0`` means "this list must be empty".
 
     Needed because min_count(0) trivially passes. The exposure derivations
-    produce lists of violations, so "no violations" is a max_count check --
+    produce lists of violations, so "no violations" is a max_count check,
     and one violation of a critical control is a FAIL, not a PARTIAL.
     """
     items = observed if isinstance(observed, (list, tuple, set)) else ([] if observed is None else [observed])
@@ -155,7 +155,7 @@ def op_matches(observed: Any, expected: Any) -> ResultState:
 
 
 def op_is_set(observed: Any, expected: Any = None) -> ResultState:
-    """Present and non-empty -- banners, descriptions."""
+    """Present and non-empty. Banners and descriptions are the usual case."""
     if observed is None:
         return ResultState.FAIL
     if isinstance(observed, str) and not observed.strip():

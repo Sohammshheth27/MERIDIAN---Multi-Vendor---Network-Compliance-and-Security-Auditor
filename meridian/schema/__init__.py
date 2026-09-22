@@ -1,4 +1,4 @@
-"""MERIDIAN schema -- the contract every other track builds against."""
+"""MERIDIAN schema, the contract every other track builds against."""
 
 from .enums import (
     ObservationSource,

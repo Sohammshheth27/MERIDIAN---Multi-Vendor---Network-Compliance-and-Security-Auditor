@@ -4,12 +4,12 @@ Validated on the real NSA 3700 (SonicOS 7.3.0-7012-R8150) against a dated NVD
 snapshot. The unit tests pin the three decisions where a CVE matcher does its
 damage:
 
-  * BOUNDARY EXCLUSIVITY -- `versionEndExcluding: 7.3.0-7012` means the fix is
+  * BOUNDARY EXCLUSIVITY. `versionEndExcluding: 7.3.0-7012` means the fix is
     IN 7.3.0-7012. Reading it as inclusive reports a patched device as
     vulnerable.
-  * HARDWARE GATING -- most SonicOS records are "version AND model". A TZ-only
+  * HARDWARE GATING: most SonicOS records are "version AND model". A TZ-only
     flaw must not be reported against an NSA.
-  * THREE-VALUED LOGIC -- "cannot tell" stays UNKNOWN. Folding it into "not
+  * THREE-VALUED LOGIC. "cannot tell" stays UNKNOWN. Folding it into "not
     affected" is the direction in which a vulnerability lookup hurts people.
 """
 import json

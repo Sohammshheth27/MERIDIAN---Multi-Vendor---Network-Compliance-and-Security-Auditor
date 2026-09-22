@@ -8,14 +8,14 @@ SonicWall, a FortiGate and an AWS security group. `management.ssh.enabled` is
 one field with one meaning; which vendor key produced it is recorded as
 evidence, not as structure.
 
-That makes this the machine-readable counterpart to the PDF report -- the same
+That makes this the machine-readable counterpart to the PDF report: the same
 assessment, shaped for a pipeline rather than a reader.
 
 WHAT IT IS NOT
 --------------
 It is not the configuration file. On the reference NSA 3700, 92,635 records
-collapse to 2,851 entries -- 56 device-wide fields plus 2,795 SCOPED
-instances, because a firewall has many rules and each is a separate object:
+collapse to 2,851 entries (56 device-wide fields plus 2,795 SCOPED
+instances), because a firewall has many rules and each is a separate object:
 
     management.ssh.enabled                              device-wide
     firewall.rules[Cloud Backup [IPv4#61]].action       one rule
@@ -24,7 +24,7 @@ instances, because a firewall has many rules and each is a separate object:
 Everything else in the export is signature databases, object-table
 bookkeeping and counters that no security control reads.
 
-Nor is it a HARDENING baseline -- it says what the device IS, not what it
+Nor is it a HARDENING baseline. It says what the device IS, not what it
 should be. What it should be lives in `rules/`, and the comparison between the
 two is the assessment.
 

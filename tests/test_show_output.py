@@ -2,7 +2,7 @@
 
 This is the tier that answers deliverable 4a. A running configuration does not
 contain a serial number, which is why MERIDIAN reported `serial=None` for every
-Cisco and Juniper device -- it was looking in the only place the answer could
+Cisco and Juniper device. It was looking in the only place the answer could
 never be.
 """
 import glob
@@ -66,7 +66,7 @@ def test_missing_template_returns_empty_not_an_exception():
 def test_show_output_is_distinguished_from_a_config():
     assert looks_like_show_output(
         "Cisco IOS Software, Version 12.2\nrouter1 uptime is 2 years")
-    # A config must never be mistaken for show output -- it would be handed to
+    # A config must never be mistaken for show output: it would be handed to
     # a template and silently produce nothing.
     assert not looks_like_show_output("version 17.9\nhostname edge-rtr-01")
     assert not looks_like_show_output("set system host-name srx-1")

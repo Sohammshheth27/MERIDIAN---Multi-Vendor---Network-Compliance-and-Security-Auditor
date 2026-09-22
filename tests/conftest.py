@@ -3,7 +3,7 @@
 `reference/approved_mappings.jsonl` is hash-chained and committed: it is the
 record of who approved which mapping. Tests exercise the approval endpoint, and
 before this fixture every run appended `test-admin` / `api-test` approvals to
-the real file -- fabricated entries in a log auditors are told to trust.
+the real file: fabricated entries in a log auditors are told to trust.
 Each test now gets its own empty log and decisions file.
 """
 import os

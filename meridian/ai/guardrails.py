@@ -10,16 +10,16 @@ Six defences, in the order they fire. Note that the first three are STRUCTURAL:
 they hold whether or not the model has ever heard of prompt injection, which is
 why they matter more than anything retrieval can contribute.
 
-  1. Single-line scope        -- only the unknown line + 2 lines of context
+  1. Single-line scope: only the unknown line + 2 lines of context
   2. Data slot, not instruction slot
   3. Field whitelist as decoder enum
-  4. Evidence anchoring       -- the quote must exist verbatim in the input
+  4. Evidence anchoring: the quote must exist verbatim in the input
   5. Type validation
-  6. Injection pre-scan       -- and report it to the customer as a finding
+  6. Injection pre-scan (reported to the customer as a finding)
 
 Defence 3 deserves a caveat proven on the bench: the enum guarantees a VALID
 field name, never a CORRECT one. Given a line whose true field was absent from
-the enum, qwen3.5:4b did not abstain -- it confidently picked the nearest
+the enum, qwen3.5:4b did not abstain. It confidently picked the nearest
 member. The enum is a containment boundary. Abstention is the confidence
 floor's job (10.2 #10), enforced in router.py.
 """
@@ -31,7 +31,7 @@ from ..frameworks.ai_security import InjectionHit, scan_for_injection
 from ..schema.normalise import normalise
 from ..schema.sbm import FIELD_NAMES, FIELD_TYPES
 
-# Defence 1 -- how much context the model may see. Never the whole file.
+# Defence 1: how much context the model may see. Never the whole file.
 CONTEXT_LINES = 2
 
 
@@ -52,7 +52,7 @@ class Proposal(BaseModel):
 
 
 def build_prompt_context(lines: list[str], index: int) -> str:
-    """Defence 1 -- single-line scope with minimal surrounding context."""
+    """Single-line scope (defence 1) with minimal surrounding context."""
     lo = max(0, index - CONTEXT_LINES)
     hi = min(len(lines), index + CONTEXT_LINES + 1)
     return "\n".join(lines[lo:hi])
@@ -70,7 +70,7 @@ SYSTEM_PROMPT = (
 
 
 def build_user_prompt(line: str, context: str, examples: list[tuple[str, str]]) -> str:
-    """Defence 2 -- the config sits in a data slot, delimited, in the USER turn."""
+    """Defence 2. The config sits in a data slot, delimited, in the USER turn."""
     ex = "\n".join(f"  {l!r} -> {f}" for l, f in examples)
     return (
         f"Examples of correct classifications:\n{ex}\n\n"
@@ -80,7 +80,7 @@ def build_user_prompt(line: str, context: str, examples: list[tuple[str, str]]) 
 
 
 def response_schema(fields: list[str] | None = None) -> dict:
-    """Defence 3 -- the field whitelist as a decoder-level enum.
+    """Defence 3. The field whitelist becomes a decoder-level enum.
 
     Ollama constrains generation against this schema, so the model cannot
     physically emit an off-list field name. That alone defeats almost every
@@ -102,20 +102,20 @@ def validate(proposal: Proposal, source_line: str) -> Proposal:
     if proposal.field is None:
         return proposal.model_copy(update={"rejected_reason": "model returned no field (abstained)"})
 
-    # Defence 3, enforced again server-side -- never trust the decoder alone.
+    # Defence 3, enforced again server-side. Never trust the decoder alone.
     if proposal.field not in FIELD_TYPES:
         return proposal.model_copy(
             update={"rejected_reason": f"field {proposal.field!r} is not in the SBM whitelist"}
         )
 
-    # Defence 4 -- evidence anchoring. Five lines, enormous value: it catches a
+    # Defence 4, evidence anchoring. Five lines, enormous value: it catches a
     # model that invents a quotation, which is the tell for a hijacked answer.
     if not proposal.evidence or proposal.evidence.strip() not in source_line:
         return proposal.model_copy(
             update={"rejected_reason": "evidence is not a verbatim substring of the source line"}
         )
 
-    # Defence 5 -- type validation, AFTER normalisation. Normalising first is
+    # Defence 5 is type validation, AFTER normalisation. Normalising first is
     # deliberate: the model returning "v2" for a Juniper line is CORRECT, and
     # validating before coercion would throw away a right answer.
     want = FIELD_TYPES[proposal.field]
@@ -131,7 +131,7 @@ class InjectionReport(BaseModel):
     """Defence 6 output. Report it to the CUSTOMER as a finding.
 
     An injection attempt sitting in a production configuration is itself worth
-    knowing about -- someone put it there.
+    knowing about. Someone put it there.
     """
 
     hits: list[InjectionHit] = Field(default_factory=list)
@@ -153,6 +153,6 @@ class InjectionReport(BaseModel):
 
 
 def prescan(text: str) -> InjectionReport:
-    """Defence 6 -- deterministic. No AI is used to detect attacks on the AI."""
+    """Defence 6, deterministic. No AI is used to detect attacks on the AI."""
     hits = scan_for_injection(text)
     return InjectionReport(hits=hits, quarantined_lines={h.line for h in hits})

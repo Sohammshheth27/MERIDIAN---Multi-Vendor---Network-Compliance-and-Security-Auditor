@@ -106,7 +106,7 @@ from meridian.nlp.rerank import LlmReranker, needs_rerank, _prompt, _schema
 
 
 def test_schema_makes_off_list_fields_ungeneratable():
-    """Not 'rejected afterwards' -- the decoder cannot emit them at all."""
+    """Not 'rejected afterwards': the decoder cannot emit them at all."""
     s = _schema(["a.b", "c.d"])
     enum = s["properties"]["field"]["enum"]
     assert "a.b" in enum and "c.d" in enum
@@ -124,7 +124,7 @@ def test_prompt_carries_the_value_and_its_type():
 
 
 def test_model_failure_never_becomes_a_mapping():
-    """A dead model must degrade to the retriever's pick, clearly marked --
+    """A dead model must degrade to the retriever's pick, clearly marked,
     never to a confident wrong answer."""
     rr = LlmReranker(host="http://127.0.0.1:9", timeout=1)
     field, conf, why = rr.rerank("x", "1", ["a.b", "c.d"])

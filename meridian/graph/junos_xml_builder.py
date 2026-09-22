@@ -1,15 +1,15 @@
 """Build an ObjectGraph from `show configuration | display xml` on an SRX.
 
 The XML sibling of junos_builder. Same device, same policy model, different
-serialisation -- and the difference matters, because the two readers expose
+serialisation. The difference matters, because the two readers expose
 repetition differently.
 
 WHY THIS IS NOT junos_builder WITH A DIFFERENT READER
 -----------------------------------------------------
 junos_builder reads `cfg.multi`, the braces reader's map of repeated leaves.
 XmlConfig has no `multi`; handing it to that builder raises AttributeError and
--- until the bare `except` in the pipeline was replaced with a logged one --
-every Juniper XML device silently got no graph at all.
+(until the bare `except` in the pipeline was replaced with a logged one) every
+Juniper XML device silently got no graph at all.
 
 ZONE PAIRS AND RULES ARE READ BY THEIR OWN KEYS
 -----------------------------------------------
@@ -44,7 +44,7 @@ UNTRUSTED = {"untrust", "internet", "wan", "outside", "public", "external"}
 
 #: Junos ships these predefined applications; they are not written into the
 #: configuration. A rule referencing junos-https would otherwise resolve to
-#: nothing and become unevaluable -- and almost every real policy uses them.
+#: nothing and become unevaluable. Almost every real policy uses them.
 #: Supplied only when referenced, and labelled so a reader can tell a platform
 #: constant from something we read off the device.
 PREDEFINED_APPLICATIONS = {
@@ -102,15 +102,15 @@ def _in_order(regex, cfg) -> list:
 def build(cfg) -> ObjectGraph | None:
     """`cfg` is an XmlConfig, whose repeated elements are keyed by identity:
     each zone pair is `policy[from>to]` and each rule `policy[<rule name>]`,
-    so every rule is read from its own path -- its own action, logging and
-    addresses -- across any number of zone pairs, in the device's order."""
+    so every rule is read from its own path (its own action, logging and
+    addresses) across any number of zone pairs, in the device's order."""
     if not hasattr(cfg, "iter_paths"):
         return None
     g = ObjectGraph()
 
     # ---------------------------------------------------------- default policy
     # `set security policies default-policy permit-all` is valid and documented.
-    # Assuming deny would report a permit-all device as compliant -- a false
+    # Assuming deny would report a permit-all device as compliant: a false
     # PASS on a high-severity control, from one wrong assumption.
     permit_all = cfg.get(f"{_POLICIES}/default-policy/permit-all")
     deny_all = cfg.get(f"{_POLICIES}/default-policy/deny-all")
@@ -144,7 +144,7 @@ def build(cfg) -> ObjectGraph | None:
             name = hit[0] if hit else unquote(rule_key)
             ev = [cfg.evidence(hit[1], hit[2])] if hit else []
 
-            # `then` carries the action as an EMPTY element -- <permit/> -- so
+            # `then` carries the action as an EMPTY element like <permit/>, so
             # its presence is the value. Junos requires an explicit action, so
             # a rule with neither is one we misread; it is treated as deny.
             permit = cfg.get(f"{rule}/then/permit")

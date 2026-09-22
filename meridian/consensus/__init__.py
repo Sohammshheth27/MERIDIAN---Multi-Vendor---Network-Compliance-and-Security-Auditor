@@ -1,4 +1,4 @@
-"""Cross-checking independent methods -- n-version programming for compliance.
+"""Cross-checking independent methods: n-version programming for compliance.
 
 MERIDIAN can answer the same question three ways, and the ways fail differently:
 
@@ -18,7 +18,7 @@ Three outcomes, and none of them is "silently pick a winner":
                   the finding you put at the top of a report.
 
   DISPUTED        they disagree. NOT auto-resolved, because in this project's
-                  own data the dispute went both ways within one run -- once
+                  own data the dispute went both ways within one run: once
                   the detector's field hint was wrong, and once the PACK had a
                   coverage gap and the detector was right. Suppressing either
                   side by rule would have hidden a real weakness.
@@ -26,7 +26,7 @@ Three outcomes, and none of them is "silently pick a winner":
   UNCORROBORATED  only one method saw it. Still reported; the second method
                   simply has no vocabulary for that setting. When it is the
                   universal layer that saw it and the pack that did not, that
-                  is a pack coverage gap with a line number attached -- which
+                  is a pack coverage gap with a line number attached, which
                   is the most actionable thing this module produces.
 
 The dispute rate is a quality metric in its own right. Rising disputes mean one

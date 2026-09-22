@@ -1,6 +1,6 @@
 """DISA STIG loader (XCCDF 1.1 manual benchmarks).
 
-Public domain -- we embed the full check and fix text.
+Public domain. We embed the full check and fix text.
 
 The fix text matters more than it looks: it contains the literal correct
 command for the platform, which makes it simultaneously rule content *and*
@@ -9,7 +9,7 @@ remediation templates.
 
 A caveat learned from the real files: our controls do NOT map 1:1 onto
 Vuln IDs. There is no rule titled "SSH must use version 2" in the Cisco NDM
-STIG -- `ip ssh version 2` lives inside the fix text of V-215844 (FIPS HMAC,
+STIG. `ip ssh version 2` lives inside the fix text of V-215844 (FIPS HMAC,
 CAT I). Four separate rules touch SSH. Hence: mine the fix text, and let a
 control reference a *list* of Vuln IDs.
 """
@@ -115,7 +115,7 @@ def _parse_xccdf(data: bytes, source_file: str) -> list[CatalogEntry]:
                     platform=_platform_of(source_file),
                     # CCIs are how a STIG rule states which 800-53 control it
                     # implements. Kept so the NIST label can be DERIVED from the
-                    # STIG hit rather than retrieved -- see frameworks/cci.py.
+                    # STIG hit rather than retrieved. See frameworks/cci.py.
                     extra={"rule_id": rule.get("id", ""), "part": part or "",
                            "ccis": _ccis(rule)},
                 )

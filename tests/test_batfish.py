@@ -1,7 +1,7 @@
 """The Batfish adapter.
 
 Batfish is an optional SECOND OPINION, not a parser we depend on and not a way
-to support more vendors -- it covers 10 of the 37 vendors in this brief and
+to support more vendors. It covers 10 of the 37 vendors in this brief and
 excludes SonicWall, the appliance this project was built against.
 
 These tests pin the three properties that make an optional dependency safe:

@@ -13,8 +13,8 @@ way for anyone tempted to tidy the numbers:
 
 So a false N/A is worse than a false UNKNOWN, and inflating N/A is the easiest
 way to make this tool lie. Measured before this was fixed: 242 of 269 N/A
-verdicts across 11 real configs came from `supported_domains` -- a list whose
-actual meaning is "domains this pack models" -- with no justification recorded
+verdicts across 11 real configs came from `supported_domains`, a list whose
+actual meaning is "domains this pack models", with no justification recorded
 anywhere. Several were plainly false, most memorably cisco.yaml declaring
 IOS-XE to have no `l2` capability, on the platform that invented DHCP snooping
 and dynamic ARP inspection.
@@ -79,7 +79,7 @@ def test_no_pack_claims_a_capability_gap_it_has_not_declared():
         declared = set(getattr(pack, "not_applicable_domains", {}) or {})
         modelled = set(pack.supported_domains or [])
         # A domain may be BOTH unmodelled and genuinely absent, but a pack must
-        # never declare a domain absent while also claiming to model it -- that
+        # never declare a domain absent while also claiming to model it. That
         # is a contradiction, and it silently wins as N/A.
         overlap = declared & modelled
         assert not overlap, (
@@ -123,7 +123,7 @@ def test_unmodelled_domains_surface_as_unknown_not_as_not_applicable():
 
     The pack does not model `l2`, which is a gap in our coverage. The platform
     invented DHCP snooping and dynamic ARP inspection, so the honest verdict is
-    UNKNOWN -- and UNKNOWN keeps the control in the denominator.
+    UNKNOWN, and UNKNOWN keeps the control in the denominator.
     """
     cisco = [s for s in SAMPLES if "cisco" in s and s.endswith(".cfg")]
     if not cisco:
@@ -135,7 +135,7 @@ def test_unmodelled_domains_surface_as_unknown_not_as_not_applicable():
         "an unmodelled domain must not be reported as a platform capability "
         f"gap: {[(f.field, f.state.value) for f in l2]}")
 
-    # In fact cisco.yaml has mapped all three l2 fields since it was written --
+    # In fact cisco.yaml has mapped all three l2 fields since it was written.
     # `supported_domains` was overriding working mappings. A router running
     # neither DHCP snooping, dynamic ARP inspection nor IP source guard now
     # FAILS these controls, which is the correct hardening verdict and was

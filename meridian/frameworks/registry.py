@@ -1,8 +1,8 @@
 """Load every framework, and report coverage honestly.
 
 Load 100% of every framework, automate a subset, and say plainly
-which is which. A tool claiming 100% automation of ISO 27001 would be lying --
-half of ISO 27001 is about policies and people.
+which is which. A tool claiming 100% automation of ISO 27001 would be
+lying. Half of ISO 27001 is about policies and people.
 """
 from pathlib import Path
 
@@ -44,8 +44,8 @@ class FrameworkRegistry(BaseModel):
 
         Control enhancements inherit from their base control when the crosswalk
         has no direct entry. NIST maps 220 IDs, only 48 of them enhancements, so
-        a rule citing AC-17(2) would otherwise return no ISO clauses at all --
-        a hole in the "NIST and ISO are complete for every vendor" claim in 6.4.
+        a rule citing AC-17(2) would otherwise return no ISO clauses at all,
+        holing the "NIST and ISO are complete for every vendor" claim in 6.4.
         An enhancement refines its base control, so the base control's ISO
         clauses are the correct answer, not an approximation.
         """
@@ -147,8 +147,8 @@ def load_all(
     Parsing ~30 CIS PDFs takes ~10 minutes, which is far too slow to sit in
     front of every scan or test run. The cache is keyed on the source files'
     (path, size, mtime), so editing or re-downloading any source invalidates it
-    automatically -- no manual cache-busting, and no risk of a stale catalogue
-    silently backing a compliance verdict.
+    automatically, with no manual cache-busting and no risk of a stale
+    catalogue silently backing a compliance verdict.
     """
     root = Path(root)
 
@@ -205,7 +205,7 @@ def _load_cache(root: Path) -> "FrameworkRegistry | None":
     except Exception:
         return None
     if payload.get("fingerprint") != _fingerprint(root):
-        return None          # a source changed -- reparse rather than trust it
+        return None          # source changed, so reparse rather than trust it
     try:
         return FrameworkRegistry.model_validate(payload["registry"])
     except Exception:

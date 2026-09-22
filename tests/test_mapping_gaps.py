@@ -1,7 +1,7 @@
 """ASA and Junos mapping gaps, each grounded in vendor syntax we can cite.
 
 Every configuration below uses statements printed in the CIS benchmark audit
-text or in the reference configs. Each test checks both directions -- the
+text or in the reference configs. Each test checks both directions: the
 setting present decides the control, and the weaker state is not a pass.
 """
 from pathlib import Path

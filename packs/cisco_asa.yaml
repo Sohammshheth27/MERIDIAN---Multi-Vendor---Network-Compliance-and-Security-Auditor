@@ -6,7 +6,7 @@
 # vty line governs telnet; on ASA telnet is permitted by the PRESENCE of a
 # `telnet <net> <mask> <interface>` line and by nothing else. A pack that
 # guessed the shared parts right and the different parts wrong would produce a
-# confident, wrong report -- so ASA gets its own platform key and its own
+# confident, wrong report, so ASA gets its own platform key and its own
 # fingerprint, and the engine's confidence floor keeps an ASA file from being
 # handed to the IOS pack.
 #
@@ -26,8 +26,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device. Such a domain resolves to
+# UNKNOWN, which keeps it in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
   security: "IPS, gateway antivirus and content filtering are next-generation firewall services this platform does not provide (they require the FirePOWER module)"
@@ -66,7 +66,7 @@ mappings:
     regex: "^ssh stricthostkeycheck\\s*$"
     value: {const: true}
     if_absent: false
-  # `ssh <net> <mask> <if>` is ASA's source restriction -- the equivalent of an
+  # `ssh <net> <mask> <if>` is ASA's source restriction, the equivalent of an
   # IOS vty access-class. Its presence is the control.
   - field: management.ssh.source_interface
     regex: "^ssh \\d+\\.\\d+\\.\\d+\\.\\d+ \\S+ (\\S+)\\s*$"
@@ -90,7 +90,7 @@ mappings:
   # `telnet timeout 5` configures the idle timer for telnet sessions and does
   # NOT permit telnet. Only `telnet <net> <mask> <interface>` does. Reading the
   # timeout line as "telnet enabled" would report a false FAIL on a device
-  # where telnet is genuinely unreachable -- which is exactly what this config
+  # where telnet is genuinely unreachable, which is exactly what this config
   # is, and the distinction the whole product is built on.
   - field: management.telnet.enabled
     regex: "^telnet \\d+\\.\\d+\\.\\d+\\.\\d+ \\S+ \\S+\\s*$"
@@ -108,7 +108,7 @@ mappings:
 
   # --- console -------------------------------------------------------------
   # `console timeout 0` means NEVER time out. Zero is not "unset" here, it is
-  # an explicitly configured never -- an observed weakness, not an absence.
+  # an explicitly configured never: an observed weakness, not an absence.
   - field: management.console.exec_timeout
     regex: "^console timeout (\\d+)"
     value: {group: 1, as: int}
@@ -123,11 +123,11 @@ mappings:
     collect: true
   # Stored-credential encryption. On ASA an encrypted value carries a trailing
   # `encrypted` or `pbkdf2` keyword; without it the password is recoverable.
-  # This config has `enable password Marcraft1` -- no keyword, so cleartext.
+  # This config has `enable password Marcraft1`, with no keyword, so cleartext.
   # Two mappings, mutually exclusive, and NEITHER uses `if_absent`.
   #
   # `if_absent: false` records DEFAULT_ASSUMED, and the engine forbids an assumed
-  # value from carrying a FAIL -- correctly, since "we did not see it" is not
+  # value from carrying a FAIL. Correctly so, since "we did not see it" is not
   # "it is wrong". So the assumed version reported UNKNOWN on a device whose
   # config plainly reads `enable password Marcraft1`. The cleartext form is
   # POSITIVELY OBSERVABLE: a trailing `encrypted`/`pbkdf2` keyword is present
@@ -150,8 +150,8 @@ mappings:
     value: {const: true}
 
   # The SERVER GROUP, not the service being authenticated. The first version
-  # captured group 1 of `aaa authentication ssh console LOCAL`, which is "ssh"
-  # -- so a device authenticating against its own local user database reported
+  # captured group 1 of `aaa authentication ssh console LOCAL`, which is "ssh".
+  # So a device authenticating against its own local user database reported
   # an external method list as configured, and MERIDIAN-EXT-015 passed. LOCAL is
   # excluded here because on-box accounts are precisely what that control
   # exists to detect the absence of an alternative to.
@@ -232,8 +232,8 @@ mappings:
 # determine.
   # --- verified against a real ASA export -----------------------------------
   # Every mapping below was checked against a captured `show running-config`
-  # before being written. The device in question is minimally configured -- 9
-  # interfaces, all shut, no nameif, no ACLs -- which is exactly why it exposed
+  # before being written. The device in question is minimally configured, with
+  # 9 interfaces, all shut, no nameif, no ACLs. That is exactly why it exposed
   # these gaps: a hardened sample would have hidden them.
 
   # Interfaces are SCOPED by name; each is a separate object.
@@ -258,7 +258,7 @@ mappings:
   # That is an observation with a line behind it, not an assumption.
   #
   # The existing mapping expresses the same conclusion via `if_absent: false`,
-  # which produces a DEFAULT_ASSUMED value -- correctly reported as UNKNOWN,
+  # which produces a DEFAULT_ASSUMED value, correctly reported as UNKNOWN,
   # because an assumed value cannot decide a control. So the finding vanished
   # on a device that plainly says what it does. This reads the LOCAL form
   # directly and carries the line as evidence.
@@ -272,7 +272,7 @@ mappings:
   # contact`, which clear the location and contact strings and say NOTHING
   # about whether the agent runs. A bare `no snmp-server` does disable it, but
   # no config we hold contains that form, so mapping it would be a guess
-  # dressed as a reading -- and a wrong one here reports a live SNMP agent as
+  # dressed as a reading, and a wrong one here reports a live SNMP agent as
   # switched off. It stays unmapped until a real config shows the form.
 
   # --- grounded in the CIS ASA 9.x benchmark's audit output -----------------
@@ -309,7 +309,7 @@ mappings:
     collect: true
 
   # --- grounded in the reference running-config ---------------------------
-  # `nameif` names the interface's security boundary -- ASA's zone construct.
+  # `nameif` names the interface's security boundary, ASA's zone construct.
   - field: firewall.zones
     regex: '^\s*nameif (\S+)'
     value: {group: 1, as: list}
@@ -319,15 +319,15 @@ mappings:
     value: {const: true}
 
   # NOT MAPPED, deliberately:
-  #  * `ssh version` -- the command exists (CIS ASA 1.6.2 audits `ssh version
+  #  * `ssh version`: the command exists (CIS ASA 1.6.2 audits `ssh version
   #    2`), but a config WITHOUT the line would fail SSH-002, and whether that
   #    image still permits SSHv1 cannot be read from the config. UNKNOWN is the
   #    honest answer; the earlier "no selector exists" exclusion was wrong.
-  #  * SNMPv3 group -- a device with no SNMP configured would fail the v3
+  #  * SNMPv3 group. A device with no SNMP configured would fail the v3
   #    controls, since their precondition only excuses SNMP explicitly off.
 
 not_applicable_fields:
-  # {field: reason}. The reason is published as the finding's justification --
+  # {field: reason}. The reason is published as the finding's justification:
   # an auditor asked to accept an exclusion needs to know why, and "verified
   # against the setting inventory" asserts a check without stating its result.
   management.vty.transport_input: "no `line vty` construct on ASA"

@@ -1,4 +1,4 @@
-/* MERIDIAN landing — technical-drawing direction, our palette.
+/* MERIDIAN landing: technical-drawing direction, our palette.
  *
  * The decisions that carry the design, each measured rather than guessed:
  *
@@ -8,13 +8,13 @@
  *   A VISIBLE BLUEPRINT GRID.  Column rails run full height with hatched
  *     gutters outside the content column. It is what makes a marketing page
  *     read as an instrument panel instead of a brochure.
- *   BRACKETED MONO LABELS in the accent colour -- [ OUR NUMBERS AT A GLANCE ],
+ *   BRACKETED MONO LABELS in the accent colour: [ OUR NUMBERS AT A GLANCE ],
  *     [PLUG ANY MODEL IN]. Measured: 12px, letter-spacing .06em, weight 500,
  *     uppercase.
  *   HEADLINES AT WEIGHT 500, SENTENCE CASE, tracking -0.02em. The h1 is
- *     44px/500 -- NOT bold caps. The restraint is the point.
+ *     44px/500, NOT bold caps. The restraint is the point.
  *   $KEY STAT ROWS.  Monospace keys, accent values, in bordered cells.
- *   HARD OFFSET SHADOWS on buttons -- a solid block offset down-right, no blur.
+ *   HARD OFFSET SHADOWS on buttons. A solid block offset down-right, no blur.
  *   LINE-ART TECHNICAL FIGURES in bordered boxes with a mono caption.
  *   A TERMINAL BLOCK in the hero.
  *
@@ -51,8 +51,8 @@
 
 :root {
   /* The console's tokens, verbatim. The home page is the front door to /app,
-     so it is built from the same material -- liquid glass over a navy gradient
-     ground -- rather than in a separate visual language. */
+     so it is built from the same material (liquid glass over a navy gradient
+     ground) rather than in a separate visual language. */
   --bg-0:#070a12;
   --bg-1:#0b1020;
   --bg:var(--bg-0);
@@ -139,7 +139,7 @@ a { color:inherit; text-decoration:none; }
 
 /* ── announcement bar ────────────────────────────────────────────────── */
 /* A solid accent slab across the full width was the loudest thing on a page
-   that is now deliberately near-monochrome -- it read as a promo banner rather
+   that is now deliberately near-monochrome. It read as a promo banner rather
    than as part of the product. Dark bar, accent only on the link. */
 .ann {
   display:flex; justify-content:center; align-items:center; gap:.7rem;
@@ -169,7 +169,7 @@ a { color:inherit; text-decoration:none; }
 .nav-mid a:hover { color:var(--label); }
 .nav-right { display:flex; gap:.6rem; margin-left:auto; }
 
-/* Hard offset shadow, no blur -- the button treatment for this direction. */
+/* Hard offset shadow, no blur: the button treatment for this direction. */
 .btn-out, .btn-fill {
   display:inline-flex; align-items:center; justify-content:center;
   padding:.62rem 1.05rem; white-space:nowrap; cursor:pointer;
@@ -355,13 +355,13 @@ figcaption { position:absolute; left:1.4rem; bottom:1.1rem;
 /* ── reveal ──────────────────────────────────────────────────────────── */
 /* Scroll reveal, standard treatment: y 24, 500ms, power2.out, stagger .08,
    fired at top 85%. Implemented with
-   IntersectionObserver rather than GSAP -- the page must stay self-contained,
+   IntersectionObserver rather than GSAP. The page must stay self-contained,
    which is a test, and a 70KB library for one fade is not a trade worth making. */
 .rv { opacity:0; transform:translateY(24px);
   transition:opacity .5s var(--power2-out), transform .5s var(--power2-out); }
 .rv.on { opacity:1; transform:none; }
 
-/* Headline character stagger -- preset "Stagger List / Complex": y 20,
+/* Headline character stagger from preset "Stagger List / Complex": y 20,
    rotateX -40, .015 stagger, expo.out. The preset warns to reserve this for
    headlines under ~8 words, so it is applied to the hero h1 only. */
 .ch { display:inline-block; opacity:0;
@@ -413,7 +413,7 @@ figcaption { position:absolute; left:1.4rem; bottom:1.1rem;
 /* ── light travelling the hero strands ───────────────────────────────── */
 /* The fan was frozen geometry. These are the same curves redrawn as short
    dashes and scrolled along their own path, so light appears to flow through
-   the barrels -- which is what the product does to a config. */
+   the barrels, which is what the product does to a config. */
 .spark { stroke:var(--accent); stroke-width:1.4; fill:none;
   filter:drop-shadow(0 0 4px rgba(58,212,208,.85));
   animation:flow 3.2s linear infinite; }
@@ -619,7 +619,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 /* ── product shots in perspective ────────────────────────────────────── */
 /* The console itself, tilted, lit and given a floor. Real product imagery is
    the thing those reference templates lead with, and it is the fastest way to
-   stop looking generic -- this screen exists and nothing else has it. */
+   stop looking generic: this screen exists and nothing else has it. */
 .shot { perspective:1900px; margin:2.6rem 0 0; padding-bottom:5.5rem; }
 .shot-in {
   position:relative; transform-style:preserve-3d;
@@ -662,7 +662,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
    bar, so a light leak can never wash out the controls.
  *
  * PROMOTED TO ITS OWN COMPOSITOR LAYER. Measured: with this overlay present the
- * median frame under scroll was 22.2ms; without it, 11.2ms -- and disabling any
+ * median frame under scroll was 22.2ms; without it, 11.2ms. Disabling any
  * single child (grain, leaks, the field canvas) changed nothing. The cost was
  * not what the overlay draws, it was that a full-screen fixed layer over live
  * content forces a repaint of the composite on every scrolled frame. Isolating
@@ -719,10 +719,10 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 /* Chromatic aberration goes on the RENDERED OBJECT and the product shots,
    never on type. A lens fringes what it photographs; putting it on a headline
    just makes the most important line on the page look out of focus, which is
-   what it did -- the 54px type read as doubled rather than as photographed. */
+   what it did: the 54px type read as doubled rather than as photographed. */
 /* No chromatic aberration on the product shots. The screen-blended channel
    split brightens as it fringes and turned the console's dark navy into
-   lavender -- these images are photographs of the real UI, and an effect that
+   lavender. These images are photographs of the real UI, and an effect that
    changes what the product looks like is misrepresentation, not a lens.
    The sheen, shadow and grain carry the photographic feel on their own. */
 
@@ -761,7 +761,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 .hero-in { max-width:none; }
 /* No ch cap on the headline. The markup already carries an explicit <br> at
    the intended break, and a measure narrower than the first line just fights
-   it -- "firewall" was splitting mid-word. balance keeps the two lines even
+   it: "firewall" was splitting mid-word. balance keeps the two lines even
    where the browser supports it. */
 .hero h1 { max-width:none; text-wrap:balance; }
 .hero .lede { margin-top:0; }
@@ -817,7 +817,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 /* ── quieter section labels ──────────────────────────────────────────── */
 /* Bracketed mono labels on every heading became their own tell. They stay,
    because they are this design's language, but at neutral weight rather than
-   glowing accent -- the accent is now reserved for figures and the CTA. */
+   glowing accent. The accent is now reserved for figures and the CTA. */
 .lab { color:var(--label-3); text-shadow:none; }
 .lab .ic { border-color:var(--label-3); }
 .lab .ic::after { background:var(--label-3); }
@@ -838,8 +838,8 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 .live .led { animation:none; }
 
 /* ── keep, because these two actually say something ──────────────────── */
-/* .gatesvg  — a packet running the six stages
-   .chainsvg — a citation crossing STIG → CCI → NIST → ISO
+/* .gatesvg:  a packet running the six stages
+   .chainsvg: a citation crossing STIG → CCI → NIST → ISO
    Both pause offscreen already. */
 
 /* ── product shots further down ──────────────────────────────────────── */
@@ -859,7 +859,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 
 /* ── the rendered appliance, restored ────────────────────────────────── */
 /* Sized and lit for the hero. The key light above it is what the brushed top
-   face and the bevels have to catch -- without it the metal has nothing to
+   face and the bevels have to catch. Without it the metal has nothing to
    reflect and the object flattens back out. */
 .rig {
   position:relative; margin:4.5rem auto 0;
@@ -884,7 +884,7 @@ a, button, .btn-out, .btn-fill, .ticket, .cells article, .steps li,
 
 html { background:var(--bg-0); }
 
-/* The console's ground, verbatim. Pure CSS -- one element, a static background
+/* The console's ground, verbatim. Pure CSS: one element, a static background
    and a transform animation, which the compositor handles for free. The canvas
    version this replaces was redrawing four radial gradients every frame. */
 .bgfield {
@@ -973,8 +973,8 @@ html { background:var(--bg-0); }
 .packet, .signal { fill:var(--accent); }
 .trail { stroke:var(--accent); }
 
-/* The optical layer stays, minus the vignette's hard edge -- the gradient
-   ground already does that work. */
+/* The optical layer stays, minus the vignette's hard edge (the gradient
+   ground already does that work). */
 .optics .vig { background:radial-gradient(138% 106% at 50% 34%,
   transparent 58%, rgba(4,6,12,.42) 100%); }
 .optics .grain { opacity:.05; }
@@ -999,7 +999,7 @@ html { background:var(--bg-0); }
   background:linear-gradient(180deg,var(--accent) 10%,var(--accent-2));
   -webkit-background-clip:text; background-clip:text; color:transparent;
   /* padding widens the clip box so the descender-free but wide glyphs and
-     any italic overhang are not sliced -- the same trap that cut "real" on
+     any italic overhang are not sliced, the same trap that cut "real" on
      the earlier build. */
   padding-right:.06em;
 }

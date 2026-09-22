@@ -5,7 +5,7 @@ WHY THIS EXISTS, stated precisely, because it is easy to oversell.
 ntc-templates does NOT parse configuration files. It parses the output of
 operational `show` commands, and its 979 templates are overwhelmingly for
 `show version`, `show interfaces`, `show inventory` and friends. So this is not
-a replacement for our config readers -- it answers a different question.
+a replacement for our config readers. It answers a different question.
 
 It answers one we could not answer at all. Deliverable 4 asks for "device
 identification: including serial numbers and hardware details", and a running
@@ -17,8 +17,8 @@ There is a second reason to take the dependency, and it is the more important
 one architecturally: 979 templates covering 35 vendors are maintained by people
 who are not us, tested against real device output, and updated when firmware
 changes their spelling. Every parser we do not own is a parser we cannot get
-wrong. Our packs keep doing the thing only we can do -- deciding what a setting
-MEANS for security -- and stop doing text extraction wherever a maintained
+wrong. Our packs keep doing the thing only we can do (deciding what a setting
+MEANS for security) and stop doing text extraction wherever a maintained
 template already does it.
 
 The honest limits, since they belong next to the claim:

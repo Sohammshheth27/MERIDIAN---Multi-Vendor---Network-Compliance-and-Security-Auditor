@@ -2,8 +2,8 @@
 #
 # Source artifact: `gcloud compute firewall-rules list --format=json`
 #
-# A sibling of packs/aws.yaml. Policy semantics -- priority, deny-wins-ties,
-# target tags, implied rules, disabled rules, per-rule logging -- live in
+# A sibling of packs/aws.yaml. Policy semantics (priority, deny-wins-ties,
+# target tags, implied rules, disabled rules, per-rule logging) live in
 # meridian/graph/gcp_builder.py; exposure findings come from the graph.
 #
 # VALIDATED ON A FIXTURE (samples/gcp/firewall-rules.json), built in the
@@ -23,7 +23,7 @@ not_applicable_domains:
   banner: "a VPC firewall rule has no console or login surface to display a banner on"
   time: "clock and NTP are instance-level, not properties of a firewall rule"
   snmp: "a VPC firewall runs no SNMP agent"
-  management: "VPC firewall rules have no management plane of their own -- they are configured through the Compute API"
+  management: "VPC firewall rules have no management plane of their own; they are configured through the Compute API"
   crypto: "a firewall rule terminates nothing, so it has no cipher or TLS configuration"
   interfaces: "firewall rules apply to instances by network and tag; they define no interfaces"
   l2: "layer 2 is not exposed to the tenant in a VPC"
@@ -61,7 +61,7 @@ mappings:
 
   # The implied deny-all INGRESS rule (priority 65535) is a platform invariant
   # and is not in the export, so it is recorded as assumed. Egress is the
-  # opposite -- implied ALLOW -- and this field does not describe it; the graph
+  # opposite, implied ALLOW, and this field does not describe it; the graph
   # therefore leaves unmatched traffic undecidable rather than denied.
   - field: firewall.default_action
     const: deny

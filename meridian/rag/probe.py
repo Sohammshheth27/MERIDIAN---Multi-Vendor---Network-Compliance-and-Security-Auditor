@@ -10,13 +10,13 @@ how badly each one bites:
     retrieval scores zero and dense retrieval is guessing from four tokens.
  2. It is per-device. Retrieving per line means re-retrieving 92,635 times for
     one SonicWall, and getting a different mapping for the next SonicWall.
- 3. It is production data -- addresses, hashes, userIV. That belongs in an
+ 3. It is production data: addresses, hashes, userIV. That belongs in an
     index even less than it belongs in a report.
 
 What is sent instead is the SBM FIELD, the vendor-neutral unit we already went
 to the trouble of building, enriched with the vendor syntax that every pack
 already declares. So one probe carries the neutral intent AND the literal
-`ip http server` / `allowHttpMgmt` strings -- and those strings are exactly what
+`ip http server` / `allowHttpMgmt` strings. Those strings are exactly what
 appears in a CIS `Audit:` section or a STIG check. Lexical and dense retrieval
 each get the half they are good at.
 
@@ -139,8 +139,8 @@ def _literalise(rx):
     `^(no )?ip http server\s*$` -> `no ip http server`. This matters more than
     it looks: that exact string is what a CIS `Audit:` section and a STIG check
     text contain, so it is the highest-precision term we can put in a query.
-    Dropping it -- which the first version did, by reading only `path` -- left
-    every Cisco field retrieving on generic words alone.
+    The first version dropped it, reading only `path`, and left every Cisco
+    field retrieving on generic words alone.
 
     Scanned character by character rather than with a regex-over-regexes: the
     escaping needed to match a literal backslash-s inside a pattern is exactly

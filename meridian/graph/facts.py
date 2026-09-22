@@ -8,12 +8,12 @@ work on any vendor whose pack builds a graph.
 Each fact returns (value, evidence, uncertainty):
 
   * ``value``       the answer
-  * ``evidence``    the resolution paths that justify it -- doc section 8
+  * ``evidence``    the resolution paths that justify it (doc section 8)
   * ``uncertainty`` the RULES we could not evaluate, not merely "something failed"
 
 Uncertainty is tracked PER RULE, deliberately. The first version marked the
 whole fact incomplete if any reference anywhere failed to resolve, so one
-dangling group name in a 200-rule policy discarded every finding in the file --
+dangling group name in a 200-rule policy discarded every finding in the file,
 including correctly resolved internet-facing RDP. Reporting nothing because one
 line was unreadable is its own kind of dishonesty.
 
@@ -32,7 +32,7 @@ class SkippedRule:
     """A rule we could not evaluate, and exactly why. Doc section 9's
     UNRESOLVED_REFERENCE: show the reference path, do not silently drop."""
 
-    # `evidence` carries the RULE's own evidence -- the line in the
+    # `evidence` carries the RULE's own evidence: the line in the
     # configuration where the unevaluable rule is defined.
     #
     # Without it the finding "rule X is not evaluable" reached the report with
@@ -123,7 +123,7 @@ def admin_mgmt_public_exposure(graph: ObjectGraph, resolver: Resolver | None = N
         res = r.resolve_rule(rule)
         bad = [x for x in res["src"] + res["dst"] + res["svc"] if not x.ok]
         if bad:
-            # This RULE is unevaluable. Record it and move on -- the other
+            # This RULE is unevaluable. Record it and move on. The other
             # rules in the policy are still perfectly readable.
             uncertain.append(_skipped(rule, bad))
             continue
@@ -150,7 +150,7 @@ def admin_mgmt_public_exposure(graph: ObjectGraph, resolver: Resolver | None = N
             hits.append(f"rule {rule.name or rule.id}: {ADMIN_PORTS[p]}/{p} "
                         f"from internet to {dst}")
         evidence += list(rule.evidence)
-        # doc section 8 -- carry the resolution PATH, not just the verdict
+        # doc section 8: carry the resolution PATH, not just the verdict
         for x in res["src"] + res["dst"] + res["svc"]:
             if x.ok and x.path:
                 evidence and None
@@ -226,7 +226,7 @@ def sensitive_service_exposed(graph: ObjectGraph, resolver: Resolver | None = No
 
 
 def unresolved_references(graph: ObjectGraph, resolver: Resolver | None = None):
-    """Doc section 9: UNRESOLVED_REFERENCE -- a finding may be incomplete.
+    """Doc section 9, UNRESOLVED_REFERENCE: a finding may be incomplete.
 
     Reported as its own finding. A config referencing objects that do not exist
     is itself a problem worth telling the customer about, and it bounds how much

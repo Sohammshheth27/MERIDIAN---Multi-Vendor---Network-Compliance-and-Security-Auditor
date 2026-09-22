@@ -1,8 +1,8 @@
 """Download the vendor documentation named in the parser-architecture PDF.
 
 Plan gap this closes: every pack regex and path so far was written from recall.
-Section 2 of that document is explicit -- "Use official vendor documentation as
-the primary grammar and semantics reference" -- and reading ONE guide (Junos)
+Section 2 of that document is explicit: "Use official vendor documentation as
+the primary grammar and semantics reference". Reading ONE guide (Junos)
 immediately found four defects including a false PASS on a high-severity
 control. This fetches the rest so the other packs can be grounded the same way.
 

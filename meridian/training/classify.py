@@ -5,7 +5,7 @@ in this repo parses 92,635 of 92,635 records and maps 8,421 of them; the other
 84,214 are perfectly legible and entirely inert, because no SBM field claims
 them and therefore no control can ask a question about them.
 
-Presenting that 84,214 as the gap would be dishonest in the other direction --
+Presenting that 84,214 as the gap would be dishonest in the other direction:
 half of it is empty strings and zeros, and most of the rest is interface
 counters and licensing state that has no place in a SECURITY baseline. Mapping
 those would inflate coverage without improving a single finding.
@@ -24,15 +24,15 @@ import re
 # setting nobody will ever look at again.
 #
 # Long keywords are safe to match anywhere. SHORT ones are not, and are
-# handled by SECURITY_SHORT below -- see the note there.
+# handled by SECURITY_SHORT below (see the note there).
 SECURITY = re.compile(
     r"(passw|secret|auth|admin|login|cipher|crypt|ssh|snmp|syslog|"
     r"audit|banner|ntp|mgmt|manage|polic|rule|zone|firewall|vpn|"
     r"ipsec|cert|radius|ldap|tacacs|lockout|idle|timeout|dpi|"
     r"botnet|antispy|block|deny|permit|trust|"
     # Crypto primitives and key material. Without these, sonicOsApi_dgstMD5
-    # and sonicOsApi_pubKeyBits -- the REST API's digest algorithm and key
-    # length -- were classified as ordinary device state.
+    # and sonicOsApi_pubKeyBits, the REST API's digest algorithm and key
+    # length, were classified as ordinary device state.
     r"md5|sha1|sha2|sha25|sha51|dgst|digest|pubkey|keybits|keysize|"
     # Privilege and role. userGroupObjPrivMask is an authorisation mask.
     r"priv|role|permission|"
@@ -49,10 +49,10 @@ STRONG = re.compile(r"(passw|secret|auth|crypt|cipher|pubkey|digest|dgst)", re.I
 # Short keywords that collide inside unrelated words. Measured on the real
 # SonicWall export, plain substring matching produced:
 #
-#     ssl  matched  guestProfileObjSes[sLif]e   -- a session lifetime
-#     ips  matched  ZR[ipS]Mode, ZR[ipS]plitH   -- RIP split-horizon
-#     gav  matched  [gav]ObjProperties          -- an object-table column
-#     cfs  matched  [cfs]ProfileObjId           -- likewise
+#     ssl  matched  guestProfileObjSes[sLif]e   (a session lifetime)
+#     ips  matched  ZR[ipS]Mode, ZR[ipS]plitH   (RIP split-horizon)
+#     gav  matched  [gav]ObjProperties          (an object-table column)
+#     cfs  matched  [cfs]ProfileObjId           (likewise)
 #
 # 127 of 805 queue entries came in this way. They are required to sit on a
 # token boundary instead: the start of the name, after an underscore or digit,
@@ -60,7 +60,7 @@ STRONG = re.compile(r"(passw|secret|auth|crypt|cipher|pubkey|digest|dgst)", re.I
 # `SessLife` no longer does.
 # NOTE the (?-i:) around the boundary. With re.I applied to the whole pattern,
 # `[A-Z]` also matches lowercase, so the camelCase hump matched everywhere and
-# the boundary did nothing at all -- `guestProfileObjSessLife` still came
+# the boundary did nothing at all. `guestProfileObjSessLife` still came
 # through on the "ssl" inside "SessLife". The boundary must be case-SENSITIVE
 # while the keywords stay case-insensitive.
 SECURITY_SHORT = re.compile(
@@ -69,7 +69,7 @@ SECURITY_SHORT = re.compile(
 
 # Record-keeping that merely CONTAINS a security-looking word. `time` matches
 # `addrObjTimeCreated`, `log` matches `logEvtAttrs`, `polic` matches
-# `policySrcIf` -- and ranked by occurrence count those bookkeeping fields sat
+# `policySrcIf`. Ranked by occurrence count those bookkeeping fields sat
 # at the very top of the queue, ahead of every real setting. A queue whose
 # first seven entries are creation timestamps is one nobody finishes.
 METADATA = re.compile(
@@ -80,7 +80,7 @@ METADATA = re.compile(
 # SonicOS stores most feature state as OBJECT TABLES, and every table repeats
 # the same structural columns: gavObjId, gavObjType, gavObjProperties,
 # cfsProfileObjId, schedObjInstanceId. The column is bookkeeping regardless of
-# which feature owns the table -- `gavObjType` says nothing about antivirus
+# which feature owns the table: `gavObjType` says nothing about antivirus
 # policy, it says a row exists.
 #
 # 271 of 805 queue entries were these columns. Ranked by occurrence they

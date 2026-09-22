@@ -1,4 +1,4 @@
-"""The regression guard -- defence #1 against registry poisoning.
+"""The regression guard, defence #1 against registry poisoning.
 
 This is CI for compliance knowledge.
 
@@ -8,7 +8,7 @@ FAIL to PASS, the approval is BLOCKED and the approver is shown exactly what
 changed.
 
 Why it outranks the other nine defences: poisoning always makes things look
-BETTER. A wrong approval does not crash anything and does not look wrong -- it
+BETTER. A wrong approval does not crash anything and does not look wrong. It
 quietly converts failures into passes, permanently, across every future scan.
 Nothing else in the system would notice. This does.
 
@@ -85,7 +85,7 @@ class RegressionGuard:
     def check(self, registry, proposal, *, approver: str = "", **approve_kw) -> RegressionResult:
         """Run the corpus before and after a hypothetical approval.
 
-        The approval is applied to a COPY of the registry -- a blocked approval
+        The approval is applied to a COPY of the registry: a blocked approval
         must leave no trace, or the guard itself becomes a way to poison.
         """
         import copy

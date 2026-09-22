@@ -5,7 +5,7 @@ compares two PARSERS, which catches a different failure: both methods agreeing
 because they read the same wrong tree.
 
 Junos specifically, because `readers/braces.py` is the one grammar written by
-hand here and it produced four separate bugs -- block-header arguments kept as
+hand here and it produced four separate bugs: block-header arguments kept as
 one segment, repeated leaf keys overwriting each other, a hardcoded
 `default-policy` that made a permit-all device a false PASS, and a grammar
 recalled wrongly in four places. Each was caught by a person noticing. This
@@ -34,8 +34,8 @@ def test_both_parsers_agree_on_every_path_our_packs_read():
 
 
 def test_vacuous_agreement_is_not_reported_as_agreement():
-    """A config where NEITHER parser finds any pack path returned agrees=True
-    -- an empty result presented as a positive one, which is the same shape as
+    """A config where NEITHER parser finds any pack path returned agrees=True,
+    an empty result presented as a positive one, which is the same shape as
     every other false clean bill of health this project has caught."""
     rep = crosscheck_braces(POLICY_ONLY)
     assert rep.checked

@@ -12,7 +12,7 @@ These are not edge cases. Every one of them appears in the real export, and
 each would turn a correct policy into a fabricated finding, or the reverse.
 
 1. APP-ID IS THE PRIMARY MATCH CRITERION, NOT THE PORT.
-   A rule carrying "application: 4shared" does not permit a port -- it permits
+   A rule carrying "application: 4shared" does not permit a port. It permits
    an application, wherever App-ID finds it. Whether that application uses the
    port a caller asks about is decided by Palo Alto's application database,
    which we do not hold. Reading only the service field would report such a
@@ -31,7 +31,7 @@ each would turn a correct policy into a fabricated finding, or the reverse.
 
 2. "application-default" IS NOT "any".
    It means "whatever ports App-ID considers standard for the matched
-   application" -- again the database we do not have. The danger is not
+   application" (again, the database we do not have). The danger is not
    leaving it unresolved; it is treating an unrecognised service token as
    unconstrained, which reads a tightly scoped rule as wide open.
 
@@ -93,7 +93,7 @@ _ZONE_IF = re.compile(r"^network/(?:layer3|layer2|virtual-wire|tap)/member$")
 
 #: Documented address forms. ip-netmask is the common one; the others are not
 #: exotic, and an address object parsed to NO values is reported by the
-#: resolver as UNRESOLVED -- an unreadable config rather than a readable one.
+#: resolver as UNRESOLVED: an unreadable config rather than a readable one.
 _ADDR_FORMS = ("ip-netmask", "ip-range", "fqdn", "ip-wildcard")
 
 UNTRUSTED = {"untrust", "untrusted", "internet", "wan", "outside", "public",
@@ -285,7 +285,7 @@ def _rules(cfg: XmlConfig, g: ObjectGraph) -> None:
             name=f"{spec['name']} [{spec['book']}#{position}]",
             order=position,
             # PAN-OS omits <disabled> on an enabled rule, so absence means
-            # ENABLED -- the opposite of SonicOS, where an absent flag means
+            # ENABLED. SonicOS inverts this: an absent flag there means
             # off. Carrying that assumption across vendors would disable a
             # live rulebase and report a permissive firewall as harmless.
             enabled=one("disabled", "no").strip().lower() != "yes",
@@ -328,7 +328,7 @@ def _rules(cfg: XmlConfig, g: ObjectGraph) -> None:
 
 #: PAN-OS ships exactly two predefined SERVICE objects. They are not written
 #: into the configuration, so a rule referencing service-https would otherwise
-#: resolve to nothing and become unevaluable -- and most real rules reference
+#: resolve to nothing and become unevaluable, and most real rules reference
 #: them. Their ports are fixed by the platform and documented by the vendor.
 #:
 #: They are added only when a rule actually references one, and never over a

@@ -13,7 +13,7 @@ spot, which is precisely the failure this codebase exists to refuse.
 
 The distinction is a property of the SOURCE, not of the engine. A Cisco
 running-config lists only what differs from default, so an absent `ip http
-server` line is real evidence the server is off -- and must keep deciding its
+server` line is real evidence the server is off, and must keep deciding its
 control. That is why this is a per-pack flag and not a global rule.
 """
 import os
@@ -73,8 +73,8 @@ def test_the_false_pass_is_gone(sw):
 
 @sw_only
 def test_a_present_but_empty_record_still_decides(sw):
-    """The distinction this rests on. `cli_loginBanner` EXISTS with value ""
-    -- the device stating it has no banner, which is provable and a real
+    """The distinction this rests on. `cli_loginBanner` EXISTS with value "",
+    the device stating it has no banner, which is provable and a real
     finding. Only a key that is absent entirely is a blind spot."""
     f = next(x for x in sw.assessment.findings if x.control_id == "MERIDIAN-BAN-001")
     assert f.state.value == "FAIL"

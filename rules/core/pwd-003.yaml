@@ -1,7 +1,7 @@
 id: MERIDIAN-PWD-003
 title: Stored passwords must be encrypted
 # Pointed at `crypto.weak_ciphers`, which is SSH key-exchange and cipher
-# state -- MERIDIAN-SSH-003 already covers that field with the right title.
+# state, and MERIDIAN-SSH-003 already covers that field with the right title.
 # The effect was a finding that read 'Stored passwords must be encrypted:
 # observed dh-group1-sha1', which is not a sentence about passwords.
 field: authentication.password_encryption
@@ -12,7 +12,7 @@ tier: core
 # crypto.weak_ciphers holds algorithms that are BOTH weak AND enabled,
 # on every vendor. Any entry is a violation, so this is max_count 0.
 # Previously contains_none matched literal tokens, which passed when a
-# vendor named the algorithm differently -- a false PASS on real weak crypto.
+# vendor named the algorithm differently: a false PASS on real weak crypto.
 rationale: >-
   Reversible password storage (e.g. Cisco type 7) is equivalent to storing the password in cleartext.
 frameworks:

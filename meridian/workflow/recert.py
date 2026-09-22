@@ -1,8 +1,8 @@
 """Rule ownership and recertification.
 
 The workflow feature firewall-orchestrator and ManageEngine are actually bought
-for. Compliance frameworks require periodic review of access -- NIST AC-2(3),
-PCI-DSS 1.1.7, ISO A.5.18 -- and the question is never "is this rule
+for. Compliance frameworks require periodic review of access (NIST AC-2(3),
+PCI-DSS 1.1.7, ISO A.5.18), and the question is never "is this rule
 technically correct" but "does anyone still need it, and who says so".
 
 A rule with no owner is the real finding. It cannot be reviewed, cannot be
@@ -11,7 +11,7 @@ years has rules nobody will admit to.
 
 WHY THIS PAIRS WITH HYGIENE
 Neither signal is sufficient alone. "Unused" without ownership cannot be acted
-on -- the owner may know it is a disaster-recovery path. "Unowned" without
+on. The owner may know it is a disaster-recovery path. "Unowned" without
 usage data cannot be prioritised. Together they rank: a rule that is both
 unused AND uncertified AND overly permissive is the one to delete first, and
 that ranking is the output an operations team can work through.

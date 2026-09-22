@@ -1,6 +1,6 @@
 """NIST SP 800-53 loader (OSCAL JSON).
 
-Public domain -- we embed the full control text.
+Public domain, so we embed the full control text.
 NIST is the universal spine. Every rule carries a NIST ID, and every
 vendor gets a complete NIST answer even when no STIG or CIS benchmark exists
 for its platform.
@@ -13,7 +13,7 @@ from pathlib import Path
 
 from .models import Automatability, Catalog, CatalogEntry, Framework, License
 
-# Control families that are inherently procedural -- policy, people, physical.
+# Control families that are inherently procedural: policy, people, physical.
 # These load but can never be automated from a config file, and must
 # report as MANUAL_REVIEW rather than inflate the automation percentage.
 _PROCEDURAL_FAMILIES = {

@@ -17,7 +17,7 @@ ACCURACY
 Every number here is computed from the DeviceAssessment at render time. There
 are no literals in the templates, no cached figures, and no rounding beyond
 what the engine itself publishes. Where a section has nothing to report, it
-says why rather than being omitted -- an absent section is indistinguishable
+says why rather than being omitted. An absent section is indistinguishable
 from a clean one, which is the failure this whole project exists to avoid.
 """
 from __future__ import annotations
@@ -52,8 +52,8 @@ STATE_MEANING = {
 def _e(value) -> str:
     """Escape for HTML. Applied to EVERY value taken from a device file.
 
-    Configuration content is untrusted input -- this project has already found
-    injection-shaped content inside real device data -- and it is reproduced
+    Configuration content is untrusted input (this project has already found
+    injection-shaped content inside real device data) and it is reproduced
     verbatim throughout this report as evidence.
     """
     if value is None:
@@ -265,7 +265,7 @@ reports are not comparable.</p>
 </table>
 <p class="footnote">Each framework is scored over its own requirements (NIST
 SP 800-53 controls, ISO/IEC 27001 Annex A controls, STIG IDs). Each requirement
-scores the share of its checks that passed -- three of four is 75% -- and the
+scores the share of its checks that passed, so three of four is 75%, and the
 framework score is the average across its requirements. Undecided checks are
 never counted as passes. "Fully met" counts requirements where every check
 passed. A framework citing no control on this platform is shown with no score
@@ -371,7 +371,7 @@ def _locator(e) -> tuple[str, str, str]:
         puts them on the exact line.
       * a SINGLE-LINE key-value export. The decoded SonicOS backup holds
         92,636 settings on one physical line, so line 1 is where every setting
-        genuinely is -- correct, but not sufficient by itself, so the
+        genuinely is. That is correct but not sufficient by itself, so the
         setting's ordinal position is given beside it. Together they locate
         the value exactly.
       * a STRUCTURED document, where the reader supplies the line and the path
@@ -399,7 +399,7 @@ def _locator(e) -> tuple[str, str, str]:
         # that is accurate and useless: a column reading 1 for every finding
         # in the report distinguishes nothing and cannot be acted on.
         #
-        # The ordinal is unique per setting and genuinely reachable --
+        # The ordinal is unique per setting and genuinely reachable:
         # `tr '&' '\\n' < config | sed -n '1234p'` returns the setting. So the
         # number given is the one that locates the value, and the footnote
         # states the retrieval, rather than a number that is merely true.
@@ -880,7 +880,7 @@ def _extended(da, d: dict) -> str:
             members = zone_members(da, z)
             s = blast_radius(da.graph, origin_zone=z,
                              origin_members=members).summary()
-            state = ("latent -- nothing is in the zone today"
+            state = ("latent: nothing is in the zone today"
                      if s["latent"] else
                      "live" if s["origin_populated"] else "population not known")
             rows.append(f"<tr><td>{_e(z)}</td><td>{s['paths_open']}</td>"
@@ -948,7 +948,7 @@ def build_report(da, assessment_id: str = "") -> str:
                 + _undecided(d) + _policy(d) + _remediation(d) + _method(d)
                 + _extended(da, d))
 
-    title = (f"MERIDIAN Assessment — "
+    title = (f"MERIDIAN Assessment: "
              f"{d['identity'].hostname or d['identity'].source_file}")
     return (f"<!DOCTYPE html>\n<html lang=\"en\"><head>"
             f"<meta charset=\"utf-8\">"
@@ -1004,7 +1004,7 @@ def _pdf_via_playwright(html_file: Path, out: Path) -> bool:
                          # The report styles its own margins in @page; letting
                          # the renderer add more would reflow the tables.
                          prefer_css_page_size=True,
-                         # Monochrome by design -- there is nothing to print.
+                         # Monochrome by design, so nothing to print.
                          print_background=False)
             finally:
                 browser.close()
@@ -1028,7 +1028,7 @@ def _pdf_via_system_browser(html_file: Path, out: Path, timeout: int) -> bool:
             capture_output=True, text=True, timeout=timeout)
     except Exception:                                      # noqa: BLE001
         return False
-    # Never trust the exit code here -- see the note above.
+    # Never trust the exit code here. See the note above.
     return out.exists() and out.stat().st_size > 0
 
 
@@ -1036,8 +1036,8 @@ def write_pdf(da, path, assessment_id: str = "", timeout: int = 180) -> Path:
     """Render the report to PDF.
 
     A browser engine does the typesetting, which gives correct pagination,
-    widow and orphan control, and tables that break across pages properly --
-    without adding a Python PDF dependency.
+    widow and orphan control, and tables that break across pages properly,
+    all without adding a Python PDF dependency.
     """
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)

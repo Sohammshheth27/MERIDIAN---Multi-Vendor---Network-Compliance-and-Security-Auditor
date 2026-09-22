@@ -1,10 +1,10 @@
-"""MITRE ATLAS and NIST AI RMF -- the governance of OUR AI, proven.
+"""MITRE ATLAS and NIST AI RMF: the governance of OUR AI, proven.
 
 WHAT THESE FRAMEWORKS ARE FOR, AND WHAT THEY ARE NOT
 ----------------------------------------------------
 NIST 800-53, CIS, STIG and ISO 27001 describe how a FIREWALL should be
 configured. ATLAS and the AI RMF do not. They describe how an AI SYSTEM should
-be governed -- and the AI system here is MERIDIAN's own mapping suggester, which
+be governed, and the AI system here is MERIDIAN's own mapping suggester, which
 reads untrusted configuration text and proposes schema fields for it.
 
 Conflating the two would be a serious claim to get wrong. "We audit your
@@ -19,7 +19,7 @@ and what these tests establish, is narrower:
 WHY THIS FILE EXISTS
 --------------------
 Every mechanism below already worked. None of it was tested, so none of it was
-PROVABLE -- and an unprovable security control is a claim, not a control. A
+PROVABLE, and an unprovable security control is a claim, not a control. A
 reviewer or auditor asking "show me" had nothing to look at.
 """
 import os
@@ -89,8 +89,8 @@ def test_every_guardrail_maps_to_an_ai_rmf_function():
 def test_technical_guardrails_name_the_technique_they_defend():
     """ATLAS covers attacks; it does not cover process.
 
-    A two-person rule and a tamper-evident log defend no ATLAS technique --
-    they constrain PEOPLE, not an adversary's method, and forcing a technique
+    A two-person rule and a tamper-evident log defend no ATLAS technique.
+    They constrain PEOPLE, not an adversary's method, and forcing a technique
     onto them would mean inventing a mapping. So the requirement is asymmetric
     and deliberately so:
 
@@ -193,7 +193,7 @@ def test_governance_text_cannot_enter_the_parser_corpus():
     ATLAS is a catalogue of ATTACK DESCRIPTIONS. Retrieval works by
     similarity, so if that text sat in the corpus used to classify
     configuration lines, a line containing "inject" or "prompt" could retrieve
-    an attack description as a "similar example" -- corpus poisoning by our own
+    an attack description as a "similar example": corpus poisoning by our own
     hand.
 
     The tripwire refuses governance documents outright, so a future refactor
@@ -222,7 +222,7 @@ def test_the_tripwire_names_the_reason_not_just_the_failure():
 
 @atlas_only
 def test_the_coverage_matrix_renders_for_a_reader(atlas):
-    """The matrix is the deliverable -- guardrails against frameworks."""
+    """The matrix is the deliverable: guardrails against frameworks."""
     from meridian.knowledge.governance import GovernanceKB
 
     kb = GovernanceKB.from_atlas(atlas) if hasattr(GovernanceKB, "from_atlas") else None

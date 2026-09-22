@@ -34,7 +34,7 @@ def test_the_pack_loads_at_all(pack):
     """`load_packs` swallows a malformed pack silently.
 
     A pack that fails validation is skipped by a bare `except: continue`, so a
-    typo does not raise — the vendor simply vanishes and every device of that
+    typo does not raise. The vendor simply vanishes and every device of that
     platform reports UNSUPPORTED. This asserts the pack parses, because nothing
     else will tell us.
     """
@@ -52,7 +52,7 @@ def test_the_pack_is_registered(pack):
 def test_every_mapped_path_exists_in_a_real_config(cfg, pack):
     """No mapping may point at a path the reader never produces.
 
-    A path with a typo is not an error — it silently yields NOT_OBSERVED, which
+    A path with a typo is not an error. It silently yields NOT_OBSERVED, which
     is indistinguishable from a device that genuinely lacks the setting. That is
     exactly the failure mode this codebase treats as unacceptable, so it is
     asserted rather than trusted.
@@ -80,7 +80,7 @@ def test_fingerprint_selects_this_pack_and_not_sonicwall(result):
 
 
 def test_absence_from_every_allowlist_is_evidenced_not_assumed(result):
-    """Telnet is off because no interface allows it — and we can prove it.
+    """Telnet is off because no interface allows it, and we can prove it.
 
     FortiOS has no global telnet toggle, so "off" is only true if telnet is
     absent from every interface's allow-list. The derivation must therefore

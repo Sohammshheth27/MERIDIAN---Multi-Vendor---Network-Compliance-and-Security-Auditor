@@ -10,8 +10,8 @@ rationale: >-
 frameworks:
   nist_800_53: [AU-8, AU-8.1]
   iso_27001_2022: [A.8.17]
-  # STIG Vuln IDs are per-platform. Derived from the downloaded
-  # XCCDF files, not recalled -- a control may map to several.
+  # STIG Vuln IDs are per-platform. Copied from the downloaded XCCDF
+  # files rather than recalled. A control may map to several.
   stig_by_platform:
     juniper_srx: [V-223205]
   # CIS recommendation numbers live in the vendor pack.

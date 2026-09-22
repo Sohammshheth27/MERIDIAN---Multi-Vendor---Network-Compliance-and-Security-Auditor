@@ -3,7 +3,7 @@
 THE BUG THIS EXISTS TO PREVENT
 ------------------------------
 Every accepted suggestion used to score exactly 1.639, on every setting, on
-every device. That number is 100 x 1/(RRF_K+1) -- the reciprocal-rank constant
+every device. That number is 100 x 1/(RRF_K+1), the reciprocal-rank constant
 for a first-place finish. It said "this came first" and nothing about whether
 the match was any good, so:
 
@@ -46,8 +46,8 @@ def queue():
     2.7 MB export; doing that per test made this file take minutes.
 
     Skips when the embedding service is unreachable. The matcher degrades to
-    type-prior x lexical in that case, which is deliberate -- an assessment
-    must never depend on a model server being up -- but the degraded arm
+    type-prior x lexical in that case, which is deliberate, because an assessment
+    must never depend on a model server being up. But the degraded arm
     produces far fewer distinct confidences, so the spread assertions below
     would fail for a reason that has nothing to do with the code under test.
     """
@@ -67,7 +67,7 @@ def test_a_type_mismatch_collapses_confidence():
     """An integer value cannot be a list-typed field.
 
     The type prior is worth 12 points of top-1 accuracy on its own, and a zero
-    multiplier has to mean zero -- not merely 'a bit less'.
+    multiplier has to mean zero, not merely 'a bit less'.
     """
     assert confidence(0.95, 0.30, 0.0) == 0.0
 

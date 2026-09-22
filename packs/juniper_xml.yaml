@@ -6,7 +6,7 @@
 # The braces pack parses text: it has to track a context stack, split block
 # headers from their arguments, keep repeated leaf keys apart, and tell
 # `telnet;` under `system services` from the word telnet in a comment. Four
-# separate bugs in this project came from exactly those hazards -- block-header
+# separate bugs in this project came from exactly those hazards: block-header
 # arguments kept as one segment, repeated leaves overwriting each other,
 # `default-policy permit-all` hardcoded as deny.
 #
@@ -15,7 +15,7 @@
 # the pack to use, and the accuracy difference is structural rather than a
 # matter of how carefully the regexes were written.
 #
-# `<foo/>` -- an empty element -- means the feature is PRESENT. Junos expresses
+# `<foo/>`, an empty element, means the feature is PRESENT. Junos expresses
 # most booleans that way, so the reader records `<present>` and the mappings
 # below read it with `presence: true` rather than coercing an empty string.
 
@@ -32,8 +32,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device. UNKNOWN is the verdict now, and
+# it keeps the domain in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
 
@@ -63,7 +63,7 @@ mappings:
   - field: management.ssh.version
     path: "configuration/system/services/ssh/protocol-version"
     value: {as: int}
-  # Failed attempts before disconnect -- not `connection-limit`, which caps
+  # Failed attempts before disconnect, not `connection-limit`, which caps
   # concurrent SSH connections (see packs/juniper.yaml).
   - field: management.ssh.max_auth_tries
     path: "configuration/system/login/retry-options/tries-before-disconnect"
@@ -71,7 +71,7 @@ mappings:
 
   # --- telnet: presence of the element IS the setting ----------------------
   # `<telnet/>` under system/services means telnet is enabled. Its absence
-  # here is a real absence -- the device emitted its whole configuration, so
+  # here is a real absence. The device emitted its whole configuration, so
   # nothing is missing because we failed to read it. That is the one case
   # where `if_absent` is honest rather than an assumption.
   - field: management.telnet.enabled
@@ -151,7 +151,7 @@ mappings:
   # BOTH forms are mapped, and neither uses `if_absent`.
   #
   # Mapping only `deny-all` meant a device with an explicit `<permit-all/>`
-  # reported "default deny not configured -- (absence)", when the export
+  # reported "default deny not configured (absence)", when the export
   # plainly states the opposite policy on a line we could cite. The braces
   # pack had the identical defect earlier in this project, where a hardcoded
   # `deny` turned a permit-all device into a false PASS. The weak form must be
@@ -213,9 +213,10 @@ derivations:
     params: {glob: "configuration/system/services/rest/*"}
 
 not_applicable_fields:
-  # {field: reason}. The reason is published as the finding's justification --
-  # an auditor asked to accept an exclusion needs to know why, and "verified
-  # against the setting inventory" asserts a check without stating its result.
+  # {field: reason}. The reason reaches the report as the finding's
+  # justification. An auditor asked to accept an exclusion needs to know why,
+  # and "verified against the setting inventory" asserts a check without
+  # stating its result.
   management.vty.transport_input: "no vty line construct on Junos"
   management.vty.access_class: "no vty line construct on Junos; access is controlled by firewall filters"
   management.vty.transport_output: "no vty line construct on Junos"

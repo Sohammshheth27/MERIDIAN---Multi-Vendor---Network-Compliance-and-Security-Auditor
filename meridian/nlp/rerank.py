@@ -2,7 +2,7 @@
 
 Retrieval and ranking fail differently, and the benchmark shows exactly where
 the gap is. On held-out vendors, hybrid+type retrieval reaches 64.8% top-5 but
-only 45.5% top-1 -- so for roughly a fifth of settings the right field IS
+only 45.5% top-1, so for roughly a fifth of settings the right field IS
 retrieved and then ranked below something else. No amount of embedding tuning
 recovers that: it is a comparison problem, not a search problem.
 
@@ -157,7 +157,7 @@ def needs_rerank(hits, *, margin=0.25) -> bool:
     up by a wide margin, retrieval is usually right and the model only agrees
     expensively.
 
-    So the model is spent on the ambiguous middle -- the cases where the answer
+    So the model is spent on the ambiguous middle: the cases where the answer
     is in the top five but not first, which is exactly the 19-point gap between
     top-1 and top-5 that the re-ranker exists to close.
     """

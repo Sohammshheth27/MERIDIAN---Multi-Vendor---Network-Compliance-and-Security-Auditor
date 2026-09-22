@@ -8,7 +8,7 @@ engine actually evaluates. Nothing here is typed by hand.
 LICENSING
 ---------
 Control titles and rationale are OUR OWN words. CIS and ISO/IEC 27001 material
-is copyrighted, so those frameworks are cited by IDENTIFIER ONLY -- clause and
+is copyrighted, so those frameworks are cited by IDENTIFIER ONLY: clause and
 recommendation numbers, never their text. NIST SP 800-53 and DISA STIG are US
 government works and could be quoted in full; they are cited by identifier here
 too, for consistency of format.

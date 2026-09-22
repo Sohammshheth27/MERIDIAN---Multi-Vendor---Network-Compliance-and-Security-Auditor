@@ -5,7 +5,7 @@
 # recommendation's Audit section in a locally licensed copy of the benchmark,
 # and tests/test_framework_selection.py checks every number exists in it.
 #
-# The mapping rule -- a control cites a recommendation only when:
+# The mapping rule. A control cites a recommendation only when:
 #   1. the recommendation audits the SAME setting the control reads, and
 #   2. the pass threshold is the SAME. Stricter or looser is a near-miss and
 #      stays unmapped: "FAIL - CIS 2.1.1.1.4" on a 90-second SSH timeout would
@@ -29,7 +29,7 @@
 #           EXT-013 (CIS also bounds threshold and duration)
 #   PAN-OS  HTTP-001/TEL-001 vs 1.2.4 (CIS audits interface
 #           management profiles; our pack reads the device service setting)
-#   Cloud   CLD-001 vs AWS 6.3/6.4, Azure 7.1/7.2, GCP 3.6/3.7 -- CLD-001 fails
+#   Cloud   CLD-001 vs AWS 6.3/6.4, Azure 7.1/7.2, GCP 3.6/3.7. CLD-001 fails
 #           on ANY of ten ports open to the world (SSH, RDP, telnet, FTP and
 #           database/cache ports); each CIS recommendation audits SSH and/or
 #           RDP. A FAIL on an open MySQL port would have been reported as a
@@ -39,7 +39,7 @@
 # CIS publishes no SonicWall benchmark, so sonicwall_sonicos has no entry and
 # selecting CIS on a SonicWall reports exactly that. The AWS benchmark parses
 # (68 recommendations) but no MERIDIAN control asks for the same setting with the
-# same scope -- see the Cloud line above -- so nothing is mapped to it.
+# same scope (see the Cloud line above), so nothing is mapped to it.
 
 benchmarks:
   cisco_iosxe_router: "CIS Cisco IOS XE 17.x Benchmark v2.2.1"

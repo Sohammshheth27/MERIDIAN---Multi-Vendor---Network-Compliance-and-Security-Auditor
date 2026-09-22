@@ -1,10 +1,10 @@
-"""What a cited identifier means -- and what we are allowed to say about it.
+"""What a cited identifier means, and what we are allowed to say about it.
 
 "AU-2" tells an operator nothing, so the console resolves identifiers through
 /framework-controls. The interesting part is not the lookup, it is the licence:
 NIST and DISA STIG are public domain and may carry their published titles, while
-CIS and ISO are identifier-only. Their prose sits in the local catalogue -- we
-parse it to find the recommendation at all -- and it must never leave this
+CIS and ISO are identifier-only. Their prose sits in the local catalogue (we
+parse it to find the recommendation at all) and it must never leave this
 process in a report, a page or a log.
 
 So these tests assert the boundary, not the plumbing: a public-domain title

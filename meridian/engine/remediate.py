@@ -20,8 +20,8 @@ Three things this does that a plain command list does not:
    removing telnet; configure the syslog target before enforcing logging.
    Steps carry a `phase` and are sorted by it.
 
-3. ROLLBACK. Every script is wrapped in the vendor's own safety net --
-   `commit confirmed` on Junos, `reload in` on IOS -- so a mistake reverts by
+3. ROLLBACK. Every script is wrapped in the vendor's own safety net
+   (`commit confirmed` on Junos, `reload in` on IOS), so a mistake reverts by
    itself instead of requiring a site visit.
 
 Remediation lives in the rule YAML as DATA, per platform. Adding a vendor is
@@ -35,7 +35,7 @@ from dataclasses import dataclass, field
 PHASE_PREPARE = 10      # create the replacement (keys, users, syslog target)
 PHASE_ENABLE = 20       # turn the secure thing on
 PHASE_HARDEN = 30       # tighten settings that break nothing
-PHASE_DISABLE = 40      # turn the insecure thing off -- last, always
+PHASE_DISABLE = 40      # turn the insecure thing off, always last
 PHASE_DEFAULT = 30
 
 # What a step does to the management plane.
@@ -109,7 +109,7 @@ class Plan:
 
     def script(self) -> str:
         """The ordered CLI script an engineer can paste."""
-        out = ["! MERIDIAN remediation -- review before running.",
+        out = ["! MERIDIAN remediation. Review before running.",
                f"! platform: {self.platform}"]
         if not self.lockout_checked:
             out += [

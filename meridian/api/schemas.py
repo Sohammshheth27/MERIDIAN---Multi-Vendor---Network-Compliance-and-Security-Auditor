@@ -15,7 +15,7 @@ a dashboard can erase them by accident in a way the engine cannot:
 
  2. UNKNOWN is not a pass and not a fail. It must never render green, and must
     never be folded into the score. It is the honest statement that we could
-    not tell -- which is the thing that makes the other numbers trustworthy.
+    not tell. That admission is what makes the other numbers trustworthy.
 
  3. Every finding carries its evidence: file, line, and the raw text. A finding
     without evidence is an assertion; with it, a reviewer can check us. The
@@ -130,7 +130,7 @@ class RecordAccountingOut(BaseModel):
     security_relevant_unmapped: int = Field(
         description="Distinct setting NAMES we read but cannot interpret. The "
                     "size of the training queue, and the honest size of the "
-                    "gap -- counted in names, not records.")
+                    "gap, counted in names, not records.")
 
 
 class CoverageOut(BaseModel):
@@ -150,7 +150,7 @@ class CoverageOut(BaseModel):
     score_pct: float | None = Field(
         default=None,
         description="Pass rate over DECIDED controls only. null when nothing "
-                    "could be decided -- never render null as 0%.")
+                    "could be decided. Never render null as 0%.")
 
 
 class ConsensusOut(BaseModel):
@@ -243,7 +243,7 @@ class RemediationStepOut(BaseModel):
     deferred: bool = Field(
         default=False,
         description="Held back: would sever the only management path. Render "
-                    "these separately -- they are not part of the script.")
+                    "these separately; they are not part of the script.")
 
 
 class RemediationOut(BaseModel):
@@ -316,7 +316,7 @@ class LoginOut(BaseModel):
     detail: str = Field(
         default="",
         description="Why a sign-in failed. Deliberately unspecific about "
-                    "WHICH factor was wrong -- naming it tells an attacker "
+                    "WHICH factor was wrong, because naming it tells an attacker "
                     "which half to keep working on.")
     locked_seconds: int = 0
 
@@ -363,7 +363,7 @@ class ReachQueryIn(BaseModel):
 
     Either address form or zone form is acceptable; a device that models zones
     but not addresses can still answer, and vice versa. Nothing is defaulted to
-    "any" -- an omitted field means the question did not constrain it, which is
+    "any": an omitted field means the question did not constrain it, which is
     different from asserting it matches everything.
     """
 

@@ -1,4 +1,4 @@
-"""Tier 3 -- the local model.
+"""Tier 3 is the local model.
 
 Fully local, no external API, ever. This can be verified by disconnecting from
 the network.
@@ -6,7 +6,7 @@ the network.
 Three settings matter more than the model choice:
   think=False       Qwen3.5 is a hybrid reasoning model; thinking tokens cost
                     ~10x the time and buy nothing on a pattern-copy task.
-  format=<schema>   JSON schema with the field ENUM -- guardrail 3.
+  format=<schema>   JSON schema with the field ENUM (guardrail 3).
   temperature=0     Reproducibility is mandatory for an audit tool. The same
                     config must produce the same report twice.
 

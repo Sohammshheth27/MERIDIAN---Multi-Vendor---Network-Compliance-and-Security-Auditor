@@ -3,7 +3,7 @@
  *
  * Every type here mirrors what `meridian/api/app.py` actually returns. They were
  * written by reading real responses from the running engine against a real
- * SonicWall NSA 3700 export, not from the endpoint signatures -- so the shapes
+ * SonicWall NSA 3700 export, not from the endpoint signatures, so the shapes
  * are what the UI will genuinely receive.
  *
  * ONE RULE ABOVE ALL OTHERS
@@ -156,7 +156,7 @@ export interface RecordAccounting {
 
 export interface EvidenceRef {
   file: string;
-  /** null where the source format has no meaningful line -- a key-value export. */
+  /** null where the source format has no meaningful line: a key-value export. */
   line: number | null;
   raw: string;
   record_id: string | null;
@@ -594,7 +594,7 @@ export interface GraphResponse {
     interfaces: Record<string, string>;
   };
   /** False means the platform does not evaluate top-to-bottom, so shadow
-   *  analysis is suppressed -- and the absence of shadow findings must not be
+   *  analysis is suppressed, and the absence of shadow findings must not be
    *  read as a tidy policy. */
   ordered: boolean;
   default_action: string;
@@ -658,7 +658,7 @@ export interface ExtendedFinding {
   evidence: ExtendedEvidence[];
 }
 
-/** One extended domain. `present: null` means we could not tell -- not "none". */
+/** One extended domain. `present: null` means we could not tell, not "none". */
 export interface ExtendedDomain {
   domain: string;
   present: boolean | null;
@@ -893,7 +893,7 @@ const SESSION_USER_KEY = "meridian_session_user";
  * trail that misattributes the actor is worse than one that says nothing, so
  * this reads the account the engine actually authenticated.
  *
- * It is not a credential and nothing is authorised by it -- every request is
+ * It is not a credential and nothing is authorised by it. Every request is
  * still judged on the signed session token.
  */
 export function sessionUser(): string {
@@ -969,7 +969,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     );
   }
 
-  // An expired or missing session is not an error to render inside the app --
+  // An expired or missing session is not an error to render inside the app:
   // there is nothing to show without one. Drop it and go to sign-in.
   if (res.status === 401 && !path.startsWith("/auth/")) {
     setSessionToken("");
@@ -1156,7 +1156,7 @@ export const api = {
   ): Promise<string> => {
     // withAuth is NOT optional here. This is the one call in the file that
     // builds its own request instead of going through `request()`, because it
-    // wants SVG text rather than JSON -- and it silently omitted the session,
+    // wants SVG text rather than JSON, and it silently omitted the session,
     // so the topology map was the one panel that 401'd for a signed-in
     // operator while everything around it worked.
     const res = await fetch(

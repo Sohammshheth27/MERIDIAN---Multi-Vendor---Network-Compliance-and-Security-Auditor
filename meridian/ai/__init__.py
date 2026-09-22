@@ -1,4 +1,4 @@
-"""AI layer -- guardrails, tiered interpretation, approval registry."""
+"""AI layer: guardrails, tiered interpretation, approval registry."""
 from .guardrails import InjectionReport, Proposal, prescan, validate
 from .interpret import OllamaInterpreter
 from .registry import ApprovedMapping, MappingRegistry, semantic_sanity

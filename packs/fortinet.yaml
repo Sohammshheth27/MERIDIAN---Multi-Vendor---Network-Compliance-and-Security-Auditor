@@ -1,11 +1,11 @@
-# Fortinet FortiOS 7.x mapping pack -- Reader 2 (Fortinet block)
+# Fortinet FortiOS 7.x mapping pack: Reader 2 (Fortinet block)
 #
 # Source artifact: `show full-configuration` from the CLI, or
 # System -> Configuration -> Backup (plain text, NOT encrypted).
 #
 # This is a mapping pack, not code. FortiOS reuses the block reader
 # that already ships for SonicWall, so adding Fortinet is this file and nothing
-# else -- no Python, no redeploy. That claim is the whole architecture argument,
+# else. No Python, no redeploy. That claim is the whole architecture argument,
 # and this pack is the demonstration of it.
 #
 # On sourcing: the settings mapped below are FortiOS CLI syntax, taken from
@@ -39,8 +39,8 @@ supported_domains: [device, platform, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device, and it now resolves to UNKNOWN.
+# That keeps it in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
 
@@ -211,7 +211,7 @@ mappings:
 derivations:
   # FortiOS has no global telnet or http toggle. A service is reachable only by
   # appearing in an interface's `allowaccess` list, so absence from EVERY
-  # interface is the evidence that it is off -- a real observation with lines to
+  # interface is the evidence that it is off: a real observation with lines to
   # cite, not an assumption.
   - field: management.telnet.enabled
     op: path_glob_contains
@@ -229,8 +229,8 @@ derivations:
 # NOT_APPLICABLE instead of leaving them UNKNOWN, which is what stops a
 # FortiGate assessment from looking less complete than it truly is.
 not_applicable_fields:
-  # {field: reason}. The reason is published as the finding's justification --
-  # an auditor asked to accept an exclusion needs to know why, and "verified
+  # {field: reason}. The published justification IS this reason, and an
+  # auditor asked to accept an exclusion needs to know why. "Verified
   # against the setting inventory" asserts a check without stating its result.
   authentication.enable_secret: "no enable-secret concept"
   management.aux.exec_disabled: "no AUX port"

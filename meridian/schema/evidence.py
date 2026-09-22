@@ -1,4 +1,4 @@
-"""Evidence references -- the audit trail behind every observation.
+"""Evidence references, which are the audit trail behind every observation.
 
 Every FAIL and PARTIAL must carry at least one of these.
 Guardrail defence 4: the AI must return the exact substring it used, and we
@@ -28,7 +28,7 @@ class EvidenceRef(BaseModel):
         return v
 
     def anchors_in(self, source_text: str) -> bool:
-        """Guardrail defence 4 -- evidence anchoring.
+        """Guardrail defence 4 (evidence anchoring).
 
         Verify this evidence actually appears in the source. Five lines,
         enormous value: it defeats an AI that invents a quotation.

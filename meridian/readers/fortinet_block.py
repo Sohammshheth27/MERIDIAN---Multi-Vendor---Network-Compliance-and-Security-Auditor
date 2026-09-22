@@ -1,4 +1,4 @@
-"""Reader 2 -- Fortinet block format.
+"""Reader 2: Fortinet block format.
 
 Vendors: Fortinet FortiOS, SonicWall SonicOS (CLI export).
 
@@ -93,7 +93,8 @@ class BlockConfig:
         section export does not, so `administration/http-management` and
         `sonicos/administration/http-management` are the same setting. Hard-
         coding one prefix into the pack would make it fail on the other export
-        mode -- precisely the brittleness the problem statement complains about.
+        mode, and that brittleness is exactly what the problem statement
+        complains about.
 
         The fallback fires ONLY when exactly one stored path ends with the
         requested one. Two candidates means the request is genuinely ambiguous,

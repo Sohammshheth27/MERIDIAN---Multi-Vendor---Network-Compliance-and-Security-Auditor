@@ -5,7 +5,7 @@ operator: is_set
 severity: high
 tier: category
 rationale: >-
-  An ACL that exists but is bound to no interface enforces nothing -- a common and easily missed misconfiguration.
+  An ACL that exists but is bound to no interface enforces nothing. It is a common and easily missed misconfiguration.
 frameworks:
   nist_800_53: ["AC-4"]
   iso_27001_2022: ["A.5.14", "A.8.22", "A.8.23"]

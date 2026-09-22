@@ -1,7 +1,7 @@
 """Consensus between independent methods.
 
 The critical property is NOT that consensus is usually reached. It is that
-disagreement is still detectable -- a reconciler that only ever returns
+disagreement is still detectable. A reconciler that only ever returns
 CONFIRMED measures nothing while looking like it measures everything.
 """
 import pytest
@@ -61,7 +61,7 @@ def test_no_pack_mapping_is_uncorroborated_and_named_as_a_coverage_gap():
 
 
 def test_undecided_pack_does_not_count_as_contradiction():
-    """UNKNOWN is not disagreement -- the pack simply could not tell."""
+    """UNKNOWN is not disagreement: the pack simply could not tell."""
     da = _DA([_Finding("management.telnet.enabled", None, ResultState.UNKNOWN)])
     assert reconcile(da, [_uf()]).items[0].verdict == UNCORROBORATED
 
@@ -109,7 +109,7 @@ def test_hardened_config_confirms_rather_than_disputes():
 def test_consensus_found_a_real_pack_blind_spot():
     """Regression test for the gap consensus itself uncovered: the Cisco pack
     read `ip ssh server algorithm` and nothing else, so `auth md5 ... priv
-    3des` on an SNMPv3 user reported crypto.weak_ciphers = [] -- on the
+    3des` on an SNMPv3 user reported crypto.weak_ciphers = [], on the
     fixture built to demonstrate correct configuration."""
     r = assess("samples/cisco/hardened-per-cisco-guide.cfg")
     weak = [f for f in r.assessment.findings if f.field == "crypto.weak_ciphers"][0]

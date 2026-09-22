@@ -1,8 +1,8 @@
 """Version awareness: say when a device runs a release the pack was not checked on.
 
 A mapping pack is a set of regexes and paths written against real
-configurations. Syntax changes between OS releases -- a keyword is renamed, a
-statement moves under a different block -- and a pack that has never seen the
+configurations. Syntax changes between OS releases: a keyword is renamed, a
+statement moves under a different block. A pack that has never seen the
 new form does not read it. The engine then reports that setting as not
 present, which is honest about the file but can mislead about the device.
 

@@ -1,6 +1,6 @@
 """The structured-input tier.
 
-Accuracy here is a mapping problem, not a parsing problem -- the device already
+Accuracy here is a mapping problem, not a parsing problem. The device already
 parsed its own configuration. These tests pin the properties that make that
 true, and the two bugs found while building it.
 """
@@ -50,7 +50,7 @@ def test_empty_element_is_a_flag_not_a_missing_value():
 def test_repeated_elements_get_distinct_line_numbers():
     """Both syslog hosts once cited the same line, so the evidence for the
     second server pointed at the first. Evidence at the wrong line is worse
-    than none -- a reviewer checks it, sees a different value, and stops
+    than none: a reviewer checks it, sees a different value, and stops
     trusting the report."""
     d = loads(JUNOS)
     hits = d.glob("configuration/system/syslog/host/name")
@@ -117,7 +117,7 @@ def test_pack_discriminates_rather_than_agreeing_with_its_author():
 def test_explicit_permit_all_is_observed_not_reported_as_absent():
     """`<permit-all/>` is a positively observable failure. Mapping only the
     `deny-all` form made an explicitly permissive device report that no
-    default policy was configured -- and the braces pack had the same defect
+    default policy was configured, and the braces pack had the same defect
     earlier, where a hardcoded `deny` produced a false PASS."""
     weak = [f for f in assess(WEAK).assessment.findings
             if f.control_id == "MERIDIAN-CLD-004"][0]

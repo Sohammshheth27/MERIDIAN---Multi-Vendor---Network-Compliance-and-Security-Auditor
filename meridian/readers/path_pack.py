@@ -1,7 +1,7 @@
 """Apply a mapping pack to any PATH-based reader (2 and 3).
 
 The Fortinet block reader and the braces reader both produce ``path -> value``,
-so one applier covers both -- and, importantly, one PACK FORMAT covers both.
+so one applier covers both. More importantly, one PACK FORMAT covers both.
 That is what lets a SonicWall pack and a Junos pack look like siblings despite
 completely unrelated syntax.
 
@@ -31,7 +31,7 @@ from .pack import Pack, _scope_field
 def apply_path_pack(
     cfg, pack: Pack, *, assessment_id: str, sha256: str
 ) -> SecurityBaselineModel:
-    """``cfg`` is a BlockConfig or BracesConfig -- both expose get/glob."""
+    """``cfg`` is a BlockConfig or BracesConfig (both expose get/glob)."""
     sbm = SecurityBaselineModel(
         assessment_id=assessment_id, source_file=cfg.source_file, source_sha256=sha256
     )
@@ -55,7 +55,7 @@ def apply_path_pack(
             if not hits:
                 if pack.exhaustive and m.if_absent is None:
                     # The source lists every setting, so a glob matching none
-                    # of them is a dead mapping -- our blind spot, not the
+                    # of them is a dead mapping: our blind spot, not the
                     # device's absence. Leaving the field unset makes the
                     # control UNKNOWN instead of letting an operator rule on a
                     # value nobody read.
@@ -84,7 +84,7 @@ def apply_path_pack(
         # ---------- exact path, list-valued ----------------------------------
         # A list field on a repeated path must collect EVERY match. `cfg.get`
         # returns only the first, so a Junos config with two syslog servers
-        # reported one -- and MERIDIAN-LOG-002 ("at least two remote syslog
+        # reported one, and MERIDIAN-LOG-002 ("at least two remote syslog
         # servers") returned PARTIAL on a device that fully complied. The
         # wildcard branch above already collects; the exact-path branch did
         # not, so whether a correct device passed depended on whether the pack
@@ -103,7 +103,7 @@ def apply_path_pack(
         # ---------- exact path ----------------------------------------------
         hit = cfg.get(path)
         if hit is None:
-            # A field may have several mappings -- mutually exclusive spellings
+            # A field may have several mappings: mutually exclusive spellings
             # of one setting, e.g. Junos `<deny-all/>` vs `<permit-all/>`.
             # Exactly one can match and the others must not erase it. The same
             # defect existed in indented_pack.py and was fixed there first; a
@@ -119,8 +119,8 @@ def apply_path_pack(
                 # As above: on a source that lists everything, a key that is
                 # absent is a key we named wrongly. `uuidIpsObjEnable` occurs
                 # in none of the 92,635 records, so we have no evidence about
-                # IPS at all -- and reporting FAIL there asserts a violation
-                # from silence.
+                # IPS at all. Reporting FAIL there asserts a violation from
+                # silence.
                 pass
             else:
                 sbm.set(field, Observation.not_observed(field_path=field))
@@ -173,7 +173,7 @@ def _obs(val: Any, spec: dict, target: str, cfg, ln: int, raw: str, field: str):
     if spec.get("const") is not None:
         return Observation.observed(spec["const"], [cfg.evidence(ln, raw)], field_path=field)
     if spec.get("invert"):
-        # `set admin-ssh-v1 disable` -- presence of a disabling token means the
+        # In `set admin-ssh-v1 disable`, the disabling token means the
         # feature is OFF, and that is an OBSERVED false, not an absence.
         return Observation.observed(
             normalise(val, "bool") is False, [cfg.evidence(ln, raw)], field_path=field)
@@ -181,8 +181,8 @@ def _obs(val: Any, spec: dict, target: str, cfg, ln: int, raw: str, field: str):
         # An EMPTY value is not True. Junos writes valueless flags (`telnet;`)
         # where presence means enabled, but a key=value export writes
         # `syslogServerName=` to mean NOT CONFIGURED. Coercing that to True
-        # produced PASS on an absent banner and an absent syslog collector --
-        # a false PASS manufactured from an empty string.
+        # produced PASS on an absent banner and an absent syslog collector.
+        # That PASS was manufactured from an empty string.
         if spec.get("empty_is_true"):
             return Observation.observed(True, [cfg.evidence(ln, raw)], field_path=field)
         return Observation.not_observed(field_path=field)
@@ -214,14 +214,14 @@ def _tokens(val) -> list[str]:
 def derive_path_weak_tokens(cfg, params: dict):
     """Values that FAIL a "strong" pattern, across one or more settings.
 
-    For algorithm lists, where the benchmark defines weakness by exclusion --
+    For algorithm lists, where the benchmark defines weakness by exclusion:
     CIS Junos 6.10.1.6 counts any cipher not matching `aes|3des` as weak, and
     6.10.1.9 any key exchange not matching `sha2|ecdh|curve`. Copying the
     whole list into a "weak" field (what the Junos pack used to do) failed a
     device configured with only strong algorithms.
 
     Params:
-        rules -- [{path, strong}] ; `strong` is a regex a good value matches.
+        rules: [{path, strong}] ; `strong` is a regex a good value matches.
     With none of the paths present the result is UNEVALUATED: the default set
     depends on the release, so absence proves nothing in either direction.
     """
@@ -249,11 +249,11 @@ def derive_path_token_any(cfg, params: dict):
     is the token, path `.../auxiliary`) and `auxiliary { disable; }` (a flag
     whose PATH ends in the token). A single path mapping reads one form and
     reports the other as absent. False, with evidence, when a setting is there
-    without the token; None when none of them is present -- an absence the
-    control's operator then judges, as for any other mapping.
+    without the token; None when none of them is present. The control's
+    operator then judges that absence, as for any other mapping.
 
     Params:
-        paths -- exact paths or globs (required); token -- the word to find
+        paths: exact paths or globs (required); token: the word to find
     """
     token = str(params.get("token", "")).lower()
     hits = []
@@ -273,7 +273,7 @@ def derive_path_present(cfg, params: dict):
     """True, with evidence, when anything matches `glob`; otherwise False
     WITHOUT evidence, which the applier records as a platform default.
 
-    For a service that is off unless configured -- Junos REST exists only
+    For a service that is off unless configured: Junos REST exists only
     under `system services rest`. The default can then pass a control but
     never fail one (an assumption cannot carry a FAIL).
     """
@@ -323,7 +323,7 @@ def derive_junos_ssh_enabled(cfg, params: dict):
 
 
 def derive_sonicos_admin_ports(cfg, params: dict):
-    """SonicWall management exposure -- HTTP/HTTPS/SSH bound to a WAN zone."""
+    """SonicWall management exposure (HTTP/HTTPS/SSH bound to a WAN zone)."""
     hits, ev = [], []
     for p, val, ln, raw in cfg.glob("administration/*"):
         key = p.split("/")[-1]
@@ -338,7 +338,7 @@ def derive_sonicos_weak_ssh_crypto(cfg, params: dict):
 
     The value is a JSON policy listing every kex/cipher/MAC with 1=enabled.
     A keyword match on the key name would say "SSH crypto is configured" and
-    miss the point entirely -- the finding is WHICH algorithms are permitted.
+    miss the point entirely. The finding is WHICH algorithms are permitted.
     SHA-1 key exchange and CBC ciphers are the ones that matter.
     """
     import json as _json
@@ -371,7 +371,7 @@ def derive_sonicos_snmp_version(cfg, params: dict):
     There is no `snmpVersion` key. v3-only is expressed as
     `Snmp3_Mand_Required=on`; if that is off and a GetCommunity string exists,
     v1/v2c is accepted. Mapping the raw flag to snmp.version yielded "off",
-    which no forbidden-version list matches -- so a device accepting v2c passed.
+    which no forbidden-version list matches, so a device accepting v2c passed.
     """
     mand = cfg.get("Snmp3_Mand_Required")
     comm = cfg.get("snmp_GetCommunity")
@@ -390,7 +390,7 @@ def derive_path_glob_contains(cfg, params: dict):
 
     Deliberately GENERIC rather than vendor-specific. Several block/braces
     platforms express "is this service reachable" as a whitespace-separated
-    allow-list on each interface rather than as a global toggle -- FortiOS
+    allow-list on each interface rather than as a global toggle. FortiOS writes
     `set allowaccess ping https ssh`, and the same shape appears elsewhere.
     Writing `fortios_telnet_enabled` would have meant new Python for the next
     vendor with the same idiom; this one is reusable from YAML alone, which is
@@ -416,7 +416,7 @@ def derive_path_glob_contains(cfg, params: dict):
             present = True
             evidence.append(cfg.evidence(ln, raw))
     if not present:
-        # cite every allow-list we checked -- that is what makes "off" evidenced
+        # cite every allow-list we checked. That is what makes "off" evidenced
         evidence = [cfg.evidence(ln, raw) for _p, _v, ln, raw in hits]
     return present, evidence
 
@@ -426,8 +426,8 @@ def derive_path_non_empty(cfg, params: dict):
 
     Vendors distinguish "not configured" from "absent" by writing the key with
     an empty value. A blind bool cast cannot express that: to_bool("") is None,
-    which the engine correctly reports as UNKNOWN -- we read the key but could
-    not interpret it.
+    which the engine correctly reports as UNKNOWN (we read the key but could
+    not interpret it).
 
     That is the wrong answer here. `syslogServerName=` on a real SonicWall is
     not an unreadable setting; it is the device stating that NO remote syslog
@@ -436,8 +436,8 @@ def derive_path_non_empty(cfg, params: dict):
     looks the same as one we failed to parse.
 
     Params:
-        path  -- the key to read (required)
-        blank -- extra values that count as empty, e.g. ["0.0.0.0", "none"]
+        path:  the key to read (required)
+        blank: extra values that count as empty, e.g. ["0.0.0.0", "none"]
     """
     key = params.get("path")
     if not key:
@@ -461,12 +461,12 @@ def derive_path_any_true(cfg, params: dict):
     TACACS, and a device may run one without the others. Expressed as separate
     mappings onto one boolean field they conflict: whichever is applied last
     wins, so a box running LDAP with RADIUS switched off reported
-    `aaa_enabled = false` -- the opposite of the truth -- purely on pack order.
+    `aaa_enabled = false` (the opposite of the truth) purely on pack order.
 
     Every matching key is cited, so the evidence shows which source answered.
 
     Params:
-        paths -- key names or globs to test (required)
+        paths: key names or globs to test (required)
     """
     paths = params.get("paths") or []
     if isinstance(paths, str):
@@ -483,7 +483,7 @@ def derive_path_any_true(cfg, params: dict):
                 result = True
                 evidence.append(cfg.evidence(ln, raw))
     if not seen_any:
-        # None of the sources is present. That is not "false" -- it is a
+        # None of the sources is present, which is not "false" but a
         # question this configuration does not answer.
         return None, []
     return result, evidence

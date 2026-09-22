@@ -1,7 +1,7 @@
 """Live collection: pull a running configuration over SSH, then assess it.
 
 The file-upload path stays the primary one. This exists for the operator who
-would rather point MERIDIAN at a device than export a file by hand -- and it is
+would rather point MERIDIAN at a device than export a file by hand. It is
 held to a stricter standard than upload, because it touches a live device.
 
 What it guarantees
@@ -11,7 +11,7 @@ What it guarantees
   A collector that could be talked into `configure terminal` is a remote
   administration tool, not an auditor.
 * CREDENTIALS ARE NOT KEPT. They are used for one session and dropped. Any
-  error text is scrubbed of them before it reaches a log or a response --
+  error text is scrubbed of them before it reaches a log or a response:
   some SSH libraries echo the failing login back in the exception.
 * THE FINGERPRINT DECIDES, NOT THE USER. The requested platform picks the SSH
   driver. Which mapping pack applies is still decided by fingerprinting what
@@ -182,8 +182,8 @@ def collect(host: str, platform: str, username: str, password: str, *,
 
 
 def write_collected(c: Collected, dest_dir: Path) -> Path:
-    """Write the configuration exactly as received -- no header, because a
-    comment line in front of XML or a Junos block changes how it parses."""
+    """Write the configuration exactly as received (no header, because a
+    comment line in front of XML or a Junos block changes how it parses)."""
     safe = re.sub(r"[^A-Za-z0-9.\-]", "_", c.host)
     # One folder per collection, so the file keeps a clean name (the host).
     folder = Path(dest_dir) / uuid.uuid4().hex

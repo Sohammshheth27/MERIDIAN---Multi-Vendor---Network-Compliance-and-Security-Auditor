@@ -106,7 +106,7 @@ def test_a_query_for_any_is_not_matched_by_a_specific_rule():
     """Asking 'can an arbitrary host reach this' is answered only by rules
     whose own side accepts anything. Treating a query of `any` as matching
     every rule let a deny scoped to a malicious-IP list appear to block all
-    inbound traffic -- reporting a wide-open firewall as fully protected."""
+    inbound traffic, reporting a wide-open firewall as fully protected."""
     assert not _addr_in("10.0.0.5", "any")
     assert _addr_in("any", "10.0.0.5")
     assert _addr_in("10.0.0.0/8", "10.1.2.3")

@@ -2,7 +2,7 @@
 
 One rulebook, four labels. Our *controls* are ours; what each
 framework calls the same requirement is a label attached to it. These types
-model the labels -- the imported catalogue -- not our rules.
+model the labels (the imported catalogue), not our rules.
 
 Licensing is enforced in the type system rather than by convention:
 every entry declares whether its text may be redistributed. NIST and DISA are
@@ -34,8 +34,8 @@ class Framework(str, Enum):
 class License(str, Enum):
     """Drives what may reach a report, a log, or the RAG index."""
 
-    PUBLIC_DOMAIN = "public_domain"   # NIST, DISA -- embed full text
-    IDENTIFIER_ONLY = "identifier_only"  # CIS, ISO, PCI DSS -- numbers, never prose
+    PUBLIC_DOMAIN = "public_domain"   # NIST, DISA: embed full text
+    IDENTIFIER_ONLY = "identifier_only"  # CIS, ISO, PCI DSS. Numbers, never prose
 
     @property
     def may_embed_text(self) -> bool:
@@ -51,8 +51,8 @@ class Automatability(str, Enum):
     flattering one.
     """
 
-    CONFIG = "config"        # decidable from the config -- automatable
-    PROCEDURAL = "procedural"  # policy/training/physical -- MANUAL_REVIEW
+    CONFIG = "config"        # decidable from the config (automatable)
+    PROCEDURAL = "procedural"  # policy/training/physical: MANUAL_REVIEW
     UNKNOWN = "unknown"        # not yet triaged
 
 
@@ -74,7 +74,7 @@ class CatalogEntry(BaseModel):
     license: License = License.PUBLIC_DOMAIN
     automatable: Automatability = Automatability.UNKNOWN
 
-    # provenance -- every assessment must record
+    # provenance. Every assessment must record
     # exactly which catalogue version produced a finding
     source_document: str = Field(description="Benchmark/STIG/catalog title + version")
     source_file: str = Field(description="File on disk this was parsed from")
@@ -89,7 +89,7 @@ class CatalogEntry(BaseModel):
     def citation(self) -> str:
         """A report-safe citation string.
 
-        Never includes copyrighted prose -- for IDENTIFIER_ONLY entries this is
+        Never includes copyrighted prose. For IDENTIFIER_ONLY entries this is
         the document title plus the number, which is all the licence permits.
         """
         if self.license is License.IDENTIFIER_ONLY:

@@ -10,8 +10,8 @@ rationale: >-
 frameworks:
   nist_800_53: [IA-5.1]
   iso_27001_2022: [A.5.16, A.5.17]
-  # STIG Vuln IDs are per-platform. Derived from the downloaded
-  # XCCDF files, not recalled -- a control may map to several.
+  # STIG Vuln IDs are per-platform. The source of truth is the
+  # downloaded XCCDF file, not memory. Several ids per control is fine.
   # CIS recommendation numbers live in the vendor pack.
 
 remediation:

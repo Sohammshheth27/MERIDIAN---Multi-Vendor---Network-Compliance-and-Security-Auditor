@@ -10,7 +10,7 @@ ignored:
   * NO EVALUATION ORDER. Windows Firewall does not match top-to-bottom; a
     block rule wins over an allow rule wherever it sits. `order` is therefore
     left at 0 for every rule and the graph is marked unordered, so shadow
-    analysis -- which assumes first-match-wins -- does not run and cannot
+    analysis (which assumes first-match-wins) does not run and cannot
     invent a finding that the platform's semantics make meaningless.
   * PROFILE IS THE ZONE. The same rule is harmless on Domain and dangerous on
     Public, so the profile is carried as the zone and reachability can be

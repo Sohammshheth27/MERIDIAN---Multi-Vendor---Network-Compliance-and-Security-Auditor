@@ -1,4 +1,4 @@
-"""MITRE ATLAS + NIST AI RMF -- the governance knowledge base for OUR AI.
+"""MITRE ATLAS + NIST AI RMF, the governance knowledge base for OUR AI.
 
 These frameworks apply to the AI *we* run, not to the devices we
 audit, and they serve three concrete purposes:
@@ -10,7 +10,7 @@ audit, and they serve three concrete purposes:
   3. Structure the guardrail narrative around the AI RMF's four functions
      (GOVERN / MAP / MEASURE / MANAGE).
 
-WHY THIS IS A SEPARATE INDEX -- read before wiring it anywhere
+WHY THIS IS A SEPARATE INDEX (read before wiring it anywhere)
 --------------------------------------------------------------
 This content must NEVER enter the parser RAG corpus (knowledge/examples.jsonl).
 
@@ -19,12 +19,12 @@ from Security RAG ("what does this property mean?"). ATLAS belongs to neither.
 It is a catalogue of *attack descriptions*. Retrieval works by similarity, so
 putting attack text into the corpus that classifies config lines means a line
 mentioning "inject" or "prompt" could retrieve an attack description as a
-"similar example" -- corpus poisoning by our own hand, and precisely the
+"similar example". That is corpus poisoning by our own hand, and precisely the
 failure mode the registry guardrails exist to prevent.
 
 Retrieval also does not prevent injection. Prompt injection is stopped by the
-structural defences in 10.1 -- single-line scope, data/instruction separation,
-the field enum as a decoder constraint, evidence anchoring, type validation --
+structural defences in 10.1 (single-line scope, data/instruction separation,
+the field enum as a decoder constraint, evidence anchoring, type validation),
 all of which hold whether or not the model has ever read about ATLAS. What this
 module adds is *detection signatures* and *provable coverage*, which is the part
 retrieval genuinely can contribute.
@@ -137,11 +137,11 @@ def load_atlas(stix_path: str | Path) -> AiSecurityKB:
 
 
 # ---------------------------------------------------------------------------
-# Injection pre-scan signatures -- guardrail defence 6.
+# Injection pre-scan signatures for guardrail defence 6.
 #
 # A configuration file is attacker-influenced data. An interface description
 # can carry an instruction aimed at our model. We scan for that, flag the file,
-# AND report it to the customer as a finding -- an injection attempt in a
+# AND report it to the customer as a finding. An injection attempt in a
 # production config is itself worth knowing about.
 #
 # Each signature is labelled with the ATLAS technique it corresponds to, which
@@ -176,7 +176,7 @@ class InjectionHit(BaseModel):
 
 
 def scan_for_injection(text: str) -> list[InjectionHit]:
-    """Guardrail defence 6. Deterministic -- no AI involved in detecting attacks on the AI."""
+    """Guardrail defence 6. Deterministic: no AI involved in detecting attacks on the AI."""
     hits: list[InjectionHit] = []
     for lineno, line in enumerate(text.splitlines(), start=1):
         for rx, tech, label in _COMPILED:

@@ -7,7 +7,7 @@ that cost each time, and paid it again on the next visit.
 
 Caching is easy; caching honestly is the part worth testing. A cache nobody can
 invalidate would keep answering from yesterday's catalogue after a rebuild and
-never say so -- in a compliance tool that is a wrong answer delivered with
+never say so, and in a compliance tool that is a wrong answer delivered with
 confidence. So the stamp, not just the hit, is what these tests hold.
 
 The helpers are exercised directly: driving them through the routes would add
@@ -64,7 +64,7 @@ def test_a_same_size_rewrite_inside_one_clock_tick_is_not_detected(tmp_path):
 
     Size plus mtime cannot see a same-length rewrite that lands within the
     filesystem's timestamp resolution. Nothing the engine stamps changes that
-    fast, so this is accepted -- but it is written down here, and in _stamp,
+    fast, so this is accepted, but it is written down here, and in _stamp,
     rather than discovered later by someone debugging a stale catalogue.
     """
     src = tmp_path / "source.yaml"
@@ -128,5 +128,5 @@ def test_the_real_stamps_resolve(tmp_path):
 
     assert Path("rules").is_dir(), "rules/ is stamped by /attack-coverage"
     # The catalogue cache and the ATT&CK bundle are both gitignored artefacts,
-    # so their absence is legitimate -- the stamp only has to survive it.
+    # so their absence is legitimate. The stamp only has to survive it.
     assert isinstance(_stamp(CACHE_PATH, Path(BUNDLE)), tuple)

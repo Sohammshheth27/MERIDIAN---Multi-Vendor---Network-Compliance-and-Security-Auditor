@@ -1,4 +1,4 @@
-"""Policy layer -- controls, operators, evaluation. Knows no vendor syntax."""
+"""Policy layer: controls, operators, evaluation. Knows no vendor syntax."""
 from .control import Control, Finding, FrameworkLabels
 from .evaluate import Assessment, evaluate_all, evaluate_control
 from .operators import OPERATORS, evaluate

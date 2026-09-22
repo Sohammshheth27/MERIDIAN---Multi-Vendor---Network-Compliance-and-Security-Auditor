@@ -2,8 +2,8 @@
 
 Why this exists: STIG rules are the strongest thing we retrieve. Their text
 runs to a 2,174-character median and contains the literal vendor command, so
-BM25 ranks them correctly almost every time. NIST is the weakest -- a
-174-character median of abstract prose with no command to match -- and that is
+BM25 ranks them correctly almost every time. NIST is the weakest: a
+174-character median of abstract prose with no command to match. That is
 where every measured mapping error landed (`snmp.communities` retrieved
 `PM-15 Security and Privacy Groups`, which is nonsense).
 
@@ -24,7 +24,7 @@ from pathlib import Path
 
 # "AC-17 (2)" -> "AC-17.2"; "CM-6 b" -> "CM-6". Our NIST catalogue writes
 # enhancements in dot form, and a mapping that does not match the catalogue's
-# own spelling silently produces zero hits -- the same trap that held ISO
+# own spelling silently produces zero hits. This is the trap that held ISO
 # coverage at 14% until both sides were canonicalised.
 _ENH = re.compile(r"^([A-Z]{2})-(\d+)\s*\((\d+)\)")
 _BASE = re.compile(r"^([A-Z]{2})-(\d+)")

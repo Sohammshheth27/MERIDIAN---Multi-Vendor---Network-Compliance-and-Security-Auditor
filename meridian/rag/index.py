@@ -9,8 +9,8 @@ Neither half is sufficient on its own here, and the failure modes are opposite:
     containing the word "management" above the one that matters.
 
 Reciprocal Rank Fusion is used rather than a weighted score blend because the
-two scores are not on comparable scales -- BM25 is unbounded and corpus
-dependent, cosine is [-1,1] -- and every attempt to normalise them into each
+two scores are not on comparable scales: BM25 is unbounded and corpus
+dependent, while cosine is [-1,1]. Every attempt to normalise them into each
 other reintroduces the tuning constant we were trying to avoid. RRF only reads
 ranks, so it needs no calibration and cannot be broken by an outlier score.
 
@@ -66,7 +66,7 @@ class HybridIndex:
 
         Embedding every document is not automatically right. Measured on this
         machine, nomic-embed-text on CPU runs at 1.4 docs/sec on real 2,000-
-        character framework text -- two hours for the full 9,838-document
+        character framework text. Two hours for the full 9,838-document
         corpus. (An earlier 12/sec figure was measured on 45-character toy
         strings and was wrong by 16x.)
 

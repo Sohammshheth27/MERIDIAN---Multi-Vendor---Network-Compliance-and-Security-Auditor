@@ -1,4 +1,4 @@
-"""Model bake-off -- decide by measurement, not reputation.
+"""Model bake-off. Decide by measurement, not reputation.
 
 Compares local models on OUR task, not on a public benchmark: read one config
 line from a vendor the system has never parsed, and name the SBM field it sets.
@@ -12,7 +12,7 @@ METHOD (this is the part that makes the numbers mean something)
   field enum, and temperature 0. The only variable is the model.
 * The gold set includes lines with NO correct field. Getting those right means
   ABSTAINING. A model that never abstains scores well on accuracy and is
-  dangerous, so abstention is scored separately -- the false-PASS rate is
+  dangerous, so abstention is scored separately. The false-PASS rate is
   exactly this failure.
 * Each model is warmed with one throwaway call before timing, so we measure
   steady-state latency rather than model load.

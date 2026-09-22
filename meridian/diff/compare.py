@@ -1,7 +1,7 @@
 """Compare two assessments of the same device over time.
 
 A one-shot audit answers "is this device compliant". Every commercial product
-in this space sells the other question -- "what changed since Tuesday" -- and
+in this space sells the other question, "what changed since Tuesday", and
 that is the one an operations team actually acts on.
 
 THE TRAP THIS AVOIDS, and it is the whole reason this module is careful:
@@ -11,7 +11,7 @@ THE TRAP THIS AVOIDS, and it is the whole reason this module is careful:
 If a pack gained a mapping between the two runs, or a control was corrected,
 the findings move while the configuration is untouched. Reporting that as
 "3 new violations" would be a lie the operator cannot detect, and it would
-happen constantly here -- this project changed the Cisco pack twice and a
+happen constantly here: this project changed the Cisco pack twice and a
 control's operator once in a single day.
 
 So a comparison records the ANALYSIS VERSION on both sides and separates:
@@ -48,8 +48,8 @@ def analysis_fingerprint(packs_dir="packs", rules_dir="rules") -> str:
     for d in (resolve_packs_dir(packs_dir), Path(rules_dir)):
         for f in sorted(d.rglob("*.yaml")):
             if f.name.endswith(".learned.yaml"):
-                # Learned mappings DO change outcomes, so they are included --
-                # an approval is exactly the kind of analysis change an
+                # Learned mappings DO change outcomes, so they are included.
+                # An approval is exactly the kind of analysis change an
                 # operator needs to see attributed.
                 pass
             h.update(f.name.encode())
@@ -93,7 +93,7 @@ def device_identifiers(identity) -> list:
     """EVERY identifier a device exposes, strongest first.
 
     Not one key. Two exports of a single appliance frequently expose different
-    identifiers -- the sanitised SonicWall export in this repo carries the same
+    identifiers. The sanitised SonicWall export in this repo carries the same
     hostname as the original but a zeroed serial, so keying on "serial, else
     hostname" gave them different keys and the change history between them was
     refused.
@@ -184,7 +184,7 @@ def _direction(before: str, after: str) -> str:
 
     UNKNOWN -> PASS is NOT an improvement. The device may be unchanged and our
     coverage simply grew, so calling it a fix would credit the tool for work
-    the operator did not do -- and hide the case where coverage grew and
+    the operator did not do, and hide the case where coverage grew and
     revealed a genuine failure.
     """
     if before in ("UNKNOWN", "ERROR", "MANUAL_REVIEW") or \

@@ -2,7 +2,7 @@
 
 The React console calls the engine as `/api/<route>`; in development Vite
 proxies that prefix away. If the engine did not answer the prefix too, every
-page would work on the developer's machine and fail everywhere else -- the
+page would work on the developer's machine and fail everywhere else, the
 worst kind of bug, because the development setup hides it. So the prefix belongs to
 the engine, and these tests keep it there.
 

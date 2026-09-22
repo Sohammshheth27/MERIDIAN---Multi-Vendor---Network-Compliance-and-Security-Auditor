@@ -1,4 +1,4 @@
-/* MERIDIAN console — visual direction.
+/* Visual direction for the MERIDIAN console.
  *
  * The direction is written for a dashboard rather than a marketing page: the
  * page map is navigation → dashboard → footer, and the register is
@@ -6,7 +6,7 @@
  *
  * The rules it imposes, followed here:
  *   LIQUID GLASSMORPHISM.  Panels are translucent over a full-bleed gradient,
- *     blurred and saturated, with a bright inner top edge -- the highlight is
+ *     blurred and saturated, with a bright inner top edge. The highlight is
  *     what makes glass read as glass rather than as a grey box.
  *   --glass IS THE SYSTEM.  One translucency token layered at four strengths,
  *     instead of a palette of opaque greys.
@@ -47,7 +47,7 @@
 
   --label:#f2f5fa;
   --label-2:rgba(226,234,248,.66);   /* composites to ~6.6:1 on glass */
-  /* .40 composited to 3.28:1 over the glass panel -- under AA, and this token
+  /* .40 composited to 3.28:1 over the glass panel, under AA, and this token
      carries every uppercase micro-label and table header at 10-11px. Glass is
      allowed to soften a surface; it is not allowed to soften a number someone
      has to read off a low-contrast display. Measured, not guessed: see
@@ -61,7 +61,7 @@
   --unknown:#8a93a6; --na:#6b7488;
   --crit:#ff7a70; --high:var(--red); --med:var(--orange); --low:var(--unknown);
 
-  /* Luxury radii -- the direction is tagged "luxury"; corners are generous. */
+  /* Luxury radii. The direction is tagged "luxury"; corners are generous. */
   --r-lg:24px; --r:18px; --r-sm:12px; --r-xs:8px;
 
   --shadow-1:0 2px 10px rgba(0,0,0,.28);
@@ -363,7 +363,7 @@ main { max-width:1360px; margin:0 auto; padding:2.2rem 1.4rem 5rem; }
 .seg.FAIL { background:linear-gradient(180deg,rgba(255,95,87,.8),rgba(255,95,87,.56)); }
 .seg.PARTIAL { background:linear-gradient(180deg,rgba(255,179,64,.72),rgba(255,179,64,.5)); }
 .seg.UNKNOWN { background:rgba(138,147,166,.44); }
-/* N/A is hatched -- it is the one band that is neither a gap nor a result. */
+/* N/A is hatched: it is the one band that is neither a gap nor a result. */
 .seg.NOT_APPLICABLE {
   background:repeating-linear-gradient(-45deg,
     rgba(107,116,136,.40) 0 5px, rgba(107,116,136,.16) 5px 10px);

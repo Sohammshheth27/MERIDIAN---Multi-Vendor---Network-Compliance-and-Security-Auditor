@@ -46,7 +46,7 @@ def test_history_and_scoped_report_over_the_api(tmp_path, monkeypatch):
     cmp = importlib.import_module("meridian.diff.compare")
 
     # `save` and `history` bind their store as a default argument, so the
-    # module variable alone is not enough -- redirect both BEFORE any call,
+    # module variable alone is not enough: redirect both BEFORE any call,
     # or the test reads (and writes) the real change history.
     store = tmp_path / "history"
     monkeypatch.setattr(cmp, "STORE", store)

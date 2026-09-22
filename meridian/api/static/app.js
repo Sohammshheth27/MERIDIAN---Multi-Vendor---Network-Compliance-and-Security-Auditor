@@ -68,7 +68,7 @@ async function api(path, opts) {
 
     // Rehydrate. The server holds the session's assessments, so a page reload
     // should not present an empty Results tab while the status line says four
-    // devices were assessed -- that reads as data loss and is exactly the kind
+    // devices were assessed. That reads as data loss and is exactly the kind
     // of "absence shown as a result" this project keeps having to design out.
     const prior = await api('/assessments');
     if (prior.length) {
@@ -125,7 +125,7 @@ async function openAssessment(id, opts = {}) {
   state.assessment = await api(`/assessment/${id}`);
   state.findings = state.assessment.findings;
   // Open on what can be ACTED ON. The wall of UNKNOWN is honest and stays one
-  // click away, but a reviewer opening a device wants the failures first --
+  // click away, but a reviewer opening a device wants the failures first:
   // 39 undecided rows above 12 failures buries the only actionable content.
   const hasFail = state.findings.some(f => f.state === 'FAIL');
   state.filter = hasFail ? 'FAIL' : null;
@@ -143,7 +143,7 @@ function renderResults() {
 
   const kv = (k, v, none) =>
     `<div><div class="k">${k}</div><div class="v${none ? ' none' : ''}">${esc(v)}</div></div>`;
-  // A serial the config does not state stays "not stated" — never a placeholder.
+  // A serial the config does not state stays "not stated", never a placeholder.
   $('#deviceBar').innerHTML =
     kv('device', i.hostname || i.source_file) +
     kv('vendor', i.vendor) + kv('platform', i.platform) +
@@ -157,7 +157,7 @@ function renderResults() {
   const risk = a.risk_worst || 'NONE';
   const riskCls = { CRITICAL: 'crit', HIGH: 'fail', MEDIUM: 'warn' }[risk] || '';
   // Score and coverage are NOT repeated here. They live in the summary figure
-  // above, drawn as one nested object -- restating them as two independent
+  // above, drawn as one nested object. Restating them as two independent
   // cards is what lets someone quote "45.5% compliant" with the coverage
   // cropped off. These cards carry what the figure cannot: counts and verdicts.
   $('#scoreCards').innerHTML = `
@@ -230,8 +230,8 @@ function renderSummary(a, c) {
   const decided = c.controls_decided, total = c.controls_total;
   /* The blue arc is NESTED inside the grey one, not drawn over the same scale.
    * score_pct is a percentage of the DECIDED subset; plotting it against the
-   * full circle would draw 45% compliance as a longer arc than 27% coverage --
-   * a picture saying we passed more than we assessed. The blue arc is
+   * full circle would draw 45% compliance as a longer arc than 27% coverage.
+   * That is a picture saying we passed more than we assessed. The blue arc is
    * passed/total, so grey is always at least as long as blue, and the white
    * remainder is honestly the part of the device we could not read. */
   const passFrac = total ? (a.counts.PASS || 0) / total : 0;
@@ -391,8 +391,8 @@ async function loadRemediation() {
   $('#remEmpty').hidden = true; $('#remBody').hidden = false;
   const p = await api(`/assessment/${id}/remediation`);
   $('#remScript').textContent = p.script || '(no remediation available)';
-  // Steps that would sever the only management path are shown SEPARATELY --
-  // they are never part of the runnable script.
+  // Steps that would sever the only management path are shown SEPARATELY.
+  // They are never part of the runnable script.
   $('#remDeferred').innerHTML = p.deferred.length ? `<div class="warnbox">
       <h4>Held back — would cut your management path</h4>
       ${p.deferred.map(s => `<div><strong>${esc(s.control_id)}</strong> ${esc(s.title)}<br>

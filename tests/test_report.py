@@ -7,7 +7,7 @@ session, it gets emailed, and nobody re-derives it.
 So this file asserts three things, in order of importance:
 
   1. EVERY figure in the report equals what the engine currently reports. Not
-     a sample -- the score, the coverage, all seven state counts, and the
+     a sample: the score, the coverage, all seven state counts, and the
      record accounting.
   2. EVERY control appears. All failures, all exclusions, all undecided. A
      report that silently drops the undecided controls reads as far more
@@ -206,7 +206,7 @@ def test_an_unassessable_file_produces_a_refusal_not_a_score(tmp_path):
     """A file we could not read must never yield a compliance figure.
 
     Presenting one would require assuming facts about a device that could not
-    be parsed -- which is the failure this whole product exists to avoid.
+    be parsed, which is the failure this whole product exists to avoid.
     """
     from meridian.pipeline import DeviceAssessment, DeviceIdentity
 
@@ -225,8 +225,8 @@ def test_an_unassessable_file_produces_a_refusal_not_a_score(tmp_path):
 # Locating a finding in the configuration.
 #
 # A finding an administrator cannot find is a finding they cannot fix. These
-# assert the position is not merely PRESENT but CORRECT -- read back from the
-# file itself -- because a confidently wrong line number is worse than none.
+# assert the position is not merely PRESENT but CORRECT, read back from the
+# file itself, because a confidently wrong line number is worse than none.
 # ---------------------------------------------------------------------------
 
 @asa_only
@@ -282,7 +282,7 @@ def test_derived_evidence_carries_the_line_of_the_rule_it_describes():
 
     The reason is derived rather than quoted, but the rule it concerns sits on
     a real line. Without carrying it through, this finding reached the report
-    with no position at all -- naming a problem rule and giving no way to find
+    with no position at all, naming a problem rule and giving no way to find
     it.
     """
     import os
@@ -328,7 +328,7 @@ def test_no_evidence_anywhere_lacks_a_locator():
 def test_setting_positions_are_real_file_positions_not_object_indices():
     """`policyName_1` is at setting 37,290, not setting 1.
 
-    The graph builder passed the OBJECT's index -- the 1 in `policyName_1` --
+    The graph builder passed the OBJECT's index, the 1 in `policyName_1`,
     as though it were the setting's position in the export. Setting 1 is
     `checksumVersion`. Every graph-derived finding on this platform therefore
     cited a position holding an unrelated value, and an administrator who
@@ -371,8 +371,8 @@ def test_setting_positions_are_real_file_positions_not_object_indices():
 def test_a_single_line_export_shows_the_setting_number_not_a_column_of_ones(sw):
     """A column reading 1 for every finding distinguishes nothing.
 
-    Line 1 is where all 92,636 settings genuinely are, so it is accurate --
-    and useless. The setting number is unique per finding and can actually be
+    Line 1 is where all 92,636 settings genuinely are, so it is accurate and
+    useless. The setting number is unique per finding and can actually be
     retrieved, so that is what the report gives.
     """
     _da, html = sw
@@ -395,7 +395,7 @@ def test_the_report_states_how_to_retrieve_a_cited_setting(sw):
     """
     _da, html = sw
     # The ampersand is HTML-escaped in the rendered command, so unescape
-    # before matching -- otherwise this tests the encoding, not the content.
+    # before matching. Otherwise this tests the encoding, not the content.
     import html as html_mod
     flat = _flat(html_mod.unescape(html))
     assert "one physical line" in flat
@@ -428,7 +428,7 @@ def test_the_report_states_wlan_exposure_as_latent(sw):
     _da, html = sw
     flat = _flat(html)
     assert "Blast radius from untrusted zones" in flat
-    assert "latent -- nothing is in the zone today" in flat
+    assert "latent: nothing is in the zone today" in flat
 
 
 @sw_only

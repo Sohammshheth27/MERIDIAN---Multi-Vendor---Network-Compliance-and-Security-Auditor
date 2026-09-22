@@ -8,7 +8,7 @@ import { api } from '../lib/api';
 import { useApi } from '../lib/useApi';
 
 /**
- * Training -- where an administrator teaches the engine a format it does not
+ * Training, where an administrator teaches the engine a format it does not
  * know. A top-level page rather than a sub-tab, because the problem statement
  * makes this loop the heart of the product.
  */

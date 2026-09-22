@@ -1,6 +1,6 @@
 # Framework-native thresholds, per platform.
 #
-# MERIDIAN applies ONE threshold per control -- its own. Several frameworks ask
+# MERIDIAN applies ONE threshold per control: its own. Several frameworks ask
 # for the same setting with a different value (DISA STIG wants a 5-minute idle
 # timeout on IOS-XE where MERIDIAN accepts 10). A framework's own score should be
 # judged by that framework's rule, so here each override re-scores a DECIDED

@@ -57,7 +57,7 @@ export default function Header({ searchQuery = '', onSearchChange }: HeaderProps
             <span className="text-xs font-bold leading-none text-[var(--color-ink-navy)] group-hover:text-[var(--color-signal-blue)] transition-colors">
               {who}
             </span>
-            {/* Not the role -- the console has exactly one -- but whether a
+            {/* Not the role, since the console has exactly one, but whether a
                 session was actually presented. With MERIDIAN_CONSOLE_AUTH=0 the
                 name above is a default, and saying "signed in" would be a
                 claim nobody made. */}

@@ -7,8 +7,8 @@ Only settings whose encoding is self-evident are judged:
     on / off switches        PFS, anti-replay, management over the tunnel
     plain integers           SA lifetimes, in seconds
 
-The cryptographic ALGORITHMS are not. SonicOS stores them as private codes --
-`ipsecPh1CryptAlg=250`, `ipsecP1DHGrp=3` -- which are not the IANA IKE
+The cryptographic ALGORITHMS are not. SonicOS stores them as private codes:
+`ipsecPh1CryptAlg=250`, `ipsecP1DHGrp=3`. These are not the IANA IKE
 numbers (250 sits in IANA's private-use range), and SonicWall publishes no
 decoding for the settings export. Failing a tunnel for "weak encryption" on the
 strength of a guessed code table would be exactly the fabricated finding this
@@ -19,8 +19,8 @@ in the device's GUI and read its proposal.
 DISABLED TUNNELS
 ----------------
 A tunnel that is switched off carries no traffic, so its settings are moot.
-It is reported NOT_APPLICABLE with that reason -- the same logic the compliance
-engine applies to the TLS version of a disabled HTTPS interface.
+It is reported NOT_APPLICABLE with that reason (the same logic the compliance
+engine applies to the TLS version of a disabled HTTPS interface).
 """
 from __future__ import annotations
 
@@ -83,7 +83,7 @@ _SONICOS_DECODED = {
 #: Management transports permitted from the tunnel's peer network.
 _SONICOS_MGMT = {"ipsecSshMgmt": "ssh", "ipsecHttpsMgmt": "https",
                  "ipsecHttpMgmt": "http", "ipsecSnmpMgmt": "snmp"}
-#: Held but not decodable -- see the module docstring.
+#: Held but not decodable. See the module docstring.
 _SONICOS_OPAQUE = ("ipsecPh1CryptAlg", "ipsecPh1AuthAlg", "ipsecP1DHGrp",
                    "ipsecPh2CryptAlg", "ipsecPh2AuthAlg", "ipsecP2DHGrp",
                    "ipsecP1Exch")

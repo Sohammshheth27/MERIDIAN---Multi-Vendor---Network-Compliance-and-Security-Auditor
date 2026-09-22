@@ -32,8 +32,8 @@ WHY PORT SELECTION IS DELIBERATE
 --------------------------------
 Asking "can anything reach anything" returns a wall of true and tells an
 operator nothing. The default probe set is the ports an attacker actually uses
-to move laterally -- remote administration and the databases behind it -- so a
-hit is a sentence someone can act on.
+to move laterally: remote administration and the databases behind it. A hit is
+then a sentence someone can act on.
 """
 from __future__ import annotations
 
@@ -68,7 +68,7 @@ LATERAL_PORTS: list[tuple[int, str, str]] = [
 ADMIN_PORTS = {22, 23, 3389, 5985, 445, 135, 161}
 
 #: What an attacker would be attempting, in ATT&CK's vocabulary, if they used
-#: this port from a foothold. IDS ONLY -- the names are resolved from the
+#: this port from a foothold. IDS ONLY. The names are resolved from the
 #: bundle in reference/attack so a technique cannot be described here from
 #: memory and drift from what MITRE actually publishes.
 #:
@@ -156,7 +156,7 @@ class BlastRadius:
     #:           but no host is in the zone to use it yet.
     #:
     #: Without this, "if the guest Wi-Fi is compromised" reads as a live risk
-    #: on a device that has no guest Wi-Fi -- true of the policy, false of the
+    #: on a device that has no guest Wi-Fi. True of the policy, false of the
     #: network, and exactly the overstatement an auditor gets challenged on.
     origin_members: list | None = None
 
@@ -245,7 +245,7 @@ def blast_radius(graph, origin_zone: str = "", origin_address: str = "any",
                  origin_members: list | None = None) -> BlastRadius:
     """Walk the policy outward from a foothold.
 
-    `origin_zone` is where the attacker already is -- a compromised guest
+    `origin_zone` is where the attacker already is: a compromised guest
     wireless segment, a DMZ host, a contractor VPN. Every other zone in the
     policy is probed from there on the lateral-movement port set.
 
@@ -345,7 +345,7 @@ def fabric_blast_radius(fabric, origin_zone: str = "",
 
     Each device is walked separately and the results are reported per device
     rather than merged. Merging would imply a single evaluated path across the
-    fabric, and adjacency here is INFERRED from shared subnets -- a chained
+    fabric, and adjacency here is INFERRED from shared subnets. A chained
     conclusion built on an inferred link is a guess presented as a path.
     """
     per_device, skipped = [], []

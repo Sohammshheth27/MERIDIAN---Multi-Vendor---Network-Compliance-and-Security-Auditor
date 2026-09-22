@@ -1,4 +1,4 @@
-"""Reference resolution -- doc section 4's algorithm, implemented.
+"""Reference resolution: doc section 4's algorithm, implemented.
 
     resolve(node):
         if primitive: return node
@@ -13,7 +13,7 @@ Two behaviours matter more than the recursion:
 
   * A MISSING reference returns UNRESOLVED, never an empty set. An empty set
     silently satisfies "no internet-facing sources", turning a config we could
-    not read into a clean bill of health -- a false PASS manufactured by a typo.
+    not read into a clean bill of health (a false PASS manufactured by a typo).
 
   * A CYCLE returns CYCLIC, never a partial union. Group A containing group B
     containing group A is a real thing in migrated configs, and a resolver that
@@ -42,7 +42,7 @@ class Resolver:
         return res
 
     def _resolve(self, name: str, stack: list[str]) -> Resolution:
-        # `any` is a primitive meaning everything -- it is not a missing object.
+        # `any` is a primitive meaning everything. It is not a missing object.
         if name.lower() in ANY_TOKENS:
             return Resolution(name=name, state=ResolutionState.RESOLVED,
                               values=["0.0.0.0/0"], path=[name])
@@ -78,7 +78,7 @@ class Resolver:
                        f"{node.attrs['protocol_unknown']!r} which we do not model")
 
         # An object that exists but carries NO value and NO members is not an
-        # empty set -- it is an object we cannot evaluate. On a real NSA 3700,
+        # empty set. It is an object we cannot evaluate. On a real NSA 3700,
         # "M0 IP" is the unconfigured management port: address 0.0.0.0, no zone.
         # Returning RESOLVED [] for it let the caller print "to any", turning an
         # interface that has no address into two critical internet-exposure
@@ -142,7 +142,7 @@ def _looks_like_literal(token: str) -> bool:
     """Is this an inline value rather than a reference to a named object?
 
     The RANGE form is here because a real PAN-OS export writes literal ranges
-    straight into a rule's member list -- "10.0.0.0-10.255.255.255" alongside
+    straight into a rule's member list: "10.0.0.0-10.255.255.255" alongside
     named address objects. Without it the range was reported as a missing
     object, which made the whole rule unevaluable and put a caveat on every
     reachability answer above it. `_addr_in` has always understood ranges; only

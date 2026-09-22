@@ -3,7 +3,7 @@
 Validated against a real `describe-security-groups` export: three groups, nine
 rules, including SSH open to 0.0.0.0/0 and a group-to-group reference. Once
 those rules are SecurityRule objects, the same hygiene analyser and
-reachability engine that run on an NSA 3700 run on a VPC -- no cloud-specific
+reachability engine that run on an NSA 3700 run on a VPC, with no cloud-specific
 analysis code.
 
 The interesting part of this builder is what it refuses to say. A security
@@ -68,7 +68,7 @@ def test_default_deny_is_observed_here_and_only_here(graph):
     """A security group cannot be configured to default-allow.
 
     Every other builder leaves this unobserved, because a default policy is
-    configurable -- `set security policies default-policy permit-all` is real
+    configurable: `set security policies default-policy permit-all` is real
     Junos. AWS has no such form, so the claim is safe, and it is what turns
     "we cannot say" into DENIED for unmatched traffic.
     """
@@ -99,7 +99,7 @@ def test_a_database_port_is_not_open_to_the_internet(graph):
     """5432 is permitted only from a GROUP reference, never from a CIDR.
 
     If the group reference were mis-read as "any", this would come back
-    permitted -- reporting a correctly-segmented database as internet-facing.
+    permitted, reporting a correctly-segmented database as internet-facing.
     """
     a = ask(graph, Query(source="0.0.0.0/0", destination=DB_SG, port=5432,
                          protocol="tcp", destination_zone=DB_SG))

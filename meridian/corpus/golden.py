@@ -6,12 +6,12 @@ verified by hand, each carrying the evidence that justifies it:
     controls:
       MERIDIAN-TEL-001:
         expect: FAIL
-        because: "line 59 -- `transport input telnet ssh` permits telnet"
+        because: "`transport input telnet ssh` on line 59 permits telnet"
 
 `because` is not decoration. An expectation without a stated reason cannot be
 re-checked by anyone but its author, and an unre-checkable expectation is
 indistinguishable from a snapshot of whatever the tool happened to print that
-day -- which is exactly the failure this corpus exists to prevent.
+day. That is exactly the failure this corpus exists to prevent.
 """
 from __future__ import annotations
 
@@ -65,9 +65,9 @@ def verify_corpus(directory=GOLDEN_DIR) -> dict:
     Reports three kinds of problem separately, because they mean different
     things:
 
-      mismatch   the tool's answer changed -- a regression, or a fix that
+      mismatch   the tool's answer changed: a regression, or a fix that
                  needs the expectation updated deliberately
-      missing    the control no longer produces a finding at all -- usually a
+      missing    the control no longer produces a finding at all, usually a
                  rule that stopped applying to the platform
       no_config  the case's config file is not on this machine
     """
@@ -101,7 +101,7 @@ def verify_corpus(directory=GOLDEN_DIR) -> dict:
 def snapshot_mappings(packs_dir="packs", samples=None) -> dict:
     """What every pack mapping currently produces against the sample set.
 
-    CHANGE DETECTION ONLY -- see the package docstring. This cannot tell a
+    CHANGE DETECTION ONLY (see the package docstring). This cannot tell a
     right mapping from a wrong one; it can only tell a changed one from an
     unchanged one, which is what stops a pack edit from silently altering
     findings on a customer's device.

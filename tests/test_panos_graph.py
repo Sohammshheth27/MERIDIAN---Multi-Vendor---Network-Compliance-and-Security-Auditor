@@ -54,7 +54,7 @@ def test_an_absent_disabled_flag_means_enabled(graph):
     """The opposite of SonicOS, where an absent flag means off.
 
     Carrying the SonicOS assumption here would disable a live rulebase and
-    report a permissive firewall as harmless -- the most dangerous direction
+    report a permissive firewall as harmless, the most dangerous direction
     for this error to run.
     """
     by_name = {r.name.split(" [")[0]: r for r in graph.rules}
@@ -124,7 +124,7 @@ def test_the_implicit_default_is_recorded_as_assumed_not_observed(graph):
     """Every PAN-OS firewall ends with an implicit interzone deny.
 
     We know it from the platform, not from this file, and the flag has to say
-    which -- otherwise an assumption is indistinguishable from a reading.
+    which. Otherwise an assumption is indistinguishable from a reading.
     """
     assert graph.default_action == "deny"
     assert graph.default_action_observed is False

@@ -37,7 +37,7 @@ import BrandMark from '../components/BrandMark';
  *
  * NOTE ON SPACING UTILITIES: the design system defines --spacing-8, -16, -24,
  * -32, -40, -48, -56, -64, -72 and -96 in @theme, which REDEFINES those
- * numeric utilities -- `p-8` is 8px, not 32px, and `w-56` is 56px, not 224px.
+ * numeric utilities: `p-8` is 8px, not 32px, and `w-56` is 56px, not 224px.
  * Every class here deliberately uses a number ABSENT from that list (3, 4, 6,
  * 11) so it resolves to the normal Tailwind scale, or an explicit pixel value.
  */
@@ -188,7 +188,7 @@ const Login: FC = () => {
         className="meridian-btn-primary mt-auto w-full h-11 text-[14px] font-semibold flex items-center justify-center gap-2 transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-signal-blue)] focus-visible:ring-offset-2"
       >
         {busy && <Loader2 className="w-4 h-4 animate-spin" />}
-        {locked > 0 ? `Locked — ${locked}s` : busy ? 'Verifying' : 'Sign in'}
+        {locked > 0 ? `Locked for ${locked}s` : busy ? 'Verifying' : 'Sign in'}
       </button>
 
       {status && !status.required && (
@@ -216,7 +216,7 @@ const Login: FC = () => {
           {/* The mark sits straight on the tile here. The sidebar nests it in
               a white chip because that chip is what lifts the brand off a
               black rail; repeating the chip on a black tile gave three
-              concentric shapes -- square, ring, sphere -- and the eye reads
+              concentric shapes (square, ring, sphere) and the eye reads
               the ring instead of the meridian. */}
           <div className="w-11 h-11 shrink-0 bg-[#0a0a0a] rounded-[14px] flex items-center justify-center shadow-[0_10px_24px_-8px_rgba(0,0,0,0.35)]">
             <BrandMark size={26} disc="#ffffff" />
@@ -259,7 +259,7 @@ const StepChip: FC<{ n: number }> = ({ n }) => (
  * First-run pairing.
  *
  * The QR is 200px. Big enough to scan from a phone held at arm's length,
- * small enough that the page still fits a laptop screen -- the earlier 240px
+ * small enough that the page still fits a laptop screen. The earlier 240px
  * version pushed the sign-in button below the fold on a 1366x768 display.
  *
  * It is drawn by the engine and shown through <img> rather than injected as

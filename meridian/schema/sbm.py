@@ -1,10 +1,10 @@
-"""The Security Baseline Model -- one common language for every vendor.
+"""The Security Baseline Model: one common language for every vendor.
 
 Core fields plus the extended-tier fields.
 
 Everything downstream of the SBM is identical for all vendors. If a rule or a
 report ever needs to know what vendor it is looking at, something upstream has
-leaked -- vendor syntax must not escape the reader layer.
+leaked. Vendor syntax must not escape the reader layer.
 
 Design note: the SBM is a *flat dotted namespace*, not a deep object tree. A
 tree looks tidier but every rule would then need to walk it defensively, and
@@ -23,14 +23,14 @@ from .observation import Observation
 #
 # This list is load-bearing in three places, which is why it lives here and
 # nowhere else:
-#   1. Guardrail defence 3 -- it becomes the JSON-schema ``enum`` handed to the
+#   1. Guardrail defence 3: it becomes the JSON-schema ``enum`` handed to the
 #      local model, so the model *cannot physically emit* an off-list name.
 #   2. The TF-IDF matcher scores an unknown line against these.
 #   3. Control coverage is measured against it.
 #
 # A caveat learned on the bench: the enum guarantees a *valid* field name, not a
 # *correct* one. Given a line whose true field is absent from the list, the model
-# did not abstain -- it confidently picked the nearest member. The enum is a
+# did not abstain. It confidently picked the nearest member. The enum is a
 # containment boundary, not a correctness check. Abstention is the retrieval
 # layer's job (defence 10, the confidence floor).
 # ---------------------------------------------------------------------------
@@ -182,7 +182,7 @@ FIELD_TYPES: dict[str, str] = {
     "firewall.rules.position": "int",
     "firewall.rules.description": "str",
     "firewall.nat_rules": "list",
-    # how much of the policy we could NOT evaluate -- the no-silent-loss
+    # how much of the policy we could NOT evaluate, because the no-silent-loss
     # invariant applies to semantics, not only to lines
     "firewall.rules_unevaluable": "list",
     # --- cloud security groups ---
@@ -205,7 +205,7 @@ FIELD_NAMES: list[str] = sorted(FIELD_TYPES)
 
 
 class SourceAccounting(BaseModel):
-    """Source accounting -- no silent loss.
+    """Source accounting with no silent loss.
 
     Invariant: total == parsed + mapped + quarantined + unknown.
     """
@@ -245,7 +245,7 @@ class SecurityBaselineModel(BaseModel):
         """Record an observation. Unknown paths are rejected, not silently kept.
 
         Silently accepting an off-list path would let a typo in a vendor pack
-        create a field no rule ever reads -- a control that can never fire and
+        create a field no rule ever reads. Such a control can never fire and
         never warns. Better to fail at load time.
         """
         base = _unscope(path)

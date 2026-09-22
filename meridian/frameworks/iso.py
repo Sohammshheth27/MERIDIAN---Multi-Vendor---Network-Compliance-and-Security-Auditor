@@ -8,7 +8,7 @@ We never invent an ISO mapping, and we never need to buy the ISO standard to
 produce a complete ISO answer for every vendor.
 
 On copyright: the crosswalk ships clause NUMBERS with an empty description
-column -- NIST omitted ISO's text deliberately. Verified on the real file:
+column. NIST omitted ISO's text deliberately. Verified on the real file:
 0 of 177 sampled rows carry any ISO description. So there is nothing of ISO's
 to discard here; the mapping itself is complete and free to use. Annex A clause
 names below are the short public labels used in the standard's own contents
@@ -20,7 +20,7 @@ from pathlib import Path
 
 from .models import Automatability, Catalog, CatalogEntry, Framework, License
 
-# Annex A short titles -- clause number + short name only, per the licence.
+# Annex A short titles. Clause number plus short name only, per the licence.
 # Used so a report can say "A.8.20 Network security" rather than a bare number.
 ANNEX_A_TITLES: dict[str, str] = {
     "A.5.1": "Policies for information security",
@@ -144,7 +144,7 @@ def _normalise_nist_id(cid: str) -> str:
     OSCAL writes enhancements as ``AC-2.1`` while the OLIR crosswalk writes
     ``AC-2(12)``. 872 of the 1196 OSCAL entries are enhancements, so leaving
     the formats unreconciled meant none of them could ever match a crosswalk
-    row -- ISO coverage silently capped at the base controls.
+    row, which silently capped ISO coverage at the base controls.
 
         AC-01      -> AC-2 style: AC-1
         AC-02(01)  -> AC-2.1

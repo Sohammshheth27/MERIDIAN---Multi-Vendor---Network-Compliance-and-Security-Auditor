@@ -1,4 +1,4 @@
-"""The security object graph -- plan 15, and section 4 of the parser architecture doc.
+"""The security object graph: plan 15, and section 4 of the parser architecture doc.
 
 WHY THIS EXISTS
 ---------------
@@ -11,8 +11,8 @@ Configurations reference names, not values::
         match destination-address WEB01
         match application HTTPS
 
-`HR_NET` is not a subnet. It is a name that resolves -- possibly through nested
-groups -- to a set of subnets. Until that is resolved, no security question can
+`HR_NET` is not a subnet. It is a name that resolves (possibly through nested
+groups) to a set of subnets. Until that is resolved, no security question can
 be answered: "is RDP reachable from the internet" is unanswerable if you only
 know the rule says `RDP_SERVICE`.
 
@@ -48,7 +48,7 @@ class NodeKind(str, Enum):
 class ResolutionState(str, Enum):
     """Doc section 9: SUPPORTED / UNSUPPORTED / AMBIGUOUS / UNRESOLVED_REFERENCE.
 
-    An unresolved reference does not fail the scan -- it makes any finding that
+    An unresolved reference does not fail the scan: it makes any finding that
     depends on it INCOMPLETE, and says so with the exact reference path. That is
     the difference between "we checked and it is fine" and "we could not check".
     """
@@ -96,7 +96,7 @@ class SecurityRule(BaseModel):
     destination_zones: list[str] = Field(default_factory=list)
     logging: bool | None = None
     # Packets matched since the counter last reset. None means the export does
-    # not publish one -- which is NOT the same as zero, and the distinction
+    # not publish one, which is NOT the same as zero, and the distinction
     # decides whether "this rule is dead" is a finding or a guess.
     hit_count: int | None = None
     # Host firewalls scope rules to a BINARY rather than a port. Such a rule
@@ -134,7 +134,7 @@ class ObjectGraph(BaseModel):
 
     All objects and rules from one device, before resolution.
 
-    `unordered` marks platforms with no positional evaluation -- Windows
+    `unordered` marks platforms with no positional evaluation. Windows
     Firewall matches by precedence (block beats allow) rather than
     top-to-bottom. Shadow analysis assumes first-match-wins, so it must not
     run there: a "shadowed rule" finding on an unordered platform describes
@@ -147,15 +147,15 @@ class ObjectGraph(BaseModel):
     rules: list[SecurityRule] = Field(default_factory=list)
     zones_of_interface: dict[str, str] = Field(default_factory=dict)
     untrusted_zones: set[str] = Field(default_factory=set)
-    # Read from the config where the vendor exposes it. NOT assumed -- see the
-    # default-policy note in junos_builder.
+    # Read from the config where the vendor exposes it. NOT assumed (see the
+    # default-policy note in junos_builder).
     unordered: bool = False
     default_action: str = "deny"
     default_action_observed: bool = False
     #: The line that STATES the default policy, where the config states one.
     #:
     #: Without this the bridge cited an arbitrary rule's evidence for the
-    #: default policy -- misleading even when it worked, and outright wrong on
+    #: default policy, misleading even when it worked, and outright wrong on
     #: a device with a `permit-all` default and no rules at all: there was no
     #: rule to borrow evidence from, so an observed permit-all degraded to an
     #: assumption and the finding disappeared. That is the exact false PASS the

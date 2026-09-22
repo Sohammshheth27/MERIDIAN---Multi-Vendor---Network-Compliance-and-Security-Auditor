@@ -88,7 +88,7 @@ class _F:
 def test_only_failures_carry_risk():
     assert score_finding(_F(state=ResultState.PASS)) is None
     assert score_finding(_F(state=ResultState.NOT_APPLICABLE)) is None
-    # UNKNOWN must not get a number -- a score would imply we knew.
+    # UNKNOWN must not get a number: a score would imply we knew.
     assert score_finding(_F(state=ResultState.UNKNOWN)) is None
     assert score_finding(_F(state=ResultState.FAIL)) is not None
 
@@ -284,7 +284,7 @@ asa_only = pytest.mark.skipif(not os.path.exists(ASA), reason="ASA sample absent
 def test_asa_is_not_mistaken_for_ios():
     """ASA and IOS-XE share `interface GigabitEthernet`; they are not one
     platform. Before ASA had its own signature this file scored 0.25 against
-    IOS-XE -- below the floor, so UNKNOWN, which was safe but unassessable."""
+    IOS-XE, below the floor, so UNKNOWN, which was safe but unassessable."""
     r = assess(ASA)
     assert r.identity.platform == "cisco_asa"
     assert r.supported
@@ -306,7 +306,7 @@ def test_cleartext_enable_password_is_observed_not_assumed():
     """The weak form is POSITIVELY matched, so the FAIL carries a line number.
 
     Modelled as `if_absent: false` it became DEFAULT_ASSUMED, which is
-    forbidden from carrying a FAIL -- so a cleartext password reported UNKNOWN.
+    forbidden from carrying a FAIL, so a cleartext password reported UNKNOWN.
     """
     r = assess(ASA)
     for cid in ("MERIDIAN-EXT-012", "MERIDIAN-PWD-003"):
@@ -370,7 +370,7 @@ sw = pytest.mark.skipif(not _os.path.exists(HARDENED_SW),
 
 @sw
 def test_raw_base64_exp_is_fingerprinted():
-    """A `.exp` straight off the appliance is BASE64 -- which is what an
+    """A `.exp` straight off the appliance is BASE64, which is what an
     administrator actually uploads. Only the already-decoded form was
     recognised, so the genuine article fingerprinted as UNKNOWN."""
     r = assess(HARDENED_SW)

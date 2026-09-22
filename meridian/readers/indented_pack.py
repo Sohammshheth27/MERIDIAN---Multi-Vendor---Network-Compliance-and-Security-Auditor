@@ -1,7 +1,7 @@
 """Apply a mapping pack to an indented (Reader 1) configuration.
 
 Same pack contract as the JSON path: declarative rules plus
-allow-listed derivations. Only the matching primitive differs -- regex against
+allow-listed derivations. Only the matching primitive differs: regex against
 lines instead of JSONPath against nodes.
 
 The scoping rule is enforced here: a mapping that declares a
@@ -28,9 +28,9 @@ def _extract(mo, spec: dict, text: str) -> Any:
 
     Uses ``mo.re.groups``, NOT ``mo.lastindex``. lastindex is None whenever an
     optional group did not participate, so `^(no )?ip http server` matching
-    "ip http server" fell through to the whole line -- and with invert that
+    "ip http server" fell through to the whole line. With invert that
     turned "HTTP is ON" into "HTTP is off": a false PASS on a high-severity
-    control -- the metric that matters most.
+    control (the metric that matters most).
     """
     if mo is None:
         return text.strip()
@@ -46,7 +46,7 @@ def _coerce(raw: Any, spec: dict, target_type: str) -> Any:
         return spec["const"]
     out = normalise(raw, spec.get("as", target_type))
     if spec.get("invert"):
-        # `^(no )?ip http server` -- group 1 is "no " when disabled, so a match
+        # Group 1 of `^(no )?ip http server` is "no " when disabled, so a match
         # on the negation means the feature is OFF. Modelling this as a real
         # OBSERVED false matters: an admin who explicitly disabled HTTP is a
         # provable PASS, which an absence could never be.
@@ -104,7 +104,7 @@ def apply_indented_pack(
         # ---------- top-level match -----------------------------------------
         hits = cfg.find(m.regex)
         if not hits:
-            # A field may have SEVERAL mappings -- alternative spellings of the
+            # A field may have SEVERAL mappings, alternative spellings of the
             # same setting, e.g. `enable password X` (weak) and `enable password
             # X encrypted` (strong), which are mutually exclusive by design.
             # Exactly one can match, and the others must not erase its result.
@@ -174,7 +174,7 @@ def apply_indented_pack(
 def derive_ios_telnet_reachable(cfg: IndentedConfig, params: dict):
     """Is telnet actually reachable on this device?
 
-    IOS has no `ip telnet server` line to look for -- the answer is a property
+    IOS has no `ip telnet server` line to look for. The answer is a property
     of the vty set. A device is telnet-reachable if ANY vty line permits telnet
     transport, so checking one line, or checking the file globally, both give
     wrong answers on a device whose vty ranges differ.
@@ -189,7 +189,7 @@ def derive_ios_telnet_reachable(cfg: IndentedConfig, params: dict):
 
 
 def derive_ios_weak_ssh_crypto(cfg, params: dict):
-    """Cisco `ip ssh server algorithm ...` -- keep only the WEAK entries.
+    """Keep only the WEAK entries from Cisco `ip ssh server algorithm ...`.
 
     Without this, crypto.weak_ciphers meant "every algorithm" on Cisco and
     "only the weak ones" on SonicWall. One field, two meanings, and a control
@@ -208,7 +208,7 @@ def derive_ios_weak_ssh_crypto(cfg, params: dict):
     # SNMPv3 user crypto. Added because the consensus layer DISPUTED a finding
     # on the hardened fixture: the universal detector flagged `auth md5 ...
     # priv 3des` on an SNMPv3 user and the pack said `crypto.weak_ciphers = []`
-    # -- because it read `ip ssh server algorithm` and nothing else. The
+    # because it read `ip ssh server algorithm` and nothing else. The
     # detector was right and the pack was blind, on the very file built to
     # demonstrate correct configuration. v3 with MD5 authentication and 3DES
     # privacy is weak whatever the version number suggests.

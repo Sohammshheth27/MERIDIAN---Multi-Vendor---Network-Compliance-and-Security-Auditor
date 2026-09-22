@@ -2,26 +2,26 @@
 
 Vendor adapter, doc section 3: AWS-specific in, vendor-neutral graph out. Once
 a security-group rule is a SecurityRule, rule hygiene and reachability work on
-a VPC exactly as they do on an NSA 3700 -- no cloud-specific analysis code.
+a VPC exactly as they do on an NSA 3700. No cloud-specific analysis code.
 
 FOUR SECURITY-GROUP SEMANTICS THAT AN APPLIANCE-SHAPED READING GETS WRONG
 ------------------------------------------------------------------------
 1. THERE IS NO EVALUATION ORDER, AND NO DENY RULE.
    A security group is a set of ALLOW rules that union together. Nothing can
-   deny, and no rule can shadow another -- position is meaningless. The graph
+   deny, and no rule can shadow another: position is meaningless. The graph
    is marked `unordered` so shadow analysis does not run, exactly as it is for
    Windows Firewall: a "shadowed rule" finding here would describe semantics
    the platform does not have.
 
 2. THE GROUP IS THE POLICY ATTACHMENT POINT, NOT A DEVICE.
    Rules attach to a group, and instances join groups. The group is therefore
-   modelled as a ZONE, and each rule is scoped to it -- so "can the internet
+   modelled as a ZONE, and each rule is scoped to it, so "can the internet
    reach db-tier-sg on 5432" is a question the resolver can answer.
 
 3. A RULE MAY REFERENCE ANOTHER GROUP INSTEAD OF A CIDR.
    `UserIdGroupPairs` means "whatever instances are in that group right now".
    That membership lives in the EC2 API, not in this file, so the referenced
-   group is recorded with `members_unknown` -- which the resolver reports as
+   group is recorded with `members_unknown`. The resolver reports that as
    UNSUPPORTED. An empty group would instead read as "matches nothing" and
    silently turn a live database path into a clean result.
 
@@ -43,8 +43,8 @@ and may still be dropped on arrival. Treat a group-to-group PERMITTED as "not
 blocked by the source group" and check the destination group's ingress rules
 before acting on it.
 
-Questions scoped to a single group -- "what may reach web-tier-sg on 22", which
-is the exposure question that matters -- are unaffected, because only that
+Questions scoped to a single group ("what may reach web-tier-sg on 22", which
+is the exposure question that matters) are unaffected, because only that
 group's ingress rules can answer them.
 """
 from __future__ import annotations
@@ -71,7 +71,7 @@ def _service(permission: dict) -> list[str]:
 
     lo, hi = permission.get("FromPort"), permission.get("ToPort")
     if lo is None and hi is None:
-        # A named protocol with no ports -- icmp, esp, gre. It constrains the
+        # A named protocol with no ports: icmp, esp, gre. It constrains the
         # protocol and nothing else.
         return [proto.lower()]
     if lo == hi:
@@ -102,7 +102,7 @@ def _remotes(permission: dict, graph: ObjectGraph, evidence) -> list[str]:
         out.append(gid)
         if graph.lookup(gid) is None:
             # Membership is runtime state held by the EC2 API, not by this
-            # file. Marked unknown rather than empty -- see the module note.
+            # file. Marked unknown rather than empty (see the module note).
             graph.add(Node(
                 id=gid, kind=NodeKind.ADDRESS_GROUP, name=gid,
                 attrs={"members_unknown": True,
@@ -155,14 +155,14 @@ def build(doc) -> ObjectGraph:
                 #
                 # Its instance addresses are runtime state held by the EC2 API,
                 # so there is no address here to give. Leaving `values` empty
-                # instead makes the resolver report the group as unevaluable --
-                # correct in the abstract, but it renders every rule in the VPC
-                # unanswerable, which is a useless kind of honesty.
+                # instead makes the resolver report the group as unevaluable.
+                # That is correct in the abstract, but it renders every rule
+                # in the VPC unanswerable, which is a useless kind of honesty.
                 #
                 # Resolving to the id means "can X reach sg-...0002 on 22" is
                 # answerable, while "can 10.0.5.9 reach it" correctly does NOT
-                # match by address -- because we genuinely do not know which
-                # addresses are in the group.
+                # match by address. We genuinely do not know which addresses
+                # are in the group.
                 values=[gid],
                 attrs={"group_name": name,
                        "vpc": sg.get("VpcId") or "",
@@ -186,7 +186,7 @@ def build(doc) -> ObjectGraph:
                 # The LOCAL side is the GROUP, named. Not "any": the instances
                 # in a group are a bounded set, and writing "any" there made
                 # the hygiene analyser read every ordinary ingress rule as
-                # permitting any destination -- seven fabricated
+                # permitting any destination: seven fabricated
                 # "overly permissive" findings on a three-group VPC, including
                 # one on a rule that only opens 443.
                 if direction == "ingress":
@@ -198,8 +198,8 @@ def build(doc) -> ObjectGraph:
                     id=f"{gid}:{key}[{i}]",
                     name=f"{name} {direction} {'/'.join(services)}",
                     # Position is recorded so findings have a stable handle,
-                    # but it carries NO evaluation meaning here -- see
-                    # `unordered` below.
+                    # but it carries NO evaluation meaning here (see
+                    # `unordered` below).
                     order=order,
                     enabled=True,          # a present rule is in force
                     action="allow",        # security groups cannot deny
@@ -228,15 +228,15 @@ def build(doc) -> ObjectGraph:
     # Default-deny is OBSERVED here, and this is the one platform where that
     # claim is safe to make without reading it from the file.
     #
-    # Elsewhere the default policy is configurable -- `set security policies
-    # default-policy permit-all` is a real Junos command -- so assuming deny
+    # Elsewhere the default policy is configurable. `set security policies
+    # default-policy permit-all` is a real Junos command, so assuming deny
     # would report a permit-all device as compliant, and every other builder
     # therefore leaves `observed` False. A security group cannot be configured
     # that way: it holds allow rules only, there is no deny form, and anything
     # unmatched is dropped. That is an invariant of the service, not a setting.
     #
     # Marking it observed is what turns "we cannot say" into "DENIED" for
-    # traffic no rule permits -- which is the answer, and the useful one.
+    # traffic no rule permits. That is the answer, and the useful one.
     g.default_action = "deny"
     g.default_action_observed = True
     return g

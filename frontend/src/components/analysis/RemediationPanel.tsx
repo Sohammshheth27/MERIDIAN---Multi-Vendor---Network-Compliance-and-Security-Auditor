@@ -9,7 +9,7 @@ import { useApi } from '../../lib/useApi';
  * Deliverable 4c in the console: the ordered fix sequence for this device.
  *
  * The engine has built this plan since the beginning and nothing in the UI ever
- * called it -- `api.remediation` existed and no component used it, so the
+ * called it. `api.remediation` existed and no component used it, so the
  * commands reached the PDF report and never the screen.
  *
  * Three things this shows that a bare command list does not, because all three
@@ -66,12 +66,12 @@ export const RemediationPanel: FC<{ id: string }> = ({ id }) => {
       <Card variant="default" className="flex flex-wrap items-center justify-between gap-3 p-4">
         <div>
           <h3 className="text-sm font-bold text-[var(--color-ink-navy)]">
-            Remediation — {steps.length} step{steps.length === 1 ? '' : 's'}
+            Remediation ({steps.length} step{steps.length === 1 ? '' : 's'})
           </h3>
           <p className="mt-0.5 max-w-3xl text-xs text-[var(--color-slate-gray)]">
             Ordered so nothing locks you out: the replacement is created and
             enabled before the insecure setting is removed. Nothing here is
-            applied to the device — this is the sequence to review and run.
+            applied to the device: this is the sequence to review and run.
           </p>
         </div>
         {url && (
@@ -90,7 +90,7 @@ export const RemediationPanel: FC<{ id: string }> = ({ id }) => {
       {data.rollback_command && (
         <Card variant="default" className="p-4">
           <p className="text-xs font-bold text-[var(--color-ink-navy)]">
-            Safety net — run this first
+            Safety net: run this first
           </p>
           <pre className="mt-2 overflow-x-auto rounded-lg bg-[var(--color-pebble)] p-3 font-mono text-xs text-[var(--color-ink-navy)]">
             {data.rollback_command}
@@ -106,7 +106,7 @@ export const RemediationPanel: FC<{ id: string }> = ({ id }) => {
       {deferred.length > 0 && (
         <Card variant="default" className="p-4">
           <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-            Held back — {deferred.length}
+            Held back ({deferred.length})
           </h4>
           <p className="mt-0.5 text-xs text-[var(--color-slate-gray)]">
             These would sever the only management path to this device, so they
@@ -130,7 +130,7 @@ export const RemediationPanel: FC<{ id: string }> = ({ id }) => {
       {unavailable.length > 0 && (
         <Card variant="default" className="p-4">
           <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-            Not remediated — {unavailable.length}
+            Not remediated ({unavailable.length})
           </h4>
           <p className="mt-0.5 text-xs text-[var(--color-slate-gray)]">
             These controls fail and have no recorded fix for this platform. The
@@ -227,7 +227,7 @@ const HardenedConfig: FC<{ id: string }> = ({ id }) => {
           </h4>
           <p className="mt-0.5 max-w-3xl text-xs text-[var(--color-slate-gray)]">
             This device's own configuration with the provable failures
-            corrected. Only records a finding cites are rewritten — settings
+            corrected. Only records a finding cites are rewritten. Settings
             that pass are untouched, and settings the engine could not read are
             never changed.
           </p>
@@ -347,8 +347,8 @@ const HardenedConfig: FC<{ id: string }> = ({ id }) => {
                 Download hardened configuration
               </button>
               <p className="text-xs text-[var(--color-slate-gray)]">
-                Carries this device's real addressing. Import is unverified —
-                test it on a sandbox appliance before a live device.
+                Carries this device's real addressing. Import is unverified.
+                Test it on a sandbox appliance before a live device.
               </p>
             </div>
           )}

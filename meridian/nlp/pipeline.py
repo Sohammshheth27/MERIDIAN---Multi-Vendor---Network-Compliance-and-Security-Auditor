@@ -1,4 +1,4 @@
-"""The NLP interpretation pipeline -- plan section 12.
+"""The NLP interpretation pipeline (plan section 12).
 
 The problem statement asks for "Pattern Recognition and Natural Language
 Processing (NLP)". It does NOT ask for an LLM. We implement both, and the LLM
@@ -12,11 +12,11 @@ problem is that vendors use different words for the same concept:
     timeout    admintimeout       idle-timeout    exec-timeout
 
 Recognising that `admintimeout`, `exec-timeout` and `idle-timeout` mean the same
-thing is semantic similarity over a technical vocabulary -- a legitimate NLP
+thing is semantic similarity over a technical vocabulary, a legitimate NLP
 task, and the one that actually matters here.
 
 Why this tier exists at all:
-  * It answers the real complaint about rule-based parsers -- brittleness. When
+  * It answers the real complaint about rule-based parsers: brittleness. When
     a vendor renames `ip ssh version` in new firmware, TF-IDF still matches on
     `ssh` + `version`.
   * It is a fallback path. If the model backend stalls or is cold, tier 2
@@ -101,7 +101,7 @@ for _canonical, _variants in SYNONYMS.items():
 
 
 def normalize(tokens: list[str], *, drop_stopwords: bool = True) -> list[str]:
-    """Map vendor words onto canonical concepts -- lemmatisation for networking."""
+    """Map vendor words onto canonical concepts. Lemmatisation for networking."""
     out = []
     for t in tokens:
         if drop_stopwords and t in STOPWORDS:
@@ -109,14 +109,14 @@ def normalize(tokens: list[str], *, drop_stopwords: bool = True) -> list[str]:
         if t in _CANON:
             out.append(_CANON[t])
             continue
-        # `sshv2` / `snmpv3` -- a concept fused with its version
+        # `sshv2` / `snmpv3` fuse a concept with its version
         m = re.match(r"^([a-z]+?)v(\d)$", t)
         if m and m.group(1) in _CANON:
             out.extend([_CANON[m.group(1)], "version"])
             continue
         # Plurals. `time.servers` never matched a line saying `ntp server`,
         # so the disambiguation tiebreak scored 0 and the boolean presence
-        # flag won instead -- a confident wrong answer at 0.78.
+        # flag won instead (a confident wrong answer at 0.78).
         if t.endswith("s") and t[:-1] in _CANON:
             out.append(_CANON[t[:-1]])
             continue

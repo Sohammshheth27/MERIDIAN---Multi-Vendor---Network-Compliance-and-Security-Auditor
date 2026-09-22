@@ -35,7 +35,7 @@ controls:
     expect: FAIL
     because: >-
       L91 `ssh key-exchange group dh-group1-sha1` is 768-bit Diffie-Hellman
-      with SHA-1 -- the weakest option the platform offers.
+      with SHA-1, the weakest option the platform offers.
 
   MERIDIAN-EXT-001:
     expect: FAIL

@@ -11,7 +11,7 @@ canonical values:
     FortiOS   set strong-crypto enable                -> "enable"
     SONiC     "protocol_version": 2                   -> 2
 
-A bench test of qwen3.5:4b on the Juniper line returned ``value="v2"`` -- the
+A bench test of qwen3.5:4b on the Juniper line returned ``value="v2"``, the
 *correct* interpretation. Without normalisation, guardrail 5 would reject it as
 a type failure, throwing away a right answer and inflating the UNKNOWN rate.
 
@@ -54,7 +54,7 @@ def to_int(raw: object) -> int | None:
 
     Handles the ``v2`` / ``version 2`` / ``2`` spread that broke the bench test.
     """
-    if isinstance(raw, bool):          # bool is an int subclass -- reject early
+    if isinstance(raw, bool):          # reject early: bool is an int subclass
         return None
     if isinstance(raw, int):
         return raw

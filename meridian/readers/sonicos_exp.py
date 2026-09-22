@@ -5,7 +5,7 @@ WHY THIS ARTIFACT IS USABLE
 The `.exp` is commonly written off as an obfuscated settings dump that cannot be
 read, with the CLI export recommended instead. That is incorrect, and the
 correction matters: the `.exp` is plain base64 of a URL-encoded `key=value`
-blob. Decoded, a real NSA 3700 export yields **92,636 settings** -- roughly
+blob. Decoded, a real NSA 3700 export yields **92,636 settings**, roughly
 forty times what the CLI export carries, including the full firewall policy.
 
   raw            3,646,910 bytes, base64 alphabet, entropy 5.63
@@ -13,7 +13,8 @@ forty times what the CLI export carries, including the full firewall policy.
   form           k1=v1&k2=v2&...   (URL-encoded, single line)
 
 Contrast with the Sophos backup, where the plan IS right: that file begins
-`Salted__` with entropy 8.00/8.00 -- genuine OpenSSL AES, not obfuscation.
+`Salted__` with entropy 8.00/8.00. That is genuine OpenSSL AES, not
+obfuscation.
 
 SECURITY
 --------
@@ -88,7 +89,7 @@ class SonicOsExport:
         return hit
 
     def glob(self, pattern: str) -> list[tuple[str, str, int, str]]:
-        """`administration/*` or `snmp*` -- both shapes accepted."""
+        """`administration/*` or `snmp*`: both shapes accepted."""
         pat = pattern.replace("/", "")
         rx = re.compile("^" + re.escape(pat).replace(r"\*", ".*") + "$", re.I)
         out = []
@@ -121,8 +122,8 @@ class SonicOsExport:
 
         The object-graph builder reads thousands of `addrObj*`, `svcObj*` and
         `policy*` records directly off `values`, and originally marked none of
-        them. Record accounting therefore reported 31 parsed of 92,635 -- a
-        0.03% read rate for a device whose graph we had fully reconstructed.
+        them. Record accounting therefore reported 31 parsed of 92,635 (a
+        0.03% read rate for a device whose graph we had fully reconstructed).
         The number was not wrong so much as measuring the wrong consumer, and
         an audit report that understates its own coverage misleads in the same
         way one that overstates it does.
@@ -136,7 +137,7 @@ class SonicOsExport:
         """TOTAL == PARSED + MAPPED + QUARANTINED + UNKNOWN.
 
         PARSED and MAPPED are different fates and were being conflated. Every
-        record in a `.exp` IS parsed -- the format is key=value and the lexer
+        record in a `.exp` IS parsed. The format is key=value and the lexer
         reads all 92,635 of them. What only 8,390 have is a MAPPING to an SBM
         field. Reporting the mapped count as "parsed" made a reader that
         succeeds completely look like one that failed on 91% of the file.
@@ -159,7 +160,8 @@ class SonicOsExport:
 
 # A switch, not a secret. `encUsernamePassword=on` says stored credentials ARE
 # encrypted; it matches the secret-key pattern by name, and redacting it turned
-# MERIDIAN-PLT-002 from FAIL into UNKNOWN -- turning privacy on changed a verdict.
+# MERIDIAN-PLT-002 from FAIL into UNKNOWN. Turning privacy on changed a
+# verdict.
 # A value from this set cannot disclose a credential, so it is never redacted.
 _FLAG_VALUE = re.compile(r"^(on|off|true|false|yes|no|enabled?|disabled?|0|1)$", re.I)
 
@@ -176,7 +178,7 @@ def _pseudonym(addr: str) -> str:
     """A stable, valid, non-routable stand-in for one real address.
 
     REDACTION MUST PSEUDONYMISE, NOT MANGLE. The previous form replaced the
-    last octet with the letter "x" -- `203.0.113.45` became `10.0.113.x`, which
+    last octet with the letter "x": `203.0.113.45` became `10.0.113.x`, which
     is not an IPv4 address at all. Everything downstream that parses addressing
     then failed silently: `from_sonicos` skipped every interface, the topology
     map drew a device with no interfaces, and the Interfaces panel was blank. A
@@ -193,7 +195,7 @@ def _pseudonym(addr: str) -> str:
 
     Hashing the whole address instead would scatter two interfaces that really
     share a subnet into unrelated /24s, and `Interface.network` would then
-    report them as separate networks -- redaction would stop destroying
+    report them as separate networks. Redaction would stop destroying
     parseability and start destroying RELATIONSHIPS, which is worse because it
     still looks like a working map. Subnet grouping, adjacency and the `.1`
     gateway convention all have to survive for the figure to mean anything.
@@ -244,7 +246,7 @@ def _assert_plausible(export, source_name: str) -> None:
     Base64-decoding arbitrary bytes always "succeeds", and splitting the
     resulting garbage on "=" always yields pairs. Fed an encrypted Sophos
     backup, this reader reported 12,088 settings of which 2 had names that were
-    even identifier-shaped -- 0.0%. Nothing downstream could tell that from a
+    even identifier-shaped (0.0%). Nothing downstream could tell that from a
     real device: the SBM would fill, controls would evaluate, and a report would
     come out the other end describing a device nobody ever parsed.
 

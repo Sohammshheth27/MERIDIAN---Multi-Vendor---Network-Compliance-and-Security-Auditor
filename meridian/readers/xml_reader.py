@@ -1,7 +1,7 @@
 """Reader 4: XML configuration exports.
 
 This is the structured-input tier, and it matters more than it looks. A CLI
-config has to be understood before it can be read -- indentation, context
+config has to be understood before it can be read: indentation, context
 stacks, `no` prefixes, line continuations, per-firmware spelling drift. An XML
 export has already been parsed by the device that wrote it: the hierarchy is
 explicit, values are attributes or text, and there is no ambiguity left to
@@ -9,7 +9,7 @@ resolve. Accuracy at this tier is a mapping problem, not a parsing problem.
 
 Two vendors in the brief publish exactly this, and both are first-class:
 
-    PAN-OS      the running config IS XML -- `<config><devices>...`
+    PAN-OS      the running config IS XML: `<config><devices>...`
     Junos       `show configuration | display xml` emits `<rpc-reply>`
 
 The path syntax is the same slash-separated one the braces and block readers
@@ -100,8 +100,8 @@ class XmlConfig:
     def _parse(self, text: str) -> None:
         """Build a light tree with expat (for true line numbers), then walk it.
 
-        Two passes because an element's key can depend on its CHILDREN -- a
-        Junos <class> is named by the <name> inside it -- so its path is only
+        Two passes because an element's key can depend on its CHILDREN (a
+        Junos <class> is named by the <name> inside it), so its path is only
         known once the element has closed. expat reports `CurrentLineNumber`
         natively; ElementTree records no positions at all.
         """
@@ -209,8 +209,8 @@ class XmlConfig:
         """Anchor a finding back into the export.
 
         `record_id` carries the structural path, so an XML finding cites both
-        the line a human can scroll to AND the path a machine can re-query --
-        a re-serialised export changes the line but not the path.
+        the line a human can scroll to AND the path a machine can re-query.
+        A re-serialised export changes the line but not the path.
         """
         return EvidenceRef(file=self.source_file, line=lineno,
                            raw=raw.strip()[:200],
@@ -249,7 +249,7 @@ class XmlConfig:
         return sorted(self._paths)
 
     def iter_paths(self) -> list:
-        """Every path in DOCUMENT order -- rule order on a firewall matters."""
+        """Every path in DOCUMENT order: rule order on a firewall matters."""
         return list(self._paths)
 
 

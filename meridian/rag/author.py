@@ -1,4 +1,4 @@
-"""Author framework mappings from SBM fields -- the RAG's only job.
+"""Author framework mappings from SBM fields: the RAG's only job.
 
 Produces `mapping_proposals.jsonl`: for every SBM field, candidate controls in
 each of the four frameworks. Nothing here writes to rules/*.yaml. A proposal is
@@ -12,15 +12,15 @@ ORDER IS DELIBERATE, and it follows the measured strength of each source:
     ISO    derived     from the NIST control via the NIST OLIR crosswalk
 
 The two derived frameworks are the two that retrieval was measurably bad at.
-NIST is 174 characters of abstract prose per control; ISO is SIX -- 70 of its
-121 entries have no title at all, so "retrieving" ISO was ranking numbers
+NIST is 174 characters of abstract prose per control; ISO is SIX. Seventy of
+its 121 entries have no title at all, so "retrieving" ISO was ranking numbers
 against a query and returning noise that read like an answer.
 
 Both now come from published crosswalks with their evidence recorded, and both
 inherit the score of the hit they were derived from: a NIST label is never
 stronger than the STIG rule that implied it, and an ISO label is never stronger
 than the NIST control. Retrieval remains the fallback where no crosswalk
-applies, so nothing is lost -- it just stops being load-bearing where it does
+applies, so nothing is lost. It just stops being load-bearing where it does
 not work.
 """
 from __future__ import annotations
@@ -141,8 +141,8 @@ def write_proposals(proposals, path="reference/mapping_proposals.jsonl",
     """Write proposals for human review.
 
     ``local_review=True`` keeps CIS/ISO titles, which a reviewer on this machine
-    needs and the licence permits locally. Anything destined to leave -- a
-    commit, a report, a training set -- must be written with False, and
+    needs and the licence permits locally. Anything destined to leave (a
+    commit, a report, a training set) must be written with False, and
     guard.assert_exportable is what stops that being forgotten.
     """
     p = Path(path)

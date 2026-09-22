@@ -11,7 +11,7 @@ import { useApi } from '../../lib/useApi';
  *
  * Only FAIL and PARTIAL controls are offered. Offering UNKNOWN would let a
  * click turn "we could not read this" into a pass. Policy-derived findings
- * come back refused, with the rules to disable instead -- shown verbatim,
+ * come back refused, with the rules to disable instead, shown verbatim,
  * because the refusal is the useful part.
  */
 export const WhatIfPanel: FC<{ id: string }> = ({ id }) => {
@@ -138,7 +138,7 @@ export const WhatIfPanel: FC<{ id: string }> = ({ id }) => {
               {r.reason}
               {r.suggest_disable_rules && r.suggest_disable_rules.length > 0 && (
                 <span className="mt-1 block font-mono text-[11px] text-[var(--color-ink-navy)]">
-                  rules behind it: {r.suggest_disable_rules.join(', ')} — use Blast
+                  rules behind it: {r.suggest_disable_rules.join(', ')}. Use Blast
                   radius → Simulate closing
                 </span>
               )}

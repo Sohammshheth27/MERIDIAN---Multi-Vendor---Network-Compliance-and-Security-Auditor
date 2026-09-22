@@ -1,6 +1,6 @@
 """Several endpoints called at once must not break each other.
 
-A dashboard page opens by firing every panel's request together -- the
+A dashboard page opens by firing every panel's request together. The
 Frameworks page asks for five. Endpoints declared with `def` run in a
 threadpool, so those handlers genuinely run in parallel, and the handlers
 import their heavy modules lazily. Two threads importing one module for the
@@ -8,8 +8,8 @@ first time is a deadlock in CPython's import lock, not a slow path: it raised
 `_DeadlockError` and the page showed a 500 while the same endpoints answered
 perfectly when called one at a time.
 
-That is the failure mode this project cares most about -- our bug presented to
-the operator as a fact about their network -- so it is held here.
+That is the failure mode this project cares most about: our bug presented to
+the operator as a fact about their network. So it is held here.
 """
 import subprocess
 import sys
@@ -39,7 +39,7 @@ def test_the_heavy_modules_are_imported_before_any_request():
     """The guard itself: a fresh process must have them loaded after startup.
 
     Checked in a subprocess because the rest of the suite imports these modules
-    anyway -- in this process the assertion would pass without the hook.
+    anyway, and in this process the assertion would pass without the hook.
     """
     code = (
         "from fastapi.testclient import TestClient;"

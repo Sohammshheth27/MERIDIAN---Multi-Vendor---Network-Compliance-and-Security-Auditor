@@ -1,4 +1,4 @@
-"""Framework catalogue loaders -- NIST, DISA STIG, CIS, ISO, plus the AI-security KB."""
+"""Framework catalogue loaders: NIST, DISA STIG, CIS, ISO, plus the AI-security KB."""
 from .models import Automatability, Catalog, CatalogEntry, Framework, License
 from .registry import FrameworkRegistry, load_all
 

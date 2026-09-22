@@ -1,4 +1,4 @@
-"""Extended checks -- VPN, wireless, known vulnerabilities.
+"""Extended checks: VPN, wireless, known vulnerabilities.
 
 Reported beside the 88-control compliance score, never inside it; see
 `model.py` for why.

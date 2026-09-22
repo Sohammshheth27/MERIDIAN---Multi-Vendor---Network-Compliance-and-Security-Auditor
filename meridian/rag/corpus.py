@@ -8,7 +8,7 @@ depends on the licence, and that is the whole design:
     CIS           IDENTIFIER_ONLY  id + title (+ body, local shard only)
     ISO 27001     IDENTIFIER_ONLY  id + short title, plus NIST crosswalk terms
 
-An IDENTIFIER_ONLY document is perfectly usable for retrieval -- it just may
+An IDENTIFIER_ONLY document is perfectly usable for retrieval. It just may
 never be quoted back out. ``guard.assert_exportable`` enforces that on the way
 out; nothing here has to remember to.
 """
@@ -79,12 +79,12 @@ def build_corpus(registry, *, cis_bodies: list[dict] | None = None) -> list[Docu
                 automatable=e.automatable.value,
                 severity=e.severity.value if e.severity else None,
                 # `ccis` is what lets the NIST label be derived from a STIG
-                # hit instead of retrieved -- see rag/author.py.
+                # hit instead of retrieved (see rag/author.py).
                 meta={"page": e.page, "source_file": e.source_file,
                       "ccis": (e.extra or {}).get("ccis") or []},
             ))
 
-    # ---- CIS body shard (LOCAL ONLY -- see rag/guard.py) -------------------
+    # ---- CIS body shard (LOCAL ONLY, see rag/guard.py) ---------------------
     # Retrieval quality on CIS roughly doubles with the body, because `Audit:`
     # contains the vendor command and our probes contain the vendor syntax.
     if cis_bodies:

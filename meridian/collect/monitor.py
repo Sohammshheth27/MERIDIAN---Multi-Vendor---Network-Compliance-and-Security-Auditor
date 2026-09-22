@@ -14,7 +14,7 @@ CREDENTIALS. A scheduled job has to keep the device password. It is stored
 encrypted (Fernet, AES-128-CBC + HMAC-SHA256) with a key held in the data
 directory, never returned by any endpoint, and never logged. The key sits on
 the same machine as the ciphertext, so this protects against the database
-being copied on its own -- not against someone with the whole data directory.
+being copied on its own, not against someone with the whole data directory.
 That limit is stated rather than hidden; use a read-only device account.
 
 The scheduler is OPT-IN (MERIDIAN_MONITOR=1): tests and demos never start
@@ -118,7 +118,7 @@ class Monitor:
 
     @staticmethod
     def _public(r) -> dict:
-        """A job WITHOUT its credentials -- the only shape that leaves here."""
+        """A job WITHOUT its credentials: the only shape that leaves here."""
         d = {k: r[k] for k in r.keys() if k != "secret_blob"}
         d["frameworks"] = json.loads(d["frameworks"]) if d["frameworks"] else None
         d["last_frameworks"] = json.loads(d["last_frameworks"]) if d["last_frameworks"] else None

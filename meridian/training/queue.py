@@ -1,9 +1,9 @@
-"""The training queue -- what a human is asked to teach the system next.
+"""The training queue: what a human is asked to teach the system next.
 
 This is the input side of the "Dynamic Adaptation" loop the problem statement
 describes: raw unrecognised settings, presented for an administrator to map to
-a security category. Until now nothing collected them, so `TierRouter` -- the
-component that consults approved mappings and escalates the rest -- was never
+a security category. Until now nothing collected them, so `TierRouter` (the
+component that consults approved mappings and escalates the rest) was never
 called by anything.
 
 The queue is deduplicated by SETTING NAME and ranked, because the useful unit
@@ -12,7 +12,7 @@ records". One approval covers every instance of that name on every device.
 
 Ranking is by how much evidence there is for the setting mattering:
 occurrences first (a setting present on 36 interfaces is load-bearing), then
-whether an existing vendor pack already has a field for the same concept --
+whether an existing vendor pack already has a field for the same concept,
 because that is a mapping we can propose rather than ask about.
 """
 from __future__ import annotations
@@ -36,8 +36,8 @@ class TrainingCandidate:
     evidence_raw: str = ""
     vendor: str = ""
     platform: str = ""
-    #: "value" -- the setting carries a value; "keys" -- the setting is a
-    #: table whose KEYS are the values (SONiC's NTP_SERVER, SYSLOG_SERVER).
+    #: "value": the setting carries a value. "keys": the setting is a table
+    #: whose KEYS are the values (SONiC's NTP_SERVER, SYSLOG_SERVER).
     kind: str = "value"
     # Filled by the NLP matcher when a known vendor expresses the same idea.
     suggested_field: str | None = None
@@ -101,7 +101,7 @@ def build_queue(device_assessment, doc=None, *, only_security=True,
 def _apply_decisions(cands: list, platform: str) -> list:
     """Mark what a human already decided, and drop what they rejected.
 
-    APPROVED stays visible until the device is re-assessed -- the mapping is
+    APPROVED stays visible until the device is re-assessed. The mapping is
     written, but this assessment was produced before it existed. A REJECTED
     setting leaves the queue for good: asking again is how reviewers learn to
     click without reading.
@@ -156,7 +156,7 @@ def json_table_records(data) -> list:
     """(name, value, line, raw, kind) for a JSON config no pack covers.
 
     Walked as TABLES, not dotted leaf paths. SONiC writes NTP and syslog
-    servers as the KEYS of a table -- "NTP_SERVER": {"0.pool.ntp.org": {}} --
+    servers as the KEYS of a table ("NTP_SERVER": {"0.pool.ntp.org": {}}),
     and a key containing dots turned the dotted path into nonsense. So:
 
       * a table of objects contributes one "keys" record per key, and
@@ -202,7 +202,7 @@ def split_cli_line(raw: str) -> tuple:
     The first version split every record on "=", which is the `.exp` shape and
     NOT the shape of any CLI. Every line of a Cisco ASA config therefore parsed
     as name=<whole line>, value=<empty>, and an empty value is classified as
-    "nothing to map" -- so 113 unrecognised lines produced 0 training
+    "nothing to map". So 113 unrecognised lines produced 0 training
     candidates. The training loop was silently dead for every CLI vendor, which
     is most of the ones the brief names.
 
@@ -244,7 +244,7 @@ def _suggest(candidates) -> None:
         hybrid + type prior   top-1 45.5%   top-5 64.8%
 
     Two results decided this. The VALUE's type is worth more than the
-    similarity function -- 214 of 400 real settings are integers and only 8 of
+    similarity function: 214 of 400 real settings are integers and only 8 of
     119 schema fields are integer-typed, so typing the value alone adds 15.5
     points. And fusing lexical with dense HURT top-1 (30.0%): reciprocal-rank
     fusion dilutes a strong ranking with a weak one, so the two are not
@@ -278,7 +278,7 @@ def _suggest(candidates) -> None:
             field, score, why = hits[0]
             c.suggested_field = field
             # Already 0-100. The old x100 existed because the score was the
-            # reciprocal-rank constant 0.01639 -- which also meant every
+            # reciprocal-rank constant 0.01639. That also meant every
             # accepted suggestion reported an identical 1.639 and the queue
             # could not be ranked by likelihood at all. Multiplying the new
             # confidence would put it in the thousands.

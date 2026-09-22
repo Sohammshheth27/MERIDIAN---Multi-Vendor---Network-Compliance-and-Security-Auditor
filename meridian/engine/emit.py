@@ -6,7 +6,7 @@ WHY A FILE AND NOT A COMMAND SCRIPT
 For SonicOS we hold no CLI grammar. `packs/sonicwall_exp.yaml` says so in its
 own header: "SonicWall publishes no CLI grammar in the vendor-doc set we hold,
 so the device itself is the authority." A command sequence written without a
-grammar is plausible text, not verified syntax -- `login-banner` is a guess,
+grammar is plausible text, not verified syntax: `login-banner` is a guess,
 while `cli_loginBanner` is a key read from a real export.
 
 What we DO hold is 92,635 settings from the appliance, each with its exact name
@@ -18,7 +18,7 @@ THE FOUR RULES
 1. ANCHOR ON EVIDENCE. A record is rewritten only when a FAIL finding cites it.
    The engine can change what it can prove is wrong, and nothing else.
 2. FALL BACK TO THE MAPPING, ONLY FOR AN EMPTY RECORD. `cli_loginBanner` is
-   present with value "" -- a provable absence, and a real finding -- but an
+   present with value "" (a provable absence, and a real finding), but an
    empty record carries no evidence, so anchoring on evidence alone silently
    skipped two legitimate fixes.
 3. COPY THE DEVICE'S OWN FORMAT. `encUsernamePassword=off` takes `on`;
@@ -26,7 +26,7 @@ THE FOUR RULES
    the key, never assumed.
 4. REFUSE RATHER THAN GUESS. A boolean control over a string-valued record is
    not a single-record change. An earlier version wrote
-   `syslogServerName=on` -- a boolean word into a server ADDRESS field --
+   `syslogServerName=on`, a boolean word into a server ADDRESS field,
    because the control says `equals True` and the record was empty. That is the
    invented value this project forbids everywhere else, and it would have put
    nonsense into a production firewall.
@@ -228,7 +228,7 @@ def emit_sonicos(device_assessment, source: str | Path, *, controls_by_id,
             hits = sum(1 for k in index if fnmatch.fnmatch(k, mapping.path))
             # A glob that matches NOTHING is a dead mapping, not a per-instance
             # setting. Calling it per-instance would describe our own blind spot
-            # as a property of the device -- the same overstatement, inverted.
+            # as a property of the device: the same overstatement, inverted.
             reason = (
                 f"per-instance setting: {hits} records match `{mapping.path}`, "
                 "so the fix targets named instances rather than one record"
@@ -267,7 +267,7 @@ def as_exp(text: str) -> bytes:
     """The IMPORTABLE form of an emitted configuration.
 
     SonicOS ingests a `.exp`, which is base64 of the URL-encoded `key=value`
-    blob -- exactly what `readers.sonicos_exp.decode` undoes. The emitter works
+    blob, exactly what `readers.sonicos_exp.decode` undoes. The emitter works
     on the decoded text, so handing an operator that text would hand them a
     file the appliance does not accept: the right settings in the wrong
     envelope. This is the inverse of `decode`, and nothing else.

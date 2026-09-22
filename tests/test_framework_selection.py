@@ -3,7 +3,7 @@
 The contract, in order of importance:
 
   1. Selecting NOTHING is the assessment exactly as it has always been. The
-     SonicWall figures below are the proof -- 41.3% on 68.7% coverage (46 of 67 applicable controls decided).
+     SonicWall figures below are the proof: 41.3% on 68.7% coverage (46 of 67 applicable controls decided).
   2. Selecting a framework scores the device against ONLY the controls that
      framework cites, so "CIS: 71%" is a statement about CIS.
   3. A framework with nothing to evaluate says so. CIS publishes no SonicWall
@@ -202,7 +202,7 @@ def test_every_crosswalk_entry_names_a_real_control_and_platform():
 
 
 def _benchmark_ids(titles: set[str]) -> dict[str, set[str]]:
-    """Parse ONLY the cited benchmarks -- the whole catalogue is 89 PDFs --
+    """Parse ONLY the cited benchmarks, since the whole catalogue is 89 PDFs,
     and cache the recommendation numbers locally (git-ignored). Parsing ten
     PDFs cost two minutes of every run. The cache key is each PDF's size and
     mtime plus the parser's own mtime, so a new PDF or a parser change

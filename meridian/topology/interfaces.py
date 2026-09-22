@@ -1,4 +1,4 @@
-"""Extract interfaces and their networks -- the foundation for topology.
+"""Extract interfaces and their networks: the foundation for topology.
 
 A device's policy says what it permits. Its INTERFACES say where it sits, and
 without that a collection of assessments is a pile of unrelated reports rather
@@ -10,7 +10,7 @@ addresses as address objects named `X0 IP` with an owning zone, while ASA and
 IOS write an `ip address` line inside an `interface` block.
 
 Every interface carries the evidence it came from. An interface inferred rather
-than read is not returned -- a topology built on guessed addressing produces
+than read is not returned. A topology built on guessed addressing produces
 confident, wrong reachability answers, which is worse than no topology.
 """
 from __future__ import annotations
@@ -133,7 +133,7 @@ class RedactedAddressing(RuntimeError):
     No longer expected from SonicOS: redaction there pseudonymises an address
     into a valid one (`_pseudonym`) instead of blanking octets, so interfaces
     parse whether or not the upload was redacted. It remains the signal for any
-    future reader that masks addressing destructively -- silence on that is how
+    future reader that masks addressing destructively. Silence on that is how
     a device with ten live interfaces came to look like a device with none.
     """
 
@@ -145,7 +145,7 @@ def extract(device_assessment, *, strict=False) -> list:
     than returning `[]` for a device that plainly has interfaces. It is a
     backstop, not the normal path: redaction is prefix-preserving, so a
     redacted SonicOS upload yields the same interfaces, in the same zones, on
-    the same subnet structure -- with pseudonymous addresses.
+    the same subnet structure, with pseudonymous addresses.
     """
     doc = getattr(device_assessment, "document", None)
     if doc is None:

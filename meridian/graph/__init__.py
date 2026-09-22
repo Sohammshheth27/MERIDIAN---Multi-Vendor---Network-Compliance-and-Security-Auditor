@@ -1,4 +1,4 @@
-"""Security object graph -- objects, references, and computed facts."""
+"""Security object graph: objects, references, and computed facts."""
 from .bridge import merge
 from .sonicos_builder import build as build_sonicos
 from .facts import FACTS

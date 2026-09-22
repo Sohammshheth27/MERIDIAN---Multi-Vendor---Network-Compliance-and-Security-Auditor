@@ -13,13 +13,13 @@ WHERE AZURE DIFFERS FROM AN AWS SECURITY GROUP
 1. ORDERED, FIRST MATCH, AND DENY EXISTS.
    Custom rules carry priority 100-4096, the built-in defaults 65000+, lower
    wins and the first match decides. Unlike a security group, position here
-   is meaning -- so the graph is NOT marked unordered.
+   is meaning, so the graph is NOT marked unordered.
 
 2. EACH NSG IS ITS OWN POLICY.
    Rules in different NSGs never compete. Each NSG's rules are kept contiguous
    (sorted by direction, then priority) and scoped to that NSG's zone.
    Interleaving every NSG by priority would let a rule in one NSG "shadow" a
-   rule in another -- a finding about semantics Azure does not have.
+   rule in another: a finding about semantics Azure does not have.
 
 3. SERVICE TAGS ARE NOT ADDRESSES, AND ARE NOT ALL ALIKE.
      Internet                          the public address space -> 0.0.0.0/0,
@@ -37,7 +37,7 @@ WHERE AZURE DIFFERS FROM AN AWS SECURITY GROUP
    `defaultSecurityRules` carries DenyAllInBound at priority 65500. It is read
    from the file and cited as the default policy's evidence. An NSG cannot
    delete its default rules, so if an export omits them the default is still
-   deny -- but it is then recorded as assumed, not observed.
+   deny. It is then recorded as assumed, not observed.
 
 Validated on a FIXTURE built from the documented `az network nsg list` output
 shape, not on a real subscription export.

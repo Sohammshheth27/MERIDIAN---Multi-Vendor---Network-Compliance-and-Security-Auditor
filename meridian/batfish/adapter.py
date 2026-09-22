@@ -1,9 +1,9 @@
-"""Batfish as an independent second opinion -- not as a parser we depend on.
+"""Batfish as an independent second opinion, not as a parser we depend on.
 
 WHAT THIS IS FOR, because the obvious assumption is wrong.
 
 Batfish is not a way to support more vendors. Measured against the 37 vendors
-named in the MERIDIAN brief it covers 10 of them -- 27% -- and it does NOT support
+named in the MERIDIAN brief it covers 10 of them (27%) and it does NOT support
 SonicWall, which is the appliance this project was actually built against. Its
 supported list (A10, Arista, AWS, Check Point, Cisco, Cumulus, F5, Fortinet,
 FRR, iptables, Juniper, Palo Alto, SONiC) overlaps heavily with the vendors we
@@ -12,7 +12,7 @@ already parse rather than extending past them.
 What it IS: a mature, independently-written implementation of the same
 questions we answer, by people who have spent years on the data plane. Where
 both tools can read a device, agreement raises confidence and DISAGREEMENT IS
-THE POINT -- it means one of us is wrong about a real device, and that is worth
+THE POINT. It means one of us is wrong about a real device, and that is worth
 more than either tool's unchallenged opinion. This is the same n-version
 reasoning as the pack-versus-detector consensus, applied to a second codebase
 instead of a second method.
@@ -71,7 +71,7 @@ def _docker(*args, timeout=60, wsl=True):
 
 
 def status(timeout=30) -> BatfishStatus:
-    """Is Batfish reachable? Never raises -- absence is a normal state."""
+    """Is Batfish reachable? Never raises, because absence is normal."""
     try:
         import pybatfish  # noqa: F401
     except ImportError:
@@ -186,7 +186,7 @@ def analyse(config_path, platform: str, *, snapshot_dir=None,
     """Send one config to Batfish and collect its own findings.
 
     Returns a report whose `consulted` flag says whether Batfish actually ran.
-    A report with consulted=False is not an error and not a clean result -- it
+    A report with consulted=False is not an error and not a clean result. It
     is the absence of a second opinion, and callers must not read it as
     agreement.
     """

@@ -1,6 +1,6 @@
 """CIS Benchmark loader (PDF).
 
-Licensing -- read this before changing anything here
+Licensing: read this before changing anything here
 ---------------------------------------------------------------
 CIS Benchmarks are copyrighted. The rule is about *redistribution*, not local
 reference, so this loader draws the line there:
@@ -46,7 +46,7 @@ def _join_wrapped_toc(text: str) -> str:
 
     The TOC pattern needs the number, the title and the dot leader on ONE
     line, so a wrapped title matched nothing and the recommendation vanished
-    from the catalogue -- in the AWS benchmark, exactly the three networking
+    from the catalogue. In the AWS benchmark that meant the three networking
     recommendations (6.2-6.4) a firewall auditor needs. Up to two continuation
     lines are joined, and only when they do not start a new numbered entry.
     """
@@ -102,7 +102,7 @@ def _parse_pdf(path: Path, vendor: str) -> list[CatalogEntry]:
             CatalogEntry(
                 framework=Framework.CIS,
                 id=num,
-                # local reference only -- see the module docstring
+                # local reference only (see the module docstring)
                 title=title,
                 license=License.IDENTIFIER_ONLY,
                 automatable=(

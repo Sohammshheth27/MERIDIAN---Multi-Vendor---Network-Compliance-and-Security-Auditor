@@ -42,7 +42,7 @@ const ApiAccess: FC = () => {
           type="password"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={saved ? 'token saved — enter a new one to replace it' : 'API token'}
+          placeholder={saved ? 'token saved. Enter a new one to replace it' : 'API token'}
           autoComplete="off"
           className="min-w-[240px] flex-1 rounded-xl border border-[var(--color-hairline)] bg-white px-3 py-2 text-xs text-[var(--color-ink-navy)] focus:border-[var(--color-signal-blue)] focus:outline-none"
         />

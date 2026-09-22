@@ -4,9 +4,9 @@ platform: juniper_srx_xml
 source: >-
   `show configuration | display xml` from a hardened SRX. The structured-input
   tier: the device already parsed its own configuration, so none of the text
-  hazards that produced four separate bugs in the braces pack -- block-header
+  hazards that produced four separate bugs in the braces pack: block-header
   arguments, repeated leaf keys overwriting each other, a hardcoded
-  default-policy -- can occur here.
+  default-policy, can occur here.
 
 controls:
   MERIDIAN-TEL-001:
@@ -49,7 +49,7 @@ source: >-
 controls:
   MERIDIAN-TEL-001:
     expect: FAIL
-    because: "`<telnet/>` at L27 -- an empty element means the service is ON."
+    because: "`<telnet/>` at L27: an empty element means the service is ON."
 
   MERIDIAN-SSH-002:
     expect: FAIL
@@ -63,7 +63,7 @@ controls:
     expect: FAIL
     because: >-
       `<permit-all/>` at L51. Reported as "(absence)" until the weak form was
-      mapped as positively as the strong one -- the same defect that let a
+      mapped as positively as the strong one. The same defect let a
       cleartext ASA password report UNKNOWN, and that once made a permit-all
       Junos device a false PASS.
 

@@ -1,4 +1,4 @@
-"""Risk severity for a finding -- deliverable 4, "risk severity assessments".
+"""Risk severity for a finding (deliverable 4, "risk severity assessments").
 
 A framework severity alone is not risk. CIS rates "administrative interface
 uses HTTP" the same on every device in the world, because a benchmark cannot
@@ -19,7 +19,7 @@ proves about this specific device:
 Two properties are deliberate:
 
   * Exposure can only be applied when the graph actually proves it. With no
-    graph the multiplier is 1.0 -- absence of evidence never becomes a
+    graph the multiplier is 1.0. Absence of evidence never becomes a
     discount, or a device we could not model would score safer than one we
     could.
   * A finding whose evidence is weak is scored DOWN, not up. A tool that
@@ -112,7 +112,7 @@ def _confidence_for(finding) -> tuple[float, str]:
 def score_finding(finding, *, graph=None) -> Risk | None:
     """Risk for one FAIL. Returns None for anything that is not a failure.
 
-    Only a FAIL carries risk. A PARTIAL is scored at half base -- it is a real
+    Only a FAIL carries risk. A PARTIAL is scored at half base: it is a real
     but incomplete deviation. UNKNOWN deliberately carries NO risk score: we do
     not know whether it is a problem, and a number would imply we did.
     """

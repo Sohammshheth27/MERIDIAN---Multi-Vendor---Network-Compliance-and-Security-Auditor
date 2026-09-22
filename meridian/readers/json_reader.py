@@ -1,4 +1,4 @@
-"""Reader 5 -- JSON.
+"""Reader 5: JSON.
 
 Vendors: AWS Security Groups, Azure NSG, GCP Firewall Rules, SONiC config_db.
 
@@ -9,7 +9,7 @@ Two things this reader must get right anyway:
 
   * **Evidence.** A JSON document has no line numbers in the useful sense, so
     evidence carries the JSONPath as ``record_id`` plus a compact rendering of
-    the matched node as ``raw``. The evidence rule still applies -- a FAIL
+    the matched node as ``raw``. The evidence rule still applies. A FAIL
     without traceable evidence is not a finding.
   * **Accounting.** The no-silent-loss invariant is about *source records*, not lines.
     For JSON we count leaf nodes, so "no silent loss" still means something.
@@ -47,15 +47,15 @@ class JsonDocument:
 
         out: list[tuple[str, Any]] = []
         for m in jp.find(self.data):
-            # jsonpath_ng renders nested paths wrapped in parentheses --
-            # "([0].GroupId)" -- which never matches our own leaf addressing.
+            # jsonpath_ng renders nested paths wrapped in parentheses, as in
+            # "([0].GroupId)", which never matches our own leaf addressing.
             # Normalise before any comparison.
             path = str(m.full_path).replace("(", "").replace(")", "")
             self.consumed_paths.add(path)
             if count:
                 # Mark the actual leaves under this node. Counting whole
                 # subtrees as "consumed" made coverage read 100% on every file,
-                # which would defeat the point of accounting -- the number exists
+                # which would defeat the point of accounting. The number exists
                 # to reveal what we did NOT read.
                 self.consumed_leaves.update(
                     lp for lp in self._leaf_paths if lp == path or lp.startswith(path + ".") or lp.startswith(path + "[")
@@ -97,7 +97,7 @@ class JsonDocument:
         }
 
     def unread_paths(self) -> list[str]:
-        """Leaves nothing in the pack ever read -- the 14.5 appendix."""
+        """Leaves nothing in the pack ever read (the 14.5 appendix)."""
         return sorted(self._leaf_paths - self.consumed_leaves)
 
 

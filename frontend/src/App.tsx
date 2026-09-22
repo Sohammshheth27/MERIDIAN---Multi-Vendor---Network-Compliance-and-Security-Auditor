@@ -17,7 +17,7 @@ import { api, sessionToken } from './lib/api';
  * Nothing behind the shell renders without a session.
  *
  * A token already in this tab is trusted optimistically so navigation does
- * not flash a check on every route change -- if it has expired, the first API
+ * not flash a check on every route change. If it has expired, the first API
  * call returns 401 and `request()` sends the browser back here. With no token
  * the engine is asked whether it is enforcing sign-in at all, so a build
  * running against MERIDIAN_CONSOLE_AUTH=0 is not locked out of its own console.

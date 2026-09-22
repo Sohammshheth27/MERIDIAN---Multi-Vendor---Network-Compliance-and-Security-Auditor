@@ -10,7 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 # The default credential, assembled rather than written, so the guard at the
-# bottom of this file -- "the plaintext must not appear in the package" -- is
+# bottom of this file ("the plaintext must not appear in the package") is
 # not defeated by the test that proves the password works.
 PASSWORD = "Maverick" + "@" + "1234"
 USER = "Administrator"

@@ -2,16 +2,16 @@
 
 Two validations, and they are not equal, so they are labelled:
 
-  * REAL DEVICE -- the NSA 3700. The correct answer is "no wireless network
+  * REAL DEVICE: the NSA 3700. The correct answer is "no wireless network
     is live", and the file's unused wireless defaults (WEP keys included) must
     NOT become findings.
-  * FIXTURE -- samples/wireless/c9800-wlc-01.cfg, built only from commands in
+  * FIXTURE (samples/wireless/c9800-wlc-01.cfg), built only from commands in
     Cisco's published Catalyst 9800 guides. It proves the checks behave; it
     does not prove a real controller export parses the same way.
 
 The most important guard is the default-security test: an IOS-XE running
 config omits defaults, so a WLAN with no security lines is WPA2/AES/802.1X per
-Cisco -- not open. Getting that backwards would invent a high-severity finding
+Cisco, not open. Getting that backwards would invent a high-severity finding
 on every enterprise WLAN.
 """
 import os

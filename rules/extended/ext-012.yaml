@@ -1,9 +1,9 @@
 id: MERIDIAN-EXT-012
 title: A privileged-mode secret must be set, not a reversible password
-# `authentication.enable_secret` is a BOOL -- true when the enable
+# `authentication.enable_secret` is a BOOL, true when the enable
 # credential is stored hashed. It was compared against the STRING
 # "password", which a bool can never equal, so the control passed on
-# every device ever assessed -- including a real ASA whose config reads
+# every device ever assessed, including a real ASA whose config reads
 # `enable password Marcraft1` in cleartext. A high-severity control that
 # cannot fail is worse than no control: it reports safety it never checked.
 field: authentication.enable_secret

@@ -14,7 +14,7 @@ import {
 import { useApi } from '../../lib/useApi';
 
 /**
- * The interactive training interface -- deliverable 2.
+ * The interactive training interface: deliverable 2.
  *
  * An administrator sees each unrecognised setting as it appears in the file,
  * the AI's proposed meaning with its confidence, and chooses what it means.
@@ -23,8 +23,8 @@ import { useApi } from '../../lib/useApi';
  * with a reason is the most useful thing this screen can say.
  *
  * For a vendor with no pack at all, the first approval creates its pack. The
- * form asks for the vendor, a platform id, the file format and a SIGNATURE --
- * without a signature the next upload of that vendor would be refused again.
+ * form asks for the vendor, a platform id, the file format and a SIGNATURE.
+ * Without a signature the next upload of that vendor would be refused again.
  *
  * "Re-assess" runs the same file through the engine with everything learned.
  * Nothing is redeployed: that is the point being demonstrated.
@@ -184,7 +184,7 @@ export const TrainingWorkbench: FC<{
             <input
               value={approver}
               onChange={(e) => setApprover(e.target.value)}
-              placeholder="Your name -- every decision is attributed"
+              placeholder="Your name (every decision is attributed)"
               className={`max-w-sm ${inputStyle} font-normal normal-case tracking-normal`}
             />
           </label>
@@ -208,7 +208,7 @@ export const TrainingWorkbench: FC<{
               />
             </label>
             <label className="text-xs font-medium text-[var(--color-slate-gray)]">
-              Platform id {c.platform_known && '(recognised -- fixed)'}
+              Platform id {c.platform_known && '(recognised, fixed)'}
               <input
                 value={platform}
                 disabled={c.platform_known}
@@ -258,7 +258,7 @@ export const TrainingWorkbench: FC<{
         <Card variant="default" className="overflow-hidden p-0">
           <div className="border-b border-[var(--color-hairline)] bg-[var(--color-cloud)] p-5">
             <h4 className="text-base font-bold text-[var(--color-ink-navy)]">
-              Unrecognised settings — {queue.data.length}
+              Unrecognised settings ({queue.data.length})
             </h4>
             <p className="mt-1 text-xs text-[var(--color-slate-gray)] leading-relaxed max-w-4xl">
               A high confidence is a reason to look first, never a reason to accept
@@ -366,7 +366,7 @@ export const TrainingWorkbench: FC<{
                       {verdict.alert && (
                         <span className="block mt-1 font-medium">
                           The corpus pass rate rose. That is what a poisoned mapping looks
-                          like too -- worth a second look.
+                          like too. Worth a second look.
                         </span>
                       )}
                       {verdict.detail && verdict.detail.length > 0 && (

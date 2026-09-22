@@ -8,7 +8,7 @@ with an Ed25519 key:
   * the PRIVATE key lives in the data directory (git-ignored) and never
     leaves this machine;
   * the PUBLIC key is served, so anyone can verify a report offline with no
-    secret -- which is the point of an asymmetric signature over an HMAC;
+    secret, which is the point of an asymmetric signature over an HMAC;
   * every issued report is recorded (hash, signature, assessment, time), so
     /verify-report can also say "this engine never issued that file".
 
@@ -69,9 +69,9 @@ class ReportSigner:
 
     # ---------------------------------------------------------------- verify
     def verify(self, data: bytes) -> dict:
-        """authentic -- issued by this engine and unchanged;
-        unknown   -- this engine never issued a file with these bytes
-                     (edited, or produced elsewhere)."""
+        """authentic: issued by this engine and unchanged;
+        unknown:   this engine never issued a file with these bytes
+                   (edited, or produced elsewhere)."""
         from cryptography.exceptions import InvalidSignature
 
         digest = hashlib.sha256(data).hexdigest()
@@ -93,7 +93,7 @@ class ReportSigner:
 
 
 def verify_offline(data: bytes, signature_b64: str, public_pem: str) -> bool:
-    """Check a report with only the public key -- no access to the engine."""
+    """Check a report with only the public key. No engine access needed."""
     from cryptography.exceptions import InvalidSignature
     from cryptography.hazmat.primitives import serialization
 

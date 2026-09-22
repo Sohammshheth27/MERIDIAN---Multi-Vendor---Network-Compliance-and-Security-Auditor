@@ -28,8 +28,8 @@ class ObservationSource(str, Enum):
     MAPPING_REGISTRY = "mapping_registry"  # platform default table
     LLM_APPROVED = "llm_approved"          # AI proposed, human approved, 0.9
 
-    # Deliberately absent: an unapproved LLM suggestion -- an
-    # unapproved guess gets no risk score at all and must surface as UNKNOWN.
+    # Deliberately absent: an unapproved LLM suggestion. An unapproved
+    # guess gets no risk score at all and must surface as UNKNOWN.
 
 
 class ResultState(str, Enum):

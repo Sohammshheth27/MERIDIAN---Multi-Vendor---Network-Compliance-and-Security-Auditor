@@ -1,7 +1,7 @@
 """Multi-device topology and end-to-end reachability.
 
 The last capability the comparable products have and MERIDIAN did not. A firewall
-report is about one box; an auditor asks about the NETWORK -- "can anything in
+report is about one box; an auditor asks about the NETWORK: "can anything in
 the DMZ reach the database server", when the answer depends on three devices
 in series and any one of them can deny.
 
@@ -25,8 +25,8 @@ than buried:
     reported as such rather than answered.
 
 A path we cannot determine returns UNDECIDABLE. The one thing a topology tool
-must never do is report "no path exists" when it simply could not find one --
-that reads as "the network is safe" and it is the failure this whole project
+must never do is report "no path exists" when it simply could not find one.
+That reads as "the network is safe", and it is the failure this whole project
 guards against.
 """
 from __future__ import annotations
@@ -128,7 +128,7 @@ class Fabric:
         return d
 
     def adjacency(self) -> list:
-        """Device pairs sharing a subnet. INFERRED -- see the module docstring."""
+        """Device pairs sharing a subnet. INFERRED (see the module docstring)."""
         links = []
         keys = list(self.devices)
         for a in range(len(keys)):

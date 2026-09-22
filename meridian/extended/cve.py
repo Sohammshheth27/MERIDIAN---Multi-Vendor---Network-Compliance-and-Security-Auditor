@@ -8,7 +8,7 @@ models". Both halves are evaluated. A version match alone is NOT enough: many
 SonicOS advisories cover only TZ models, and reporting one of those against an
 NSA would be a false finding with a CVE number on it.
 
-Evaluation is three-valued -- affected, not affected, cannot tell -- and
+Evaluation is three-valued (affected, not affected, cannot tell), and
 "cannot tell" is reported as such. It is never folded into "not affected",
 because that is the direction in which a vulnerability lookup does harm.
 
@@ -23,7 +23,7 @@ still cannot be ordered makes the match indeterminate.
 
 WHAT A RESULT IS, AND IS NOT
 ----------------------------
-The data is a dated snapshot (tools/fetch_cve.py) -- every result states its
+The data is a dated snapshot (tools/fetch_cve.py). Every result states its
 date, because a snapshot misses everything published after it. NVD is
 sometimes late and occasionally wrong; the vendor's PSIRT advisory is
 authoritative. And no match is not proof of no vulnerability: it means only
@@ -70,7 +70,7 @@ def version_key(v) -> tuple | None:
             break
         nums.append(int(m.group()))
         if m.group() != part:
-            break                      # `4v` -- numeric prefix, then stop
+            break                      # `4v`: numeric prefix, then stop
     if not nums:
         return None
     m = re.match(r"\d+", tail)

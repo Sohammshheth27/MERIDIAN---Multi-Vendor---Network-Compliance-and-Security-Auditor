@@ -104,7 +104,7 @@ export function NotRun({
           ) : null}
           <p className="mt-2 text-[12px] italic text-[var(--color-mist-gray)]">
             Zero findings here would mean "we looked and found nothing". This
-            means we never looked — a gap in our coverage, not a clean result.
+            means we never looked: a gap in our coverage, not a clean result.
           </p>
         </div>
       </div>

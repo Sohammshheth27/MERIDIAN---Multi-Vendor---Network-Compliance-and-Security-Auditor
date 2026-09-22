@@ -13,7 +13,7 @@ import { useApi } from '../../lib/useApi';
  * markup: the figure contains names taken from the configuration, which is
  * untrusted input, and an <img> cannot execute anything inside it.
  *
- * Redaction is on by default -- WAN addresses are real public IPs and tunnel
+ * Redaction is on by default. WAN addresses are real public IPs and tunnel
  * names are usually customer sites.
  */
 export const TopologyMapPanel: FC<{ id: string }> = ({ id }) => {

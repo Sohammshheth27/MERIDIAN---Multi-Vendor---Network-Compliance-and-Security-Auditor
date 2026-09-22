@@ -11,7 +11,7 @@ controls:
     expect: FAIL
     because: >-
       L30 `ip http server`. This control produced a FALSE PASS until the
-      `_extract` helper stopped using `mo.lastindex` -- which is None when an
+      `_extract` helper stopped using `mo.lastindex`, which is None when an
       optional group does not participate, so `^(no )?ip http server` matching
       the enabled form fell through to the whole line and inverted to "off".
 
@@ -35,7 +35,7 @@ controls:
     because: >-
       L48 has one `logging host`; the control requires two. EXPECTATION
       CORRECTED 2026-09-03: I first wrote FAIL and the tool said PARTIAL. The
-      tool is right -- `op_min_count` documents that one of two required is
+      tool is right: `op_min_count` documents that one of two required is
       genuinely partial compliance, the device does ship logs, it just has no
       redundant collector. Recorded here because the corpus adjudicated this,
       and the opposite call was made for VTY-001 in the same run.
@@ -57,7 +57,7 @@ controls:
   MERIDIAN-HTTP-001:
     expect: PASS
     because: >-
-      L47 `no ip http server` -- an OBSERVED false, not an absence. L48
+      L47 `no ip http server` is an OBSERVED false, not an absence. L48
       `ip http secure-server` is HTTPS and must not be read as cleartext
       management; the universal detector fired on it until `secure-server`
       was excluded, because the "s" of https is in the next word.
@@ -72,7 +72,7 @@ controls:
 
   MERIDIAN-EXT-012:
     expect: PASS
-    because: "L36 `enable secret 5 $1$...` -- hashed, not a reversible password."
+    because: "L36 `enable secret 5 $1$...` is hashed, not a reversible password."
 
   MERIDIAN-AAA-001:
     expect: PASS

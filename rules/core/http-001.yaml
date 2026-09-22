@@ -10,8 +10,8 @@ rationale: >-
 frameworks:
   nist_800_53: [AC-17.2, SC-8, SC-8.1]
   iso_27001_2022: [A.5.10, A.5.14, A.5.33, A.6.7, A.8.20, A.8.26]
-  # STIG Vuln IDs are per-platform. Derived from the downloaded
-  # XCCDF files, not recalled -- a control may map to several.
+  # STIG Vuln IDs are per-platform. Pulled from the downloaded XCCDF
+  # files (not recalled), and one control can map to several of them.
   stig_by_platform:
     cisco_iosxe_router: [V-215823]
     cisco_iosxe_switch: [V-220534]

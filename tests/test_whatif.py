@@ -33,7 +33,7 @@ def da():
 
 
 def _simple_fail(da):
-    """A FAIL on a scalar setting with an `equals` control -- a clean fix."""
+    """A FAIL on a scalar setting with an `equals` control: a clean fix."""
     rules = {c.id: c for c in load_rules("rules", platform=da.identity.platform)}
     for f in da.assessment.findings:
         c = rules.get(f.control_id)
@@ -88,7 +88,7 @@ def test_disabling_only_the_ipv4_rules_leaves_the_ipv6_twins_open(da):
 
     SonicOS keeps IPv4 and IPv6 policy in separate tables. Rules 216/217 have
     IPv6 twins (59/60) with the same any/any/any allow, so an administrator who
-    closes the IPv4 rules has closed nothing -- the same 32 paths stay open
+    closes the IPv4 rules has closed nothing. The same 32 paths stay open
     over IPv6. The simulation must show that, and must say why.
     """
     out = simulate(da, disable_rules=[WLAN_DMZ, WLAN_WAN], origin_zone="WLAN")

@@ -1,7 +1,7 @@
 """Host firewalls: Windows Firewall and iptables.
 
 The capability `firewall_audit` has and MERIDIAN did not. It costs almost nothing
-architecturally -- once host rules become SecurityRule objects, hygiene,
+architecturally: once host rules become SecurityRule objects, hygiene,
 reachability and the controls all apply unchanged. That is the payoff of a
 vendor-neutral model, and these tests pin the places where host semantics
 DIFFER from an appliance and must not be papered over.
@@ -63,7 +63,7 @@ def test_host_graph_is_marked_unordered():
 
 def test_shadow_analysis_does_not_run_on_an_unordered_platform():
     """A 'shadowed rule' finding there describes semantics the device does not
-    have -- it would be invented by our assumption, not read from the policy."""
+    have. It would be invented by our assumption, not read from the policy."""
     fw = HostFirewall(
         source_file="t", collected_at="t", profiles=[],
         rules=[{"name": "wide", "action": "Allow", "enabled": "True",

@@ -1,10 +1,10 @@
+"""Send a prompt file to a local model and write clean output, no spinner."""
+import json, sys, time, urllib.request
 from pathlib import Path
 
-#: Repository root, derived from this file rather than hardcoded.
+#: Repository root, derived from this file rather than hardcoded, so the
+#: script runs from any checkout.
 _ROOT = Path(__file__).resolve().parents[1]
-
-"""Send a prompt file to a local model and write clean output -- no spinner."""
-import json, sys, time, urllib.request
 
 model = sys.argv[1] if len(sys.argv) > 1 else "qwen3.5:9b"
 src   = sys.argv[2] if len(sys.argv) > 2 else str(_ROOT / "prompts" / "sonicwall_real_full.txt")

@@ -1,4 +1,4 @@
-/* MERIDIAN landing — behaviour for the technical-drawing design.
+/* MERIDIAN landing. Behaviour for the technical-drawing design.
  *
  * Four things: the two line-art figures, the live figures, the platform wall,
  * and one-shot reveals. Everything is drawn as SVG geometry rather than shipped
@@ -78,12 +78,12 @@
         console.warn('MERIDIAN landing: no display title for catalogue key(s)',
           Object.keys(fw.catalogs).filter(k => !titles[k]));
       }
-      // A proportional bar per catalogue. The real spread is extreme -- CIS is
-      // roughly thirty times ISO -- and showing that honestly is what makes the
+      // A proportional bar per catalogue. The real spread is extreme (CIS is
+      // roughly thirty times ISO), and showing that honestly is what makes the
       // figure look like data rather than like four identical cards.
       const max = Math.max(...loaded.map(([, n]) => n));
       // A framework showing zero on a marketing page reads as broken. The
-      // engine still reports it, and /frameworks explains why it is empty --
+      // engine still reports it, and /frameworks explains why it is empty,
       // but the page shows only what actually loaded.
       const loaded = Object.entries(fw.catalogs).filter(([, n]) => n > 0);
       grid.innerHTML = loaded.map(([k, n]) =>
@@ -123,8 +123,8 @@
     })();
 
     // The honesty ring is driven by the same figures the hero terminal states,
-    // read out of the DOM rather than restated -- so the ring cannot disagree
-    // with the number beside it, and the terminal's test covers both.
+    // read out of the DOM rather than restated. The ring therefore cannot
+    // disagree with the number beside it, and the terminal's test covers both.
     if (window.__meridianRing) {
       const term = document.querySelector('.term');
       const m = term && term.textContent.match(
@@ -171,7 +171,7 @@
     '.sec-head, .cells article, .steps li, .fig, .two > div, .end > *, ' +
     '.glance-row, .wall-grid, .fw-grid, .fine');
   // Preset stagger is .08s, and the preset warns not to stagger more than ~8
-  // children -- past that the last item feels laggy. Capped at 6.
+  // children: past that the last item feels laggy. Capped at 6.
   targets.forEach((e, i) => {
     e.classList.add('rv');
     e.style.transitionDelay = (Math.min(i % 6, 5) * 80) + 'ms';

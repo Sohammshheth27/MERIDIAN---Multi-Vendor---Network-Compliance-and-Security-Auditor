@@ -189,10 +189,10 @@ const LiveCollect: FC<{ redact: boolean; frameworks: string[] }> = ({
               value={monitorEvery}
               onChange={(e) => setMonitorEvery(Number(e.target.value))}
             >
-              <option value={0}>No — collect once</option>
-              <option value={60}>Every hour — alert on drift</option>
-              <option value={360}>Every 6 hours — alert on drift</option>
-              <option value={1440}>Daily — alert on drift</option>
+              <option value={0}>No (collect once)</option>
+              <option value={60}>Every hour (alert on drift)</option>
+              <option value={360}>Every 6 hours (alert on drift)</option>
+              <option value={1440}>Daily (alert on drift)</option>
             </select>
             {monitorEvery > 0 && (
               <span className="mt-2 block text-xs text-[var(--color-slate-gray)] italic">

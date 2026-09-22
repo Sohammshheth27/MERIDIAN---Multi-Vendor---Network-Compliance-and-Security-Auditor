@@ -8,7 +8,7 @@ settings an AUDIT needs, not only the settings privacy needs:
   * IP addresses and passwords/secrets are anonymised (-a -p).
   * Default SNMP community strings are PRESERVED (-r public,private,...).
     netconan's -p also rewrites community lines; without this, a device still
-    using "public" would look compliant after sanitising -- SNMP-002 exists to
+    using "public" would look compliant after sanitising. SNMP-002 exists to
     catch exactly that.
   * Site names, hostnames and serials go in a words file you keep OUT of git
     (-w). One word per line.

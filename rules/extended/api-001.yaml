@@ -14,7 +14,7 @@ frameworks:
 
 # The management API's auth settings are moot when the API is switched off.
 # On the reference NSA 3700 `sonicOsApi_enable = off`, so every one of these
-# resolves to NOT_APPLICABLE with the disabling setting cited as evidence --
+# resolves to NOT_APPLICABLE with the disabling setting cited as evidence,
 # not to a FAIL about an attack surface that does not exist.
 requires:
   - field: platform.api.enabled

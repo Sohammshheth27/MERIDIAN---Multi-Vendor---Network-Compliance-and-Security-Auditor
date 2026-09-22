@@ -84,7 +84,7 @@ class TestObservation:
 # ------------------------------------------------------------------ Evidence
 class TestEvidence:
     def test_anchoring_accepts_real_quote(self):
-        """Guardrail defence 4 -- evidence anchoring."""
+        """Guardrail defence 4: evidence anchoring."""
         source = "line vty 0 4\n transport input ssh\n"
         assert EvidenceRef(file="c.cfg", line=2, raw="transport input ssh").anchors_in(source)
 
@@ -116,7 +116,7 @@ class TestNormalise:
     def test_ssh_version_across_vendors(self, raw, expected):
         """The bench failure this module exists for.
 
-        qwen3.5:4b returned "v2" for the Juniper line -- the correct reading.
+        qwen3.5:4b returned "v2" for the Juniper line, the correct reading.
         Without this, type validation would discard a right answer.
         """
         assert normalise(raw, "int") == expected
@@ -172,7 +172,7 @@ class TestEnums:
     def test_stig_cat_one_is_high(self):
         """Severity comes from the rule, not from a guess.
 
-        V-215844 (the real SSH rule) is CAT I -- an earlier draft assumed
+        V-215844 (the real SSH rule) is CAT I. An earlier draft assumed
         CAT II for it.
         """
         assert Severity.from_stig_cat("I") is Severity.HIGH

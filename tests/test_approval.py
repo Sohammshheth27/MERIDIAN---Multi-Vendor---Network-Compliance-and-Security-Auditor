@@ -2,7 +2,7 @@
 
 An approval is the only way a human decision changes what the tool reports, so
 it is the one path where a mistake becomes permanent and invisible. Poisoning
-always makes things look BETTER -- a wrong mapping does not crash, it quietly
+always makes things look BETTER. A wrong mapping does not crash, it quietly
 converts failures into passes forever. These tests pin the four properties
 that stop that.
 """
@@ -43,7 +43,7 @@ def test_unknown_platform_is_refused():
 def test_line_reader_mapping_captures_the_value_it_coerces():
     """A generated `^console timeout\b` with `as: int` and no capture group
     made the extractor fall back to the whole line and coerce
-    "console timeout 0" to an integer -- UNPARSED, on the very setting the
+    "console timeout 0" to an integer: UNPARSED, on the very setting the
     approval claimed to teach."""
     e = _mapping_entry("console timeout", "management.console.exec_timeout",
                        "indented")
@@ -147,8 +147,8 @@ def test_revert_removes_a_file_that_did_not_exist_before():
 
 
 def test_a_good_approval_actually_changes_parsing():
-    """An approval that does not alter what the device reports is theatre --
-    and it was: registry entries changed nothing because no reader read them."""
+    """An approval that does not alter what the device reports is theatre, and
+    it was: registry entries changed nothing because no reader read them."""
     import hashlib
 
     from meridian.pipeline import load_packs

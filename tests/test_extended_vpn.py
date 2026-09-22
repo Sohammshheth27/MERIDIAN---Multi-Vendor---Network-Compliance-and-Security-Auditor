@@ -2,7 +2,7 @@
 
 The checks judge only settings whose encoding is self-evident (on/off switches
 and lifetimes in seconds). The algorithm codes are vendor-private and stay
-UNKNOWN -- and one test below exists purely to stop a future change from
+UNKNOWN, and one test below exists purely to stop a future change from
 "helpfully" guessing them.
 
 The expectations are re-derived from the raw export independently of the
@@ -131,7 +131,7 @@ def test_algorithm_strength_is_never_guessed(sw):
 
     SonicOS stores algorithms as private codes (250 is in IANA's private-use
     range). No verified decoding is held, so this check must never PASS or
-    FAIL -- and must show the codes and how to calibrate them.
+    FAIL, and must show the codes and how to calibrate them.
     """
     _da, res = sw
     alg = [f for f in res.findings if f.check_id == "MERIDIAN-X-VPN-005"]

@@ -10,10 +10,10 @@ RULES FOR A TAG
   * DIRECT ONLY. A control is tagged with a technique it directly prevents or
     detects. Telnet enabled -> T1040 Network Sniffing is direct: credentials
     cross the wire in the clear. A login banner prevents no technique, so it
-    has no tag -- and a tag added for completeness would be decoration that a
+    has no tag, and a tag added for completeness would be decoration that a
     reviewer who knows ATT&CK would rightly pick apart.
   * VERIFIED, EVERY TIME. Every ID below is checked against the ATT&CK STIX
-    bundle on disk (tests/test_attack_tags.py) and must be ACTIVE -- neither
+    bundle on disk (tests/test_attack_tags.py) and must be ACTIVE, neither
     revoked nor deprecated. That test is why this map uses T1685 and T1686:
     ATT&CK v19 revoked T1562 "Impair Defenses", which a map written from
     memory would still cite.
@@ -140,7 +140,7 @@ def tags_for(check_id: str, techniques: dict | None = None) -> list[dict]:
     """ATT&CK tags for one control, with names resolved from the bundle.
 
     A mapped ID the bundle does not know is DROPPED here rather than shown
-    unresolved, and the test suite fails on it -- a stale tag must never reach
+    unresolved, and the test suite fails on it. A stale tag must never reach
     a report looking authoritative.
     """
     techniques = techniques if techniques is not None else load_techniques()

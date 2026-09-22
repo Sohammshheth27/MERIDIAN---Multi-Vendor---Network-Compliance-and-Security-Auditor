@@ -3,9 +3,9 @@
 Replaces ranking all 119 schema fields by name similarity alone. Three signals,
 combined because they fail differently:
 
-    type prior     from the VALUE. Cheap, and the strongest single constraint
-                   -- 214 of 400 real settings are integers and only 8 fields
-                   are integer-typed.
+    type prior     from the VALUE. Cheap, and the strongest single constraint,
+                   since 214 of 400 real settings are integers and only 8
+                   fields are integer-typed.
     dense          expanded setting name vs a natural-language DESCRIPTION of
                    each field. Handles `IdleVpnDpdInterval` -> "idle timeout",
                    which shares no tokens with anything.
@@ -14,7 +14,7 @@ combined because they fail differently:
                    (`ip http server`), which is where dense is weakest.
 
 Embeddings are optional. Without a reachable embedding service this degrades
-to type prior x lexical rather than failing -- an assessment must not depend on
+to type prior x lexical rather than failing. An assessment must not depend on
 a model server being up.
 """
 from __future__ import annotations
@@ -106,7 +106,7 @@ class SemanticMatcher:
             return []
 
         # The MARGIN between the best and second-best similarity. On its own a
-        # high cosine means little -- these field descriptions are all security
+        # high cosine means little. These field descriptions are all security
         # settings and sit close together in the space. What separates a real
         # match from a plausible one is how far clear of the runner-up it is.
         margin = 0.0
@@ -124,7 +124,7 @@ class SemanticMatcher:
                 why += f" lex#{lex.index(f) + 1}"
             ranked.append((f, base * mult, why, sim_of.get(f, 0.0)))
 
-        # RANKING is unchanged -- still the fused reciprocal rank times the
+        # RANKING is unchanged, still the fused reciprocal rank times the
         # type prior, which is the arrangement the benchmark measured at 59.0%
         # top-1. Only the reported NUMBER changes, from a rank constant to a
         # confidence, so accuracy is preserved while the score becomes usable.
@@ -195,7 +195,7 @@ def confidence(similarity: float, margin: float, type_mult: float) -> float:
     Three signals, and the middle one carries most of the weight:
 
       similarity  how close the setting name is to the field description. On
-                  its own it is weak -- every SBM field describes a security
+                  its own it is weak, as every SBM field describes a security
                   setting, so they cluster and even a poor match scores high.
       margin      how far clear of the runner-up. This is what separates "this
                   is the field" from "one of these six could be".

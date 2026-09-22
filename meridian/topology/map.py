@@ -10,23 +10,23 @@ any/any rule.
 
 HOW IT IS LAID OUT, AND WHY THAT CHANGED
 ----------------------------------------
-Zones are stacked in TRUST TIERS -- internet-facing at the top, the device as a
-full-width slab across the middle, internal zones below -- which is how every
+Zones are stacked in TRUST TIERS: internet-facing at the top, the device as a
+full-width slab across the middle, internal zones below. That is how every
 network diagram an administrator has ever read is drawn.
 
 It used to be a ring: the device in the centre with ten zones around it. Every
 fact was present and none of it was legible. Working out whether a flow ran
 toward something sensitive meant finding two boxes on a circle and judging
 which was "more trusted", and the arrows between them crossed the middle at
-every angle. Stacking the tiers makes the one question worth asking --
-DOES THIS REACH MY INTERNAL NETWORK? -- answerable by direction alone: an
-escalating flow points DOWN, and it visibly passes through the firewall slab on
-its way. Position now carries meaning, so the reader does not have to.
+every angle. Stacking the tiers means the one question worth asking (DOES THIS
+REACH MY INTERNAL NETWORK?) is answerable by direction alone: an escalating
+flow points DOWN, and it visibly passes through the firewall slab on its way.
+Position now carries meaning, so the reader does not have to.
 
 WHAT IT IS NOT
 --------------
 It is not live discovery. A configuration file does not say which hosts are
-connected right now -- that needs ARP/DHCP tables, LLDP or the vendor API.
+connected right now. That needs ARP/DHCP tables, LLDP or the vendor API.
 Every figure says "derived from configuration" in its footer, because a map
 that looks live and is not is the kind of overstatement this project avoids.
 
@@ -45,7 +45,7 @@ the figure useful and it identifies nobody.
 
 That is redaction at the MAP layer, and it still applies. A redacted
 ASSESSMENT is separately pseudonymised in the reader, which maps each address
-to a stable stand-in inside 10/8 -- so an assessment run with `redact=True`
+to a stable stand-in inside 10/8, so an assessment run with `redact=True`
 arrives here already carrying private-looking addressing, and the figure shows
 its structure rather than a row of blanks.
 """
@@ -99,7 +99,7 @@ class _Redactor:
         return self._ip[base] + ("/" + v.split("/")[1] if "/" in v else "")
 
     def net(self, v: str) -> str:
-        # A public subnet names the ISP block -- as identifying as the address.
+        # A public subnet names the ISP block (as identifying as the address).
         return self.ip(v) if v and _is_public(v.split("/")[0]) else v
 
     def peer(self, v: str) -> str:
@@ -202,7 +202,7 @@ def build_map(da, *, redact: bool = True) -> dict:
 
     # SonicOS delivers decrypted site-to-site traffic into the VPN zone. With
     # enabled tunnels that zone is a live source even though no interface sits
-    # in it -- labelling its flows "latent" would understate a real exposure.
+    # in it. Labelling its flows "latent" would understate a real exposure.
     live_tunnels = sum(1 for t in tunnels if t["enabled"] is not False)
     if live_tunnels:
         for zn, z in zones.items():
@@ -267,7 +267,7 @@ def _zone_rank(z: dict):
 #
 # The figure is drawn on a DARK canvas. A network diagram is read on a console
 # for minutes at a time, and on dark ground a saturated stroke separates from
-# its background far more strongly than the same hue does on white -- so trust
+# its background far more strongly than the same hue does on white, so trust
 # reads at a glance and the arrows stay visible over ten stacked boxes. Every
 # fill, stroke and text colour below is chosen against this ground, not adapted
 # from the light version: dark backgrounds punish borrowed palettes.
@@ -281,7 +281,7 @@ PANEL = "#111c30"        # device / side panel
 HAIRLINE = "#1e2b44"     # rules and grid
 GRID = "#111a2b"
 
-# Trust. (fill, stroke, label) -- the label is a LIGHT tint of the stroke so
+# Trust. (fill, stroke, label). The label is a LIGHT tint of the stroke so
 # the zone name carries the same meaning as its border without dropping
 # contrast against a dark fill, which a saturated stroke colour would.
 PALETTE = {
@@ -351,7 +351,7 @@ def _mono(x, y, s, size=15, color=INK, anchor="start", opacity=None):
 # ------------------------------------------------------------------ 3-D solid
 #
 # Zones are drawn as extruded slabs rather than flat rectangles. This is real
-# geometry -- three painted faces per solid with a cast shadow -- not a CSS
+# geometry (three painted faces per solid with a cast shadow), not a CSS
 # effect, so it renders identically in the browser and in the PDF report and
 # needs no WebGL library (which the console's content-security policy would
 # block anyway).
@@ -359,8 +359,8 @@ def _mono(x, y, s, size=15, color=INK, anchor="start", opacity=None):
 # The projection is a shallow cabinet oblique: the front face keeps its true
 # rectangle so LABELS STAY HORIZONTAL AND FULLY LEGIBLE, and depth is added by
 # offsetting a second face up and to the right. A true isometric would skew
-# every label, which trades the one thing this figure exists for -- being read
-# -- for the appearance of sophistication.
+# every label, which buys the appearance of sophistication at the cost of the
+# one thing this figure exists for: being read.
 DEPTH = 16          # how far the solid is extruded, in pixels
 
 
@@ -379,7 +379,7 @@ def _mix(hex_colour: str, other: str, amount: float) -> str:
 
 
 def _shade(hex_colour: str, factor: float) -> str:
-    """Same hue, darker or lighter -- kept for callers outside this module."""
+    """Same hue, darker or lighter. Kept for callers outside this module."""
     h = hex_colour.lstrip("#")
     if len(h) != 6:
         return hex_colour
@@ -591,7 +591,7 @@ def render_svg(m: dict, width: int = 2000, height: int = 1300,
         #
         # SCORED, because the search can genuinely run out of room. An earlier
         # version took the first free candidate and otherwise fell back to the
-        # arrow's midpoint -- so the one flow that found nothing (VPN ZOne ->
+        # arrow's midpoint, so the one flow that found nothing (VPN ZOne ->
         # DMZ, 0 of 65 candidates free once tier headings became obstacles) was
         # dumped at the exact spot it had just proved was occupied, landing on
         # both a neighbouring plate and a tier subtitle. Failing into the WORST

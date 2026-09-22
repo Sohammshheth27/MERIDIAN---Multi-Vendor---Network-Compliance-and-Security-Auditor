@@ -1,4 +1,4 @@
-"""The Observation -- every value in the SBM is one of these, never a bare value.
+"""The Observation: every value in the SBM is one of these, never a bare value.
 
 This is the single most important type in the system.
 """
@@ -22,7 +22,7 @@ _CONFIDENCE = {
 class Observation(BaseModel):
     """One known (or notably unknown) fact about a device.
 
-    Construct via the classmethods rather than directly -- they enforce the
+    Construct via the classmethods rather than directly. They enforce the
     state/source/evidence combinations that the rest of the engine relies on.
     """
 

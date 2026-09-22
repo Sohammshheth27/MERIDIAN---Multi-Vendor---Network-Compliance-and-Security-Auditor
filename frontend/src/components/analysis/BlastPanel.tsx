@@ -90,8 +90,8 @@ export const BlastPanel: FC<{ id: string }> = ({ id }) => {
           </button>
         </div>
         <p className="mt-3 text-xs text-[var(--color-slate-gray)]">
-          Probes every other zone on the ports attackers use to move laterally —
-          remote administration first, then data stores — and names the rule that
+          Probes every other zone on the ports attackers use to move laterally
+          (remote administration first, then data stores) and names the rule that
           permits each path. Reachable is not exploitable: policy permitting a
           packet says nothing about whether a service is listening or patched.
         </p>
@@ -122,7 +122,7 @@ const BlastResult: FC<{ id: string; r: BlastResponse }> = ({ id, r }) => {
       {s.latent && s.paths_open > 0 && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs leading-relaxed text-[var(--color-slate-gray)]">
           <strong className="text-[#b45309]">Latent exposure.</strong> Nothing is
-          in {s.origin} today — no interface and no access point. The policy
+          in {s.origin} today: no interface and no access point. The policy
           permits every path below, and they go live the moment something joins
           the zone, with no firewall change needed.
         </div>
@@ -153,7 +153,7 @@ const BlastResult: FC<{ id: string; r: BlastResponse }> = ({ id, r }) => {
       {s.zones_fully_undecidable.length > 0 && (
         <p className="rounded-xl border border-[var(--color-hairline)] p-3 text-xs text-[var(--color-slate-gray)]">
           <strong className="text-[var(--color-ink-navy)]">Unproven, not absent:</strong> every
-          probe into {s.zones_fully_undecidable.join(', ')} was undecidable — no
+          probe into {s.zones_fully_undecidable.join(', ')} was undecidable. No
           rule matched and this platform does not state its default policy.
         </p>
       )}
@@ -206,7 +206,7 @@ const BlastResult: FC<{ id: string; r: BlastResponse }> = ({ id, r }) => {
  *
  * The line held throughout: a permitted path is exposure, not proof. Policy
  * allowing a packet says nothing about whether a service is listening, patched
- * or authenticated -- so every heading describes what could be ATTEMPTED.
+ * or authenticated, so every heading describes what could be ATTEMPTED.
  */
 const ATTACK_CLASSES: {
   match: (p: { port: number; administrative: boolean }) => boolean;
@@ -240,7 +240,7 @@ const ATTACK_CLASSES: {
     match: (p) => [80, 443, 8080, 8443, 8000].includes(p.port),
     title: 'Reach web applications',
     attempt:
-      'Probe the web application behind the port for its own flaws — ' +
+      'Probe the web application behind the port for its own flaws: ' +
       'injection, broken authentication, unpatched components.',
   },
   {
@@ -256,15 +256,15 @@ const ATTACK_CLASSES: {
       'invites poisoning, time manipulation, or device enumeration.',
   },
   // LAST on purpose. The engine marks anything reaching a management plane as
-  // administrative, which includes SMB, RDP and RPC -- so testing this flag
+  // administrative, which includes SMB, RDP and RPC, so testing this flag
   // first swept those into "take over administration" and buried what they
   // actually are. Specific ports win; this catches the rest.
   {
     match: (p) => p.administrative,
     title: 'Take over device administration',
     attempt:
-      'Reach a management interface and try to log in — default, reused or ' +
-      'brute-forced credentials, or a known authentication bypass. Success ' +
+      'Reach a management interface and try to log in with default, reused ' +
+      'or brute-forced credentials, or a known authentication bypass. Success ' +
       'here means control of the device itself, not just traffic through it.',
   },
 ];
@@ -300,7 +300,7 @@ const AttackSurface: FC<{ r: BlastResponse }> = ({ r }) => {
       <p className="mt-1 text-xs text-[var(--color-slate-gray)]">
         Grouped by consequence rather than by port number. Each group lists the
         zones it reaches and the rules that permit it. These are things an
-        attacker could <em>try</em> from this foothold — the policy allows the
+        attacker could <em>try</em> from this foothold. The policy allows the
         packet through; whether a service answers, and whether it is patched, is
         not something a configuration file can tell us.
       </p>

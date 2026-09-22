@@ -1,4 +1,4 @@
-"""Reader 1 -- indented blocks.
+"""Reader 1: indented blocks.
 
 Vendors: Cisco IOS / IOS-XE / NX-OS, Arista EOS, HPE Aruba AOS-CX.
 
@@ -13,8 +13,8 @@ Library: ciscoconfparse2 (saves roughly a week of hand-written parsing).
 The thing this reader must get right is SCOPE:
 ``transport input ssh`` under ``line vty`` means something different from the
 same line under ``line con``. A flat regex sweep over the file would conflate
-them and produce a confident, wrong answer -- so every child match carries the
-parent it was found under.
+them and produce a confident, wrong answer. Every child match therefore carries
+the parent it was found under.
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ class IndentedConfig:
     def find_children(self, parent_regex: str, child_regex: str) -> list[tuple[str, int, str]]:
         """Children matching ``child_regex`` under parents matching ``parent_regex``.
 
-        Returns [(parent_text, lineno, child_text)] -- the parent comes back so
+        Returns [(parent_text, lineno, child_text)]. The parent comes back so
         the caller can scope the resulting SBM path.
         """
         out = []
@@ -83,7 +83,7 @@ class IndentedConfig:
         """Lines that carry configuration. Blank lines and bare ``!`` do not.
 
         Counting decoration would inflate the denominator and make coverage
-        look better than it is -- the opposite of what accounting is for.
+        look better than it is. Accounting exists to do the opposite.
         """
         out = []
         for i, ln in enumerate(self.lines):
@@ -110,7 +110,7 @@ class IndentedConfig:
         }
 
     def unrecognised(self) -> list[EvidenceRef]:
-        """Lines no mapping rule touched -- these feed the AI helper (plan 3b)."""
+        """Lines no mapping rule touched. These feed the AI helper (plan 3b)."""
         sig = set(self.significant_lines)
         return [
             self.evidence(i + 1, self.lines[i])
@@ -122,7 +122,7 @@ def load(path: str | Path) -> IndentedConfig:
     p = Path(path)
     # errors="replace": a production config can carry stray bytes in a banner
     # or description. Refusing to parse the whole device over one bad byte is
-    # worse than flagging that line -- and accounting will still count it.
+    # worse than flagging that line, and accounting will still count it.
     text = p.read_text(encoding="utf-8", errors="replace")
     return IndentedConfig(text, p.name)
 

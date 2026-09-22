@@ -19,7 +19,7 @@ traffic and no log lines is not quiet; it is unlogged, and an unlogged permit
 rule is a gap in the audit trail that several frameworks require.
 
 FORMATS. Firewall logging is not standardised, so this parses the shapes that
-actually appear -- SonicOS, ASA, Fortinet and generic key=value syslog -- and
+actually appear (SonicOS, ASA, Fortinet and generic key=value syslog), and
 reports what fraction of lines it could not read rather than discarding them.
 """
 from __future__ import annotations
@@ -64,8 +64,8 @@ def _timestamp(line: str, year=None):
     m = _SYSLOG_TS.match(line)
     if m:
         # Syslog omits the year, so a January log read in December lands twelve
-        # months out. The caller's year is used, and the ambiguity is real --
-        # it is why `parse` reports how many timestamps it had to assume.
+        # months out. The caller's year is used, and the ambiguity is real.
+        # It is why `parse` reports how many timestamps it had to assume.
         try:
             y = year or datetime.now().year
             return datetime.strptime(f"{y} {m.group(1)}", "%Y %b %d %H:%M:%S")

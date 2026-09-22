@@ -6,7 +6,7 @@ are not symmetric:
 
   * a FALSE NEGATIVE silently drops a real security setting, and nobody will
     ever look at it again. This is the worse error.
-  * a FALSE POSITIVE costs a reviewer one glance -- but at scale it buries the
+  * a FALSE POSITIVE costs a reviewer one glance, but at scale it buries the
     real settings. On the real SonicWall export, 271 of 805 queue entries were
     object-table columns, and ranked by occurrence they sat ABOVE every genuine
     setting.
@@ -20,7 +20,7 @@ from meridian.training.classify import (CAT_COSMETIC, CAT_EMPTY, CAT_OTHER,
 
 #: Must remain security-relevant. Each was verified present in the real export.
 MUST_KEEP = [
-    # The REST API's authentication surface -- remote management, and until
+    # The REST API's authentication surface: remote management, and until
     # this was mapped it was neither audited nor even queued.
     "sonicOsApi_basicAuth", "sonicOsApi_tokenAuth", "sonicOsApi_dgstMD5",
     "sonicOsApi_dgstSHA256", "sonicOsApi_pubKeyBits", "sonicOsApi_CORS",
@@ -39,7 +39,7 @@ MUST_KEEP = [
 #: Must be excluded. Object-table columns and substring collisions.
 MUST_DROP = [
     # Object-table structure. SonicOS repeats the owning feature in the column
-    # name, so the adjacency `ObjType` is not enough -- `gavObjGavType`.
+    # name, so the adjacency `ObjType` is not enough (`gavObjGavType`).
     "gavObjId", "gavObjType", "gavObjGavType", "gavObjProperties",
     "cfsProfileObjId", "schedObjInstanceId", "policyInstanceId",
     "uuidAtomTableName", "uuid_InternalInstanceId", "uuidAtomTableIntInsId",

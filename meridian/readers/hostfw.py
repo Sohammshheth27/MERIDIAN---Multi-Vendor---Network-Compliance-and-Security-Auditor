@@ -2,7 +2,7 @@
 
 The capability `firewall_audit` has and we did not. The brief says "any network
 device configuration", and a laptop's own firewall is the one every engineer
-can produce in ten seconds -- which also makes it the only device in this
+can produce in ten seconds, which also makes it the only device in this
 project that can be demonstrated live, on the presenter's machine, with no
 customer data involved.
 
@@ -21,7 +21,7 @@ WHAT IS DIFFERENT ABOUT A HOST FIREWALL, and why it is not just another vendor:
     from the same rule on Domain.
   * NO ORDER. Windows Firewall does not evaluate rules top-to-bottom; block
     rules win over allow rules regardless of position. Shadow analysis assumes
-    ordered evaluation, so it is NOT applied here -- claiming a rule is
+    ordered evaluation, so it is NOT applied here. Claiming a rule is
     shadowed on a platform with no ordering would be inventing a finding.
   * LIVE STATE, not a file. This reads the running configuration, so there is
     no file hash to pin an assessment to. The collection timestamp is recorded

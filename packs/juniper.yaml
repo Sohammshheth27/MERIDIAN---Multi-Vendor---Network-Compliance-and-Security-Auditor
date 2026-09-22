@@ -1,4 +1,4 @@
-# Juniper Junos (SRX) mapping pack -- Reader 3 (braces)
+# Juniper Junos (SRX) mapping pack (Reader 3, braces)
 #
 # Handles BOTH export forms. The reader normalises hierarchical `{ }` blocks and
 # flat `set ...` lines to identical paths, so every rule below fires
@@ -18,8 +18,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack rather than a fact about the device, and now resolves to
+# UNKNOWN, which keeps it in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
 
@@ -38,7 +38,7 @@ mappings:
     path: "system/services/ssh/protocol-version"
     value: {as: int}                 # "v2" -> 2 via normalise
   # Failed attempts before disconnect. NOT `services ssh connection-limit`,
-  # which caps concurrent SSH connections -- a different setting that let a
+  # which caps concurrent SSH connections, a different setting that let a
   # device with `connection-limit 3` pass a lockout control it never set.
   - field: management.ssh.max_auth_tries
     path: "system/login/retry-options/tries-before-disconnect"
@@ -64,7 +64,7 @@ mappings:
     scope_from: 3
 
   # `set system ntp server 10.20.0.9` is a LEAF, not a block, so it is an
-  # exact path -- not every repeated element in Junos is a named object.
+  # exact path. Not every repeated element in Junos is a named object.
   - field: time.servers
     path: "system/ntp/server"
   - field: time.authenticated
@@ -118,7 +118,7 @@ mappings:
     value: {const: true, empty_is_true: true}
   # crypto.weak_ciphers is DERIVED below: this used to copy EVERY configured
   # cipher into the field, so a device restricted to aes256-ctr failed the
-  # "no weak ciphers" controls -- and a device with no cipher statement
+  # "no weak ciphers" controls, and a device with no cipher statement
   # passed them, although older Junos defaults include weak ones.
 
   # --- grounded in the CIS Junos benchmark's audit commands ----------------
@@ -158,7 +158,7 @@ mappings:
     path: "system/services/ssh"
     value: {const: ["ssh"]}
   # Junos restricts who may reach management with a firewall filter applied
-  # inbound on the loopback -- the equivalent of an IOS vty access-class. It
+  # inbound on the loopback, the equivalent of an IOS vty access-class. It
   # was read from `connection-limit`, which restricts nobody.
   - field: management.vty.access_class
     path: "interfaces/lo0/unit/*/family/inet/filter/input"
@@ -170,7 +170,7 @@ derivations:
     op: junos_ssh_enabled
   # Weak = what CIS Junos 6.10.1.6 / 6.10.1.9 exclude: a cipher not matching
   # aes|3des, a key exchange not matching sha2|ecdh|curve. With neither
-  # statement present the field stays unevaluated -- the default set is
+  # statement present the field stays unevaluated. The default set is
   # release-dependent, so absence proves nothing either way.
   - field: crypto.weak_ciphers
     op: path_weak_tokens

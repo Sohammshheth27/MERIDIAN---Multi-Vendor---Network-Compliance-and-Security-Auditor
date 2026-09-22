@@ -6,7 +6,7 @@
 # SCOPE IS THE WHOLE GAME HERE. `transport input ssh` means one
 # thing under `line vty 0 4` and something else under `line con 0`. Every rule
 # below that reads a child declares its parent, and the resulting SBM path is
-# scoped by that parent -- management.vty[line vty 0 4].transport_input.
+# scoped by that parent: management.vty[line vty 0 4].transport_input.
 #
 # Remediation lives in this same file, backwards: the `remediate`
 # block on a rule is the fix for the control that reads its field.
@@ -24,8 +24,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device, so it now resolves to UNKNOWN
+# and stays in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
   security: "IPS, gateway antivirus and content filtering are next-generation firewall services this platform does not provide"
@@ -90,7 +90,7 @@ mappings:
     value: {group: 1, as: str}
     scope_by: parent
 
-  # telnet is enabled if any vty line accepts it -- see the derivation below,
+  # telnet is enabled if any vty line accepts it. See the derivation below,
   # because it is a property of the set of lines, not of any single line.
 
   # --- authentication ------------------------------------------------------
@@ -182,7 +182,7 @@ mappings:
     regex: "^ip http (?:secure-)?server"
     value: {const: true}
 
-  # interfaces are SCOPED by name -- Gi0/0/0 and Gi0/0/1 are different objects
+  # interfaces are SCOPED by name: Gi0/0/0 and Gi0/0/1 are different objects
   - field: interfaces.description
     parent: "^interface "
     regex: "^\\s*description (.+)$"
@@ -240,7 +240,7 @@ mappings:
 
   # --- privileged-mode credential. `enable password` is reversible; the guide
   # is explicit that `enable secret` must be used instead.
-  # `authentication.enable_secret` is a BOOL -- is the enable credential
+  # `authentication.enable_secret` is a BOOL: is the enable credential
   # stored hashed? This produced the STRING "secret" or "password", so once
   # MERIDIAN-EXT-012 was corrected to `equals true` the hardened fixture failed on
   # the one line that proves it is hardened. Two mutually exclusive mappings,
@@ -315,7 +315,7 @@ mappings:
 
   # --- remaining documented hardening commands ----------------------------
   # (A mapping here once collected `service password-encryption` into
-  # crypto.weak_ciphers -- not a cipher at all. The derivation below owns that
+  # crypto.weak_ciphers, not a cipher at all. The derivation below owns that
   # field and overwrote it, so it never changed a result; it is gone.)
   - field: services.unused_enabled
     regex: "^(?:no )?(service password-recovery|ip http server|ip scp server)"
@@ -349,7 +349,7 @@ mappings:
     regex: "^ip dhcp snooping"
     value: {const: true}
   # IP Source Guard is `ip verify source` on an access port. `ip verify
-  # unicast ...` is uRPF -- a different control -- and used to satisfy this one.
+  # unicast ...` is uRPF, a different control, and used to satisfy this one.
   - field: l2.ip_source_guard
     regex: "^\\s*ip verify source\\b"
     value: {const: true}
@@ -384,6 +384,6 @@ derivations:
   - field: crypto.weak_ciphers
     op: ios_weak_ssh_crypto
   # Telnet reachability is a property of the vty set, not of one line, and
-  # `no ip telnet` does not exist on IOS -- the answer lives in transport input.
+  # `no ip telnet` does not exist on IOS: the answer lives in transport input.
   - field: management.telnet.enabled
     op: ios_telnet_reachable

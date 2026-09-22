@@ -1,9 +1,9 @@
-"""Blast radius -- what an attacker reaches from a foothold.
+"""Blast radius: what an attacker reaches from a foothold.
 
 Validated against the real NSA 3700, where it finds something genuine: the
 wireless zone has an any/any/any allow into the DMZ, so a device on the guest
 Wi-Fi can reach SSH, Telnet, RDP, SMB, RPC and SNMP on the DMZ. That is not a
-fixture and not a contrived example -- it is rule 217 of a production policy.
+fixture and not a contrived example. It is rule 217 of a production policy.
 
 THE FAILURE DIRECTION THAT MATTERS
 ----------------------------------
@@ -43,7 +43,7 @@ def test_the_wireless_zone_reaches_the_dmz_on_this_device(graph):
 
     Verified against the configuration: source any, destination any, service
     any, enabled. If this assertion ever fails, either the device changed or
-    the policy walk did -- and both are worth stopping for.
+    the policy walk did, and both are worth stopping for.
     """
     radius = blast_radius(graph, origin_zone="WLAN")
     dmz = [s for s in radius.reachable if s.to_zone == "DMZ"]
@@ -180,7 +180,7 @@ def test_the_probe_set_leads_with_administrative_access():
 def test_an_empty_origin_zone_makes_every_path_latent(graph):
     """The NSA 3700 has no access point and no interface in WLAN.
 
-    Rule 217 still permits WLAN -> DMZ, so the paths are real POLICY -- but
+    Rule 217 still permits WLAN -> DMZ, so the paths are real POLICY, but
     nothing sits in the zone to use them. Presenting them as live would
     overstate the risk on this device; omitting them would hide a rule that
     activates the moment an access point is plugged in. LATENT says both.

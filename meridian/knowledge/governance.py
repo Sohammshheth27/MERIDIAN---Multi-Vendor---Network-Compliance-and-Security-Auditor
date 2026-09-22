@@ -1,10 +1,10 @@
-"""Governance KB -- retrievable AI-security knowledge, structurally isolated.
+"""Governance KB: retrievable AI-security knowledge, structurally isolated.
 
 WHY THIS IS A SEPARATE INDEX
 ----------------------------
-The MITRE ATLAS entry for prompt injection *contains prompt injection examples*
--- strings like "ignore previous instructions" appear in it, because that is
-what the technique looks like.
+The MITRE ATLAS entry for prompt injection *contains prompt injection
+examples*. Strings like "ignore previous instructions" appear in it, because
+that is what the technique looks like.
 
 If ATLAS text shared a corpus with our config-line examples, a config line
 mentioning those words would retrieve the ATLAS page as a "similar example",
@@ -50,7 +50,7 @@ class GovernanceDoc(BaseModel):
     title: str
     text: str
     kind: str                      # technique | mitigation | function | guardrail
-    corpus: str = CORPUS_TAG       # tripwire -- see assert_not_parser_corpus
+    corpus: str = CORPUS_TAG       # tripwire for assert_not_parser_corpus
 
 
 class GovernanceKB:

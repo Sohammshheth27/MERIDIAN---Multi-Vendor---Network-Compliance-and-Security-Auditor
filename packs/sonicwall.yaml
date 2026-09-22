@@ -1,8 +1,8 @@
-# SonicWall SonicOS 7.x mapping pack -- Reader 2 (Fortinet block)
+# SonicWall SonicOS 7.x mapping pack. Reader 2 (Fortinet block).
 #
 # Source artifact: web console -> Device -> Settings -> Export CLI settings
 # (PLAIN TEXT). The `.exp` export is a base64-obfuscated settings
-# dump and is the WRONG artifact -- it cannot be parsed and must not be used.
+# dump and is the WRONG artifact. It cannot be parsed and must not be used.
 #
 # This pack was written and validated against a real SonicWall appliance export.
 # Sanitise any such export with netconan before it goes anywhere near a repo.
@@ -20,8 +20,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device, and now resolves to UNKNOWN:
+# the denominator is where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
 
@@ -76,7 +76,7 @@ mappings:
   - field: banner.login
     path: "administration/login-banner"
 
-  # Appliance security services -- these are NOT_APPLICABLE on a router,
+  # Appliance security services. These are NOT_APPLICABLE on a router,
   # which is what supported_domains above is for.
   - field: security.ips.enabled
     path: "security-services/ips"

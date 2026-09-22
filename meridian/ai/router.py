@@ -1,4 +1,4 @@
-"""12.7 -- the tier router.
+"""12.7: the tier router.
 
     tier 0  exact regex from the mapping pack        1 ms    known vendors
     tier 1  mapping registry (previously approved)   1 ms    learned
@@ -13,7 +13,7 @@ through tier 2 versus ~3 minutes through tier 3.
 
 THE CONFIDENCE FLOOR (defence #10) LIVES HERE, and it is the most important
 thing in this file. The bench finding that motivated it: given a line whose
-true field was absent from the enum, the model did not abstain -- it
+true field was absent from the enum, the model did not abstain. It
 confidently picked the nearest member and returned a plausible, wrong answer.
 So a line that tier 2 cannot match ABOVE THRESHOLD does not reach tier 3 with
 an open question; it reaches a human. Building the abstain path before the
@@ -35,11 +35,11 @@ from .guardrails import Proposal, validate
 #     no-correct-answer    score <= 0.57
 # The distributions OVERLAP, so no threshold separates them perfectly. 0.60 sits
 # above every wrong and every no-answer score, which means tier 2 never asserts
-# a wrong field -- at the cost of escalating some correct lines it could have
+# a wrong field, at the cost of escalating some correct lines it could have
 # resolved. That trade is deliberate: escalation costs time, a wrong assertion
 # costs a false PASS.
 NLP_ACCEPT = 0.60
-# Below this, we do not even ask the model -- there is nothing useful to
+# Below this, we do not even ask the model: there is nothing useful to
 # retrieve, so any answer would be a guess dressed as an inference.
 NLP_ESCALATE_FLOOR = 0.20
 # One-click Approve is disabled below this; the mapper must type the field

@@ -1,7 +1,7 @@
 """MITRE ATT&CK tags must be real, current and direct.
 
 The first test here is the reason the file exists. A map written from memory
-cited T1562 "Impair Defenses" -- which ATT&CK v19 revoked. Every tag is now
+cited T1562 "Impair Defenses", which ATT&CK v19 revoked. Every tag is now
 resolved against the STIX bundle on disk and must be ACTIVE.
 """
 import pytest

@@ -1,6 +1,6 @@
 """Which grammar is this file written in? Answered structurally, not by name.
 
-`engine/fingerprint.py` matches vendor SIGNATURES -- `version 17.9`, `## Last
+`engine/fingerprint.py` matches vendor SIGNATURES: `version 17.9`, `## Last
 commit`. That works only for vendors we have already met; an IBM or SONiC file
 returns UNKNOWN with no reader, and nothing downstream can even choose a
 parser.
@@ -89,7 +89,7 @@ def detect_grammar(text: str) -> list[Grammar]:
                            [f"{paths} '/a/b/c' style lines"]))
 
     # A flat file of `keyword argument` lines with no structure at all still
-    # parses as `indented` with low confidence -- better than refusing, and the
+    # parses as `indented` with low confidence. That beats refusing, and the
     # confidence is what tells a reviewer to look.
     if not out:
         out.append(Grammar("indented", 0.15, ["no structural markers found"]))

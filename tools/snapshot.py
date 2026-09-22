@@ -3,7 +3,7 @@
     python -m tools.snapshot          # re-record
     python -m tools.snapshot --diff   # show changes without recording
 
-CHANGE DETECTION, not correctness -- see meridian/corpus/__init__.py. Re-record
+CHANGE DETECTION, not correctness (see meridian/corpus/__init__.py). Re-record
 deliberately, after reading the diff, never to make a red test go green.
 """
 import argparse

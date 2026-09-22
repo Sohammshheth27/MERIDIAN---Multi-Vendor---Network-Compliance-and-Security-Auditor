@@ -2,8 +2,8 @@
 
 The consensus we already had compares two METHODS (a pack mapping against a
 vendor-agnostic detector) on the same device. This compares two PARSERS on the
-same syntax, which catches a different class of error entirely -- one where
-both methods agree because they are reading the same wrong tree.
+same syntax, which catches a different class of error entirely. Both methods
+can agree because they are reading the same wrong tree.
 
 WHY JUNOS SPECIFICALLY. `readers/braces.py` is hand-written, and it produced
 four separate bugs during this project: block-header arguments kept as one
@@ -16,8 +16,8 @@ a repeatable process.
 and comparing turns "somebody noticed" into a test.
 
 WHAT IS AND IS NOT A DISAGREEMENT
-The two produce different path VOCABULARIES -- ours records `a/b/c` for a leaf
-with a value, theirs flattens the tree its own way -- so raw path-count
+The two produce different path VOCABULARIES (ours records `a/b/c` for a leaf
+with a value, theirs flattens the tree its own way), so raw path-count
 differences are noise and are not reported. What matters is narrower and
 decidable: for every path a MAPPING PACK actually reads, do both parsers find
 it? A path our packs never consult is not worth a finding, and a path we find
@@ -49,7 +49,7 @@ class ParserAgreement:
         """Agreement requires something to have been agreed ON.
 
         Without the `both_found` term this returned True for a config where
-        NEITHER parser found any path a pack reads -- vacuous agreement
+        NEITHER parser found any path a pack reads: vacuous agreement
         reported as a positive result, which is the same shape as every other
         empty-answer-as-clean-bill-of-health this project has caught.
         """

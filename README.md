@@ -1,28 +1,29 @@
 # MERIDIAN
 
-**Network Compliance and Security Auditor**
+**Multi-Vendor Network Compliance and Security Auditor**
 
-MERIDIAN is a vendor-agnostic configuration assurance platform for network and
-security infrastructure. It ingests a device configuration — uploaded, or
-collected over SSH — normalises it into a common security model, evaluates it
-against a catalogue of security controls, and produces an assessment in which
-every assertion is traceable to the exact file and line that produced it.
+Give MERIDIAN a device configuration, either uploaded or pulled over SSH, and
+it returns a compliance assessment where every single claim points back to the
+file and line it came from. No verdict is offered that the configuration
+itself cannot support.
+
+It works across vendors because vendor knowledge lives in data rather than in
+code. Adding a platform means writing a YAML file, not editing the engine.
 
 ---
 
-## Table of contents
+## Contents
 
 - [The console](#the-console)
-- [Design principles](#design-principles)
-- [Capabilities](#capabilities)
-- [Compliance framework coverage](#compliance-framework-coverage)
+- [How it decides](#how-it-decides)
+- [What it does](#what-it-does)
+- [Frameworks](#frameworks)
 - [Architecture](#architecture)
-- [Installation](#installation)
-- [Operation](#operation)
-- [Extending platform support](#extending-platform-support)
-- [Application security posture](#application-security-posture)
-- [Data handling and licensing](#data-handling-and-licensing)
-- [Validation status](#validation-status)
+- [Getting it running](#getting-it-running)
+- [Adding a vendor](#adding-a-vendor)
+- [Securing the console itself](#securing-the-console-itself)
+- [What is not in this repository](#what-is-not-in-this-repository)
+- [Where the packs actually stand](#where-the-packs-actually-stand)
 
 ---
 
@@ -30,245 +31,240 @@ every assertion is traceable to the exact file and line that produced it.
 
 ### Overview
 
-The landing view reports the state of the estate: assessments in progress,
-mappings learned through the training interface, and the average compliance
-score across audited devices.
+The landing page answers the question you ask first thing in the morning: what
+is in flight, what has the tool learned recently, and how is the estate doing
+overall.
 
 ![Dashboard](docs/screenshots/01-dashboard.png)
 
 ### Assessment register
 
-Every assessment is retained and addressable, with vendor, platform,
-compliance score and status. Results may be exported as CSV, and a previously
-issued report may be re-verified against its signature.
+Every assessment is kept and stays addressable, with its vendor, platform,
+score and status. You can export the list as CSV. You can also hand a report
+back to the tool and have it re-checked against its signature, which matters
+when someone asks whether a report has been edited since it was issued.
 
 ![Assessments](docs/screenshots/02-assessments.png)
 
 ### Assessment overview
 
-Framework scores are reported per framework, each with the number of
-requirements met and the number that remain undecided. Configuration coverage
-is displayed alongside the score rather than behind it, and a framework that
-publishes no requirements for the platform states that instead of reporting
-zero.
+Each framework gets its own score, shown with how many of its requirements
+were met and how many are still undecided. Coverage sits next to the score
+rather than buried below it. If a framework publishes nothing for the platform
+in front of it, the view says so instead of printing a zero and letting you
+draw the wrong conclusion.
 
 ![Assessment overview](docs/screenshots/03-assessment-overview.png)
 
 ### Findings
 
-Findings are aligned to a chosen framework, and carry severity, the control
-that produced them, the framework requirements they cite, and a result state.
-`PASS`, `FAIL` and `UNKNOWN` are distinct outcomes and are rendered as such:
-an undecided control is never presented as a pass.
+Pick a framework and the findings realign to it. Each one carries a severity,
+the control that produced it, the requirements it cites, and a result state.
+PASS, FAIL and UNKNOWN are three different things here and they look like
+three different things. A control nobody could evaluate is never dressed up as
+a pass.
 
 ![Findings](docs/screenshots/04-findings.png)
 
 ### Interface inventory
 
-The addressing from which multi-device topology is inferred. Adjacency is
-derived from shared subnets rather than read from the wire, and the view says
-so, because an inference presented as an observation is a claim the platform
-has not earned.
+The addressing behind the topology view. Adjacency between devices is worked
+out from shared subnets rather than observed on the wire, and the page says as
+much, because an inference presented as a measurement is a claim the tool has
+not earned.
 
 ![Interfaces](docs/screenshots/05-interfaces.png)
 
 ### Topology
 
-Zones are arranged by trust tier, with the enforcement point drawn between
-them. Every `any`/`any` flow into a more trusted zone is drawn and labelled
-with the rule that permits it. A flow whose zone currently contains no
-interface is marked `latent`: permitted by policy, but not presently
-traversable.
+Zones are stacked by how much you trust them, with the enforcement point drawn
+in between. Every any/any flow heading into a more trusted zone is drawn and
+labelled with the rule that allows it. Where a zone has no interface in it
+yet, the flow is marked latent: the policy permits it, but nothing can take
+that path today.
 
 ![Topology](docs/screenshots/06-topology.png)
 
 ### Known vulnerabilities
 
-Published vulnerabilities affecting the exact firmware and hardware model the
-device reports. Both version and model must match before a vulnerability is
-listed. The view states the date of the vulnerability data it used, and
-distinguishes a device that is affected from a configuration check that
-failed — the remedy for the former is a firmware update, not a setting.
+Published flaws affecting the precise firmware and hardware model the device
+reports. Both have to match before anything is listed, because "some version
+of this product was vulnerable once" is not a finding. The page states the
+date of the vulnerability data it used, and it separates being affected from
+failing a configuration check. There is no setting to fix here. The fix is a
+firmware update.
 
 ![Known vulnerabilities](docs/screenshots/07-known-vulnerabilities.png)
 
 ### Training
 
-Settings the mapping packs do not recognise are queued for operator review,
-ranked by a calibrated confidence score. The measured precision at each
-confidence band is displayed, so the operator knows what the ranking is worth
-and does not mistake a high score for a decision already made.
+Settings the packs do not recognise are queued for review and ranked by
+confidence. The measured precision of each confidence band is printed on the
+page, so a high score tells you where to look first rather than pretending the
+decision has already been made.
 
 ![Training](docs/screenshots/08-training-loop.png)
 
 ---
 
-## Design principles
+## How it decides
 
-### Absence is never reported as a positive result
+### Not knowing is never a pass
 
-The governing rule of the platform is that a control which could not be
-evaluated is never recorded as compliant. Where a configuration is silent, the
-assessment states that it is silent. This principle determines the result
-model, the scoring method, and the conditions under which a control may be
-excluded from scoring.
+This is the rule the rest of the design hangs off. If a control could not be
+evaluated, the assessment says so. It does not quietly become a PASS and it
+does not vanish into a zero.
 
-Most tools in this category report two states. MERIDIAN reports seven.
+Most tools in this space report two states. MERIDIAN reports seven, because
+two is not enough to be honest with.
 
-| State | Definition |
+| State | What it means |
 |---|---|
-| `PASS` | The control was evaluated and the device satisfies it. |
-| `FAIL` | The control was evaluated and the device does not satisfy it. |
-| `PARTIAL` | The control is scoped to multiple instances; some comply and others do not. |
-| `NOT_APPLICABLE` | The control does not apply to this platform or deployment, and the justification is recorded. |
-| `UNKNOWN` | The control could not be evaluated. This is neither a pass nor a failure. |
-| `MANUAL_REVIEW` | The control requires human judgement; no automated verdict would be defensible. |
-| `ERROR` | The evaluation itself failed. This is a defect in the platform, not in the device. |
+| `PASS` | Evaluated, and the device satisfies it. |
+| `FAIL` | Evaluated, and it does not. |
+| `PARTIAL` | The control covers several instances. Some comply, some do not. |
+| `NOT_APPLICABLE` | Genuinely does not apply here, and the reason is recorded. |
+| `UNKNOWN` | Could not be evaluated. Not a pass, not a failure. |
+| `MANUAL_REVIEW` | Needs a person. No automated verdict would hold up. |
+| `ERROR` | The check itself broke. That is our bug, not the device's. |
 
-### Scoring is reported with its coverage
+### A score without its coverage is marketing
 
-`score_pct` is calculated across decided controls only, and is never published
-without `assessed_pct` alongside it. A device for which 40 percent of the
-relevant settings could be read, all of which passed, is reported as scoring
-100 percent at 40 percent coverage. It is never reported as scoring 100
-percent.
+`score_pct` counts only the controls that were actually decided, and it is
+never shown without `assessed_pct` beside it. Suppose the tool could read 40%
+of the relevant settings and everything it read passed. That device scores
+100% at 40% coverage. Reporting it as "100%" would be true and useless at the
+same time.
 
-### Exclusion from scoring is the platform's strictest invariant
+### The rule we are strictest about
 
-`UNKNOWN` remains in the denominator and therefore depresses coverage.
-`NOT_APPLICABLE` is excluded from scoring entirely, which means an incorrect
-exclusion silently raises the score by removing a control from the
-denominator. Over-application of `NOT_APPLICABLE` is consequently the most
-direct way in which a tool of this kind can misrepresent a device.
+`UNKNOWN` stays in the denominator, so it drags coverage down and you notice
+it. `NOT_APPLICABLE` leaves scoring altogether, which means a wrong one
+quietly pushes the score **up** by removing a hard control from the sum.
 
-Every `NOT_APPLICABLE` verdict must therefore satisfy one of three conditions,
-each of which is recorded as evidence:
+That makes over-applying N/A the easiest way for a tool like this to flatter a
+device, so every exclusion has to earn itself one of three ways:
 
-1. **The platform is incapable of the control.** Declared per field or per
-   domain, with a written justification.
-2. **The relevant feature is not in use.** Gated on an observed setting, which
-   is cited as the evidence for the exclusion.
-3. **Neither condition holds.** The control is then recorded as `UNKNOWN` and
-   remains in the denominator.
+1. **The platform genuinely cannot do it.** Declared per field or per domain,
+   with a written reason.
+2. **The feature is not in use.** Gated on a setting that was actually
+   observed, and that setting is cited as the evidence.
+3. **Neither.** Then it is UNKNOWN and it stays in the denominator.
 
-Every `NOT_APPLICABLE` verdict produced across the bundled configurations
-carries a justification. A test enumerates all of them and fails on the first
-that cannot supply one.
+Every N/A across every bundled configuration carries its justification. A test
+walks all of them and fails on the first one that cannot explain itself.
 
 ---
 
-## Capabilities
+## What it does
 
-### Configuration ingestion and normalisation
+### Reading configurations
 
-| Capability | Description |
+| | |
 |---|---|
-| Multi-vendor parsing | Thirteen mapping packs spanning ten platforms and six grammar families. Vendor support is expressed as data, not code. |
-| Live collection | Read-only `show` commands over SSH. Credentials are used for the session and are not persisted. |
-| Record accounting | Every source record is classified as parsed, unreadable, mapped, or parsed-but-unmapped, so parsing coverage is itself measurable. |
-| Redaction | Addresses and secrets are pseudonymised on ingest. Pseudonymisation preserves network prefixes, so subnet relationships survive redaction and topology remains analysable. |
-| Parser cross-check | Two independent parsing methods are run over the same device and their results reconciled, so a single parser defect does not silently become a finding. |
+| Multi-vendor parsing | 13 mapping packs, 10 platforms, 6 grammar families, all expressed as data |
+| Live collection | Read-only `show` commands over SSH. Credentials are used for the session and never stored |
+| Record accounting | Every source record is counted as parsed, unreadable, mapped or seen-but-unmapped, so parsing coverage is itself measurable |
+| Redaction | Addresses and secrets are pseudonymised on the way in. Network prefixes survive the process, so subnet relationships hold and topology still works |
+| Parser cross-check | Two independent parsers read the same device and their results are reconciled, so one parser's bug does not quietly become a finding |
 
-### Compliance evaluation
+### Judging them
 
-| Capability | Description |
+| | |
 |---|---|
-| Control catalogue | Eighty-eight controls, each evaluated against the normalised model and each citing the evidence behind its verdict. |
-| Framework mapping | Findings are mapped to external framework requirements with the provenance chain recorded. |
-| Strictness profiles | Framework-specific evaluation profiles, so a control may be assessed against the standard being applied rather than a single fixed threshold. |
-| Manual review routing | Controls that cannot be decided mechanically are routed for human decision rather than guessed. |
+| Control catalogue | 88 controls, each citing the evidence behind its verdict |
+| Framework mapping | Findings map to external requirements with the provenance chain kept intact |
+| Strictness profiles | A control can be judged against the standard being applied rather than one fixed threshold |
+| Manual review | Anything that cannot be decided mechanically is routed to a person instead of guessed at |
 
-### Policy and rule analysis
+### Policy analysis
 
-| Capability | Description |
+| | |
 |---|---|
-| Rule hygiene | Detection of dead, shadowed, redundant and over-broad policy entries. |
-| Reachability analysis | Determines whether specified traffic would be permitted, and identifies the rule that decides the outcome. |
-| Blast radius | From a compromised zone, enumerates every zone reachable over lateral-movement ports together with the permitting rule. Paths are marked `LATENT` where no host currently occupies the zone. |
-| Recertification | Identifies rules due for review. Deletion is recommended only where three independent signals agree. |
-| Log correlation | Distinguishes a genuinely unused rule from one whose counters were reset. |
+| Rule hygiene | Dead, shadowed, redundant and over-broad rules |
+| Reachability | Would this traffic get through, and which rule decides it |
+| Blast radius | From a compromised zone, every zone reachable on lateral-movement ports and the rule that permits each hop |
+| Recertification | Which rules are due for review. Deletion is only suggested when three independent signals agree |
+| Log correlation | Whether a rule is genuinely unused or its counters were simply reset |
 
-### Remediation
+### Fixing them
 
-| Capability | Description |
+| | |
 |---|---|
-| Remediation guidance | Vendor-correct commands for each finding, checked against lockout conditions before being proposed. |
-| Hardened configuration generation | Generates a complete hardened configuration for the target vendor, anchored on observed evidence and preserving the device's own value formats. Type mismatches are refused rather than coerced. |
-| What-if analysis | Re-scores a copy of the device with proposed fixes applied or rules disabled, and warns where an IPv6 counterpart would still permit the traffic. |
+| Remediation | Vendor-correct commands, checked against lockout conditions before being offered |
+| Hardened configuration | A complete hardened config for the target vendor, anchored on observed evidence and written in the device's own value formats. A type mismatch is refused rather than coerced |
+| What-if | Re-scores a copy with fixes applied or rules disabled, and warns when an IPv6 twin would still let the traffic through |
 
-### Infrastructure and threat context
+### Context around them
 
-| Capability | Description |
+| | |
 |---|---|
-| Multi-device topology | A fabric assembled from several assessed devices, with trust tiers rendered. |
-| Change tracking | Snapshot and differential comparison, distinguishing a change in the device from a change in the analysis. |
-| Known vulnerabilities | Firmware evaluated against a dated NVD snapshot and the CISA KEV catalogue. Both version and hardware model must match before a vulnerability is reported. |
-| Adversary technique mapping | Each control is associated with the MITRE ATT&CK technique it mitigates. |
-| VPN assessment | Per-tunnel perfect forward secrecy, anti-replay, security association lifetimes, and management exposure over the tunnel. |
-| Wireless assessment | Open, WEP and TKIP detection, protected management frames, guest isolation, and cleartext pre-shared keys. |
-| Host firewall | Windows and iptables configurations assessed through the same analysers used for appliances. |
-| Cloud firewalls | AWS security groups, Azure network security groups, and GCP VPC firewall rules. |
+| Multi-device topology | A fabric assembled from several assessed devices, drawn by trust tier |
+| Change tracking | Snapshot and diff, keeping "the device changed" separate from "our analysis changed" |
+| Known vulnerabilities | Firmware checked against a dated NVD snapshot and CISA KEV. Version and hardware model must both match |
+| ATT&CK mapping | The adversary technique each control stands in front of |
+| VPN | Per-tunnel PFS, anti-replay, SA lifetimes, and management exposure through the tunnel |
+| Wireless | Open, WEP and TKIP, protected management frames, guest isolation, cleartext PSKs |
+| Host firewall | Windows and iptables, through the same analysers used for appliances |
+| Cloud | AWS security groups, Azure NSGs, GCP VPC firewall rules |
 
-### Reporting and assurance
+### Reporting
 
-| Capability | Description |
+| | |
 |---|---|
-| Tamper-evident reports | Reports carry a content hash and signature, so alteration after issue is detectable. |
-| Scheduled re-collection | Periodic re-assessment with alerting on configuration drift. |
-| Fleet view | Cross-device reporting with CSV export. |
-| Learning loop | Unmapped settings are queued for operator review and ranked by a calibrated confidence score. |
+| Tamper-evident reports | A content hash and signature, so later edits are detectable |
+| Scheduled re-collection | Periodic re-assessment with alerts on drift |
+| Fleet view | Cross-device reporting, CSV export |
+| Learning loop | Unrecognised settings queued for review, ranked by calibrated confidence |
 
-### Extended checks are reported beside the score, not inside it
+### Why the extended checks sit outside the score
 
-VPN, wireless and vulnerability findings are presented alongside the
-compliance score and do not alter it. Incorporating them into the
-eighty-eight-control catalogue would have changed the score and coverage of
-every device previously assessed, including results already issued. These
-checks follow the same evidentiary rules as the control catalogue: each
-failure cites the setting responsible, and any value that cannot be decoded is
-reported as undecided rather than inferred.
+VPN, wireless and vulnerability results appear next to the compliance score
+and deliberately do not move it. Folding them into the 88-control catalogue
+would have changed the score and coverage of every device already assessed,
+including reports that had already gone out. They follow the same evidence
+rules as everything else: a failure names the setting behind it, and anything
+that cannot be decoded is reported as undecided rather than guessed.
 
 ---
 
-## Compliance framework coverage
+## Frameworks
 
-**5,785 requirements** across the following frameworks:
+**5,785 requirements**, across:
 
 | Framework | Scope |
 |---|---|
 | NIST SP 800-53 | Security and privacy controls |
-| DISA STIG | Defense Information Systems Agency hardening guidance |
-| CIS Benchmarks | Referenced by identifier and short title |
-| ISO/IEC 27001 | Referenced by clause number and short title |
+| DISA STIG | Defense hardening guidance |
+| CIS Benchmarks | Cited by identifier and short title |
+| ISO/IEC 27001 | Cited by clause number and short title |
 | NIST SP 800-171 r3 | Controlled unclassified information |
-| PCI DSS 4.0 | Payment card industry data security |
+| PCI DSS 4.0 | Payment card data security |
 | CMMC | Cybersecurity maturity model certification |
 | NERC CIP | Critical infrastructure protection |
 
-Provenance is chained: STIG to CCI to NIST SP 800-53 to ISO/IEC 27001 and
-NIST SP 800-171.
+Provenance is chained rather than asserted: STIG to CCI to 800-53 to ISO 27001
+and 800-171.
 
 ---
 
 ## Architecture
 
-| Layer | Technology | Responsibility |
+| Layer | Built with | Job |
 |---|---|---|
 | Engine | Python, FastAPI | Parsing, normalisation, evaluation, reporting |
-| Console | React, TypeScript, Vite | Operator interface |
-| Mapping packs | YAML | Vendor and platform support, expressed as data |
-| Control catalogue | YAML | Security control definitions and framework citations |
+| Console | React, TypeScript, Vite | The operator interface |
+| Mapping packs | YAML | Vendor and platform support |
+| Control catalogue | YAML | Control definitions and framework citations |
 
-The console is built into the engine package, so a deployment serves both the
-application programming interface and the operator interface from a single
-process and a single origin.
+The console is built into the engine package, so one process serves the API
+and the interface from a single origin.
 
 ---
 
-## Installation
+## Getting it running
 
-Requirements: Python 3.11 or later, and Node.js 20 or later to build the
-console.
+You need Python 3.11 or later, and Node 20 or later to build the console.
 
 ```bash
 python -m venv .venv
@@ -280,43 +276,45 @@ pip install -r requirements.txt
 cd frontend && npm install && npm run build && cd ..
 ```
 
-## Operation
+Then start it:
 
 ```bash
 python -m uvicorn meridian.api.app:app --host 127.0.0.1 --port 8000
 ```
 
-The console is then available at `http://127.0.0.1:8000/dashboard`, and the
-application programming interface documentation at `http://127.0.0.1:8000/docs`.
+The console is at `http://127.0.0.1:8000/dashboard` and the API documentation
+at `http://127.0.0.1:8000/docs`.
 
-For console development with hot reloading, run the engine as above and start
-the development server separately. It proxies the application programming
-interface to the engine, so a single origin is presented to the browser.
+For console work with hot reloading, start the engine as above and run the dev
+server alongside it. It proxies the API, so the browser still sees one origin.
 
 ```bash
 cd frontend && npm run dev
 ```
 
-### Configuration
+One thing worth knowing: the dev server and the engine-served console are
+different origins, and sessions are per origin. Signing in on one does not
+sign you in on the other.
 
-| Variable | Purpose |
+### Settings
+
+| Variable | What it does |
 |---|---|
-| `MERIDIAN_ADMIN_USER` | Console account name. |
-| `MERIDIAN_ADMIN_PASSWORD_HASH` | bcrypt hash of the console password. |
-| `MERIDIAN_CONSOLE_AUTH` | Set to `0` to disable console authentication for local development. |
-| `MERIDIAN_API_TOKEN` | Bearer token required for programmatic access. |
-| `MERIDIAN_DATA_DIR` | Location of uploaded configurations and the assessment store. |
-| `MERIDIAN_PACKS_DIR` | Location of mapping packs. |
-| `MERIDIAN_CORS_ORIGINS` | Permitted cross-origin callers. |
-| `MERIDIAN_MONITOR` | Set to `1` to enable scheduled re-collection. |
-| `MERIDIAN_SHOW_PAIRING` | Set to `1` to keep the authenticator pairing code available after enrolment. Intended for demonstration only. |
+| `MERIDIAN_ADMIN_USER` | Console account name |
+| `MERIDIAN_ADMIN_PASSWORD_HASH` | bcrypt hash of the console password |
+| `MERIDIAN_CONSOLE_AUTH` | Set to `0` to turn off console authentication for local work |
+| `MERIDIAN_API_TOKEN` | Bearer token for programmatic access |
+| `MERIDIAN_DATA_DIR` | Where uploads and the assessment store live |
+| `MERIDIAN_PACKS_DIR` | Where mapping packs live |
+| `MERIDIAN_CORS_ORIGINS` | Permitted cross-origin callers |
+| `MERIDIAN_MONITOR` | Set to `1` for scheduled re-collection |
+| `MERIDIAN_SHOW_PAIRING` | Set to `1` to keep the authenticator QR available after enrolment. For demonstrations only |
 
 ### Threat data
 
-Vulnerability lookup and adversary technique mapping operate from local data
-files, so results are reproducible and each states the date of the data it
-used. A vulnerability result derived from data more than thirty days old
-declares that fact before its findings.
+Vulnerability lookup and ATT&CK mapping run from local files, so results
+reproduce and each one states the date of the data behind it. Anything derived
+from data more than thirty days old says so before it says anything else.
 
 ```bash
 python -m tools.fetch_cve
@@ -324,9 +322,9 @@ python -m tools.fetch_cve
 
 ---
 
-## Extending platform support
+## Adding a vendor
 
-A new platform is a YAML file rather than a code change.
+A new platform is a YAML file, not a code change.
 
 ```yaml
 vendor: acme
@@ -340,66 +338,63 @@ not_applicable_fields:
   authentication.enable_secret: "AcmeOS has no enable-secret concept"
 ```
 
-A pack validated only against a fixture written alongside it is assigned
-version `0.9`. A test prevents it from being promoted to `1.0` until it has
-been validated against output from a real device. This distinction is
-maintained because real configurations expose defects that constructed
-fixtures do not: a downloaded PAN-OS export identified a defect in the XML
-reader within minutes of first use.
+A pack that has only ever been tested against a fixture written next to it
+stays at version `0.9`, and a test stops it reaching `1.0` until it has faced
+output from a real device. That rule exists because real configurations keep
+finding bugs that invented ones cannot. A downloaded PAN-OS export broke the
+XML reader within minutes of first contact.
 
 ---
 
-## Application security posture
+## Securing the console itself
 
-The platform is built to satisfy the controls it assesses.
+This tool reports on other people's access control, so it should survive the
+same questions.
 
-| Measure | Corresponding control |
+| What it does | The control it answers |
 |---|---|
-| Console credentials stored as a bcrypt hash; no plaintext credential in the repository or its history | `MERIDIAN-PLT-002` |
-| Account lockout after repeated authentication failures | `MERIDIAN-EXT-013` |
-| Multi-factor authentication for administrative access, by time-based one-time password | `MERIDIAN-EXT-014` |
-| Authentication failures recorded | `MERIDIAN-EXT-021` |
+| Console password stored as a bcrypt hash, with no plaintext in the repository or its history | `MERIDIAN-PLT-002` |
+| Account lockout after repeated failures | `MERIDIAN-EXT-013` |
+| Multi-factor authentication for administrative access, by TOTP | `MERIDIAN-EXT-014` |
+| Failed sign-ins recorded | `MERIDIAN-EXT-021` |
 
-One-time codes conform to RFC 6238 and are compatible with standard
-authenticator applications. One-time codes are accepted once; replay of a
-previously accepted code is refused. Sessions are held in session storage and
-expire with the browser session.
+Codes are standard RFC 6238, so any normal authenticator app works. A code is
+accepted once and once only. Replaying one that has already been used is
+refused, which matters because the clock tolerance that makes TOTP usable also
+widens the window an observed code stays valid in.
 
-The pairing endpoint, which discloses the shared secret, closes after the
-first successful authentication. It may be held open for demonstration by
-setting `MERIDIAN_SHOW_PAIRING=1`, in which case the engine records a warning
-at startup stating that the control has been relaxed.
+The pairing endpoint hands out the shared secret, so it closes after the first
+successful sign-in. It can be held open for demonstrations with
+`MERIDIAN_SHOW_PAIRING=1`, and when it is, the engine logs a warning at
+startup saying the control has been relaxed. A weakened control that announces
+itself is a demo setting. One that stays quiet is a vulnerability.
 
 ---
 
-## Data handling and licensing
+## What is not in this repository
 
-The following are deliberately excluded from this repository.
-
-| Excluded | Reason |
+| Left out | Why |
 |---|---|
-| CIS Benchmark and ISO/IEC 27001 text | Copyrighted. Referenced by identifier and short title only. Licence handling is enforced in the type system rather than by policy. |
-| Vendor documentation | Retaining a local copy against which to write mappings is fair use; republishing a vendor's command reference is not. Sources are recorded so that each may be retrieved independently. |
-| Real device configurations and assessment history | The change-tracking store keys on hostname, serial number and configuration digest. Publishing it would disclose live infrastructure. |
-| NIST OSCAL catalogues | Public domain, but retrievable on demand and large enough to dominate the repository. |
+| CIS Benchmark and ISO/IEC 27001 text | Copyrighted. Cited by identifier and short title only. The licence boundary is enforced in the type system, not by good intentions |
+| Vendor documentation | Keeping a local copy to write mappings against is fair use. Republishing a vendor's command reference is not. Sources are recorded so anyone can fetch their own |
+| Real configurations and assessment history | The change store keys on hostname, serial and configuration digest. Publishing it would expose live infrastructure |
+| NIST OSCAL, MITRE ATT&CK and ATLAS corpora | Public and freely available, but large, and the tools here re-fetch them on demand |
 
-These exclusions are enforced by `.gitignore` and, for licensed content, in
-code.
+`.gitignore` enforces these, and for the licensed material so does the code.
 
 ---
 
-## Validation status
+## Where the packs actually stand
 
-Mapping packs for SonicWall, PAN-OS, Cisco IOS-XE, Cisco ASA and Juniper are
-validated against real or captured device configurations. Packs for Arista,
-Aruba, FortiOS, Azure and GCP are at version `0.9`, validated against
-constructed fixtures pending real exports.
+SonicWall, PAN-OS, Cisco IOS-XE, Cisco ASA and Juniper are validated against
+real or captured configurations. Arista, Aruba, FortiOS, Azure and GCP sit at
+version `0.9`, validated against constructed fixtures while they wait for real
+exports.
 
-Among the extended checks, the VPN, vulnerability and wireless assessments are
-validated against a real SonicWall NSA 3700 export comprising 92,635 settings.
-The Catalyst 9800 wireless adapter is validated against a fixture constructed
-from the vendor's published command reference, and every result it produces
-declares that basis.
+Of the extended checks, VPN, vulnerability and wireless are validated against
+a real SonicWall NSA 3700 export of 92,635 settings. The Catalyst 9800
+wireless adapter is validated against a fixture built from the vendor's
+published command reference, and every result it produces says so.
 
 ```bash
 python -m pytest -q

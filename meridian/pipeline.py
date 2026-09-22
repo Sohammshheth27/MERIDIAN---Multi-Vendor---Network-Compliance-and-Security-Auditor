@@ -1,6 +1,6 @@
 """One call: a configuration file in, a complete assessment out.
 
-Until now this chain existed only as something a caller re-assembled by hand --
+Until now this chain existed only as something a caller re-assembled by hand:
 fingerprint, pick a pack, pick a reader, apply, build the object graph, merge,
 load rules, evaluate. Twelve lines and five imports, rewritten slightly
 differently every time, which is how two runs of "the same" assessment end up
@@ -73,13 +73,13 @@ class DeviceAssessment:
     total_records: int = 0
     # The parsed document, retained so the training queue can see exactly what
     # the pack AND the graph consumed. Rebuilding it separately misses pack
-    # consumption and re-offers settings that are already mapped -- the queue
+    # consumption and re-offers settings that are already mapped. The queue
     # was proposing `minPasswordLength`, which the pack has mapped all along.
     document: object | None = None
     # The normalised device model the controls were evaluated against.
     #
     # It was previously discarded once the findings existed, so anything that
-    # needed it -- remediation's lockout check, and now the baseline export --
+    # needed it (remediation's lockout check, and now the baseline export)
     # had to re-parse the file and rebuild it. Keeping it costs nothing: it is
     # computed on every assessment regardless, and a second parse can silently
     # diverge from the one the findings actually came from.
@@ -87,12 +87,12 @@ class DeviceAssessment:
     #: Frameworks the user selected; None means all of them.
     frameworks: list | None = None
     # Vendor-agnostic detections and their cross-check against the pack.
-    # Computed for EVERY device, including unsupported ones -- the universal
+    # Computed for EVERY device, including unsupported ones: the universal
     # layer is the floor under a vendor nobody has described to us.
     universal: list = field(default_factory=list)
     consensus: object | None = None
     # Two independent PARSERS on the same syntax. Distinct from `consensus`,
-    # which compares two methods over one parse tree -- this catches the case
+    # which compares two methods over one parse tree. This catches the case
     # where both methods agree because they read the same wrong tree.
     parser_agreement: object | None = None
 
@@ -139,7 +139,7 @@ class DeviceAssessment:
         give up; the same gap counted in distinct names is 841, because one
         setting recurs once per interface, per rule, per zone. One approval in
         the training GUI covers every instance of a name, on every device of
-        that platform -- so names, not records, is the honest size of the work.
+        that platform. So names, not records, is the honest size of the work.
         """
         try:
             from .training.queue import build_queue
@@ -258,7 +258,7 @@ def _load_packs(packs_dir) -> list:
     to return a device to its pre-approval coverage.
 
     Learned mappings are appended AFTER the authored ones, so a hand-written
-    mapping for the same field wins -- a human decision outranks an approved
+    mapping for the same field wins: a human decision outranks an approved
     proposal about the same setting.
     """
     root = Path(packs_dir)
@@ -273,8 +273,8 @@ def _load_packs(packs_dir) -> list:
             # A pack that will not load USED to vanish silently. The failure
             # mode is brutal and was observed for real: a pack referencing a
             # derivation the running code does not have raised here, was
-            # swallowed, and the device was then assessed with NO pack at all
-            # -- 50 UNKNOWN controls instead of 20, no error anywhere, and
+            # swallowed, and the device was then assessed with NO pack at all:
+            # 50 UNKNOWN controls instead of 20, no error anywhere, and
             # nothing to distinguish it from a genuinely unreadable device.
             #
             # A broken pack is our bug. It is recorded and surfaced (see
@@ -292,7 +292,7 @@ def _load_packs(packs_dir) -> list:
                 extra = load_pack(learned)
                 # A later mapping OVERWRITES an earlier one for the same field,
                 # so simply appending let an approval silently replace a
-                # hand-authored mapping -- and degrade it: a generated
+                # hand-authored mapping and degrade it: a generated
                 # `console timeout` rule with no capture group turned a
                 # working integer read into UNPARSED. Learned mappings may
                 # only ADD fields the authored pack does not already cover.
@@ -328,8 +328,8 @@ def select_pack(packs, fp: Fingerprint):
     """Choose the pack for this device AND this file format.
 
     Platform alone is not enough. SonicWall ships two export formats and we
-    hold a pack for each -- `sonicwall.yaml` reads the CLI export,
-    `sonicwall_exp.yaml` reads the `.exp` backup -- and both declare
+    hold a pack for each (`sonicwall.yaml` reads the CLI export,
+    `sonicwall_exp.yaml` reads the `.exp` backup), and both declare
     `platform: sonicwall_sonicos`. Keying on platform picked whichever sorted
     first, so a `.exp` file was silently handed to the CLI reader: it still
     produced an SBM and an 81-control assessment, just from the wrong parser,
@@ -383,7 +383,7 @@ def _read_and_apply(path: Path, pack: Pack, *, aid: str, sha: str, redact: bool)
 #: Keyed on the EXACT platform, not a prefix.
 #:
 #: A prefix of "juniper" also matched `juniper_srx_xml`, whose reader produces
-#: an XmlConfig -- and junos_builder reads `cfg.multi`, which XmlConfig does not
+#: an XmlConfig. junos_builder reads `cfg.multi`, which XmlConfig does not
 #: have. Every Juniper XML device therefore raised AttributeError inside the
 #: builder and silently got no object graph, which read downstream as "this
 #: platform has no rule-graph builder". The exception was invisible until the
@@ -408,7 +408,7 @@ def graph_platforms() -> list:
 def _build_graph(platform: str, doc):
     """Object graph, where a builder exists for this platform.
 
-    Returns None when no builder is registered -- that is an ordinary,
+    Returns None when no builder is registered. That is an ordinary,
     expected outcome and callers must treat it as "cannot answer", never as
     "nothing wrong". A builder that RAISES is different: that is our bug, and
     it is recorded on the module logger instead of vanishing, because a
@@ -418,7 +418,7 @@ def _build_graph(platform: str, doc):
 
     # EXACT match. `startswith` matched juniper_srx_xml against the
     # juniper_srx entry, handing an XmlConfig to a builder that reads
-    # cfg.multi -- which XmlConfig does not have.
+    # cfg.multi, which XmlConfig does not have.
     for key, (module, _label) in GRAPH_BUILDERS.items():
         if platform != key:
             continue
@@ -433,7 +433,7 @@ def enrich_identity(identity: DeviceIdentity, show_text: str) -> list:
     """Fill serial / model / version from `show version` output.
 
     Deliverable 4 asks for "serial numbers and hardware details". A running
-    configuration does not contain them -- which is why MERIDIAN reported
+    configuration does not contain them. That is why MERIDIAN reported
     `serial=None` for every Cisco and Juniper device. They live in operational
     output, and ntc-templates parses that for 41 platforms.
 
@@ -470,7 +470,7 @@ def enrich_identity(identity: DeviceIdentity, show_text: str) -> list:
                      ", ".join(facts["serial_all"]))
 
     # Several independent fields disagreeing is not drift, it is two different
-    # devices -- somebody pasted the wrong `show version`. Reported as three
+    # devices: somebody pasted the wrong `show version`. Reported as three
     # separate field notes that reads like pedantry; stated once, it is the
     # warning that stops a serial number from the wrong box being printed on
     # an audit report.
@@ -513,8 +513,8 @@ def _universal_pass(path: Path, device_assessment) -> None:
     """Run the vendor-agnostic detectors and cross-check them against the pack.
 
     Deliberately unconditional. On an UNSUPPORTED vendor this is the only
-    analysis that runs at all, and on a supported one it is the second opinion
-    -- the layer that found a cleartext credential on ASA line 97 that the
+    analysis that runs at all, and on a supported one it is the second opinion:
+    the layer that found a cleartext credential on ASA line 97 that the
     vendor pack itself missed.
     """
     try:
@@ -553,13 +553,13 @@ def assess(path, *, packs_dir="packs", rules_dir="rules", redact=True,
     pack = select_pack(load_packs(packs_dir), fp)
 
     if pack is None:
-        # Not a failure -- the bootstrap path. The raw lines are the training
+        # The bootstrap path, not a failure. The raw lines are the training
         # loop's input, so they are carried out rather than discarded.
         unsupported = DeviceAssessment(
             identity=identity, fingerprint=fp, supported=False,
             unrecognised=_raw_lines(p),
             # Parsed with the format's reader even though no pack exists, so
-            # the training queue sees STRUCTURE -- setting names and tables --
+            # the training queue sees STRUCTURE (setting names and tables)
             # rather than raw text lines.
             document=_parse_for_training(p, fp),
             notes=identity_notes + [
@@ -592,8 +592,8 @@ def assess(path, *, packs_dir="packs", rules_dir="rules", redact=True,
 
     controls = load_rules(rules_dir, platform=pack.platform, tiers=tiers)
 
-    # User-selected frameworks. None means all -- the assessment exactly as
-    # it has always been produced.
+    # User-selected frameworks. None means all, giving the assessment
+    # exactly as it has always been produced.
     from .frameworks.selection import FRAMEWORKS, cites
     from .frameworks.selection import normalise as _normalise_fw
     fws = _normalise_fw(frameworks)
@@ -619,8 +619,8 @@ def assess(path, *, packs_dir="packs", rules_dir="rules", redact=True,
         not_applicable_fields=getattr(pack, "not_applicable_fields", None))
 
     # Record accounting, and the lines no mapping touched. Those lines are the
-    # training loop's input, so they are carried out for SUPPORTED devices too
-    # -- not only for unknown vendors. A recognised vendor with an incomplete
+    # training loop's input, so they are carried out for SUPPORTED devices
+    # too, not only for unknown ones. A recognised vendor with an incomplete
     # pack is exactly the case where new mappings are worth learning.
     records, total, unrecognised = {}, 0, []
     try:

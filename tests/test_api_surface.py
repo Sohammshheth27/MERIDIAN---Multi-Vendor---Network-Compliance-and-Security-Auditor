@@ -8,7 +8,7 @@ question about any of them.
 These tests cover two things that have to be true together:
 
   1. the settings are read and evaluated when the API is ON;
-  2. they resolve to NOT_APPLICABLE -- citing the disabling setting -- when it
+  2. they resolve to NOT_APPLICABLE, citing the disabling setting, when it
      is OFF.
 
 The second without the first would be a permanently silent control, which is
@@ -50,7 +50,7 @@ def test_every_api_control_is_gated_on_the_api_being_enabled(controls):
     """A control about a disabled surface must not be able to fail.
 
     Without the gate, a device with the API switched off collects six findings
-    about an interface it does not expose -- which is the same mistake as
+    about an interface it does not expose, which is the same mistake as
     reporting the TLS version of disabled HTTPS management.
     """
     gated = {c.field: c for c in controls if c.field in API_FIELDS}
@@ -128,7 +128,7 @@ def test_an_unmapped_gate_field_does_not_suppress_the_control(controls):
 
     If `platform.api.enabled` is simply not mapped for a platform, that is a
     gap in OUR coverage. Reading it as "the API is off" would manufacture a
-    false negative out of our own blind spot -- strictly worse than the false
+    false negative out of our own blind spot, strictly worse than the false
     positive the gate exists to remove.
     """
     sbm = _sbm()
@@ -156,7 +156,7 @@ def test_the_real_device_reports_the_api_surface_as_not_applicable():
 
 @sw_only
 def test_stored_credentials_are_audited_and_this_device_fails():
-    """`encUsernamePassword = off` -- a leaked backup exposes credentials.
+    """`encUsernamePassword = off`: a leaked backup exposes credentials.
 
     Not gated: stored-credential protection matters whether or not any
     management interface is enabled.

@@ -2,7 +2,7 @@
 
 The problem statement's hardest sentence: "traditional parsers fail because
 they cannot predict or interpret the configuration structures of newly acquired
-or proprietary hardware." A signature table cannot answer that -- by definition
+or proprietary hardware." A signature table cannot answer that. By definition
 the signature is missing.
 
 So this package does not ask "which vendor is this?". It asks three questions
@@ -17,8 +17,8 @@ that can be answered about a file nobody has ever described:
 
 The output is a DRAFT pack: `packs/<vendor>.draft.yaml`, every mapping marked
 PROPOSED with its confidence and the known-vendor line it was reasoned from.
-A human approves it into a real pack. No code is written to add a vendor --
-which is the requirement.
+A human approves it into a real pack. No code is written to add a vendor.
+That is the requirement.
 """
 from .detect import Grammar, detect_grammar
 from .harvest import Candidate, harvest

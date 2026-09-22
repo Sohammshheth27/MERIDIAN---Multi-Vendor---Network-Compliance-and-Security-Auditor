@@ -2,8 +2,8 @@
 
 THIS IS LOCAL AUTHENTICATION WITH MFA, NOT SINGLE SIGN-ON
 ---------------------------------------------------------
-SSO means federating to an identity provider -- Entra ID, Okta, Google
-Workspace -- over SAML or OIDC, so the password is never seen by this
+SSO means federating to an identity provider (Entra ID, Okta, Google
+Workspace) over SAML or OIDC, so the password is never seen by this
 application at all. What this module does is verify a local credential and a
 TOTP code. The distinction matters in a room where somebody knows it, so the
 console says "Sign in", never "SSO".
@@ -13,9 +13,9 @@ WHY A HASH AND NOT THE PASSWORD
 The default credential is stored as a bcrypt hash, and the plaintext appears
 nowhere in this repository.
 
-That is not fastidiousness. This product reports MERIDIAN-PLT-002 -- "stored
-credentials and configuration parameters must be encrypted" -- as a FAIL on
-devices that keep credentials in the clear. A compliance auditor whose own
+That is not fastidiousness. This product reports a FAIL on devices that keep
+credentials in the clear, under MERIDIAN-PLT-002: "stored credentials and
+configuration parameters must be encrypted". A compliance auditor whose own
 console shipped a plaintext password in every clone and every line of its git
 history would be the finding it exists to report.
 
@@ -67,8 +67,8 @@ def pairing_always_open() -> bool:
     -------------------------------------------
     `/auth/enroll` hands out the shared TOTP secret. It is open only until the
     first successful sign-in, because after that anybody who can reach the
-    console could fetch the secret and pair their own phone -- which would
-    make the second factor a formality rather than a factor. The gate closing
+    console could fetch the secret and pair their own phone. That would make
+    the second factor a formality rather than a factor. The gate closing
     is the control, not a side effect.
 
     Setting MERIDIAN_SHOW_PAIRING=1 holds it open. That is a demonstration
@@ -95,7 +95,7 @@ def _state_path() -> Path:
     """Where the TOTP secret and the failure counter live.
 
     Under the data directory, which is git-ignored because it holds customer
-    configurations -- and now a shared secret, which must never be committed
+    configurations, and now a shared secret, which must never be committed
     for exactly the same reason.
     """
     return _data_dir() / "auth.json"
@@ -145,7 +145,7 @@ def qr_svg() -> str:
     """The provisioning URI as an inline SVG.
 
     Rendered here rather than in the browser so the console needs no QR
-    library and works with no network at all -- enrolment must not depend on
+    library and works with no network at all: enrolment must not depend on
     reaching a CDN.
     """
     import io
@@ -194,9 +194,9 @@ def check_otp(code: str) -> bool:
     skew is a demo that fails.
 
     REPLAY IS REFUSED. Without this, a code read over someone's shoulder stays
-    valid for its whole window -- and the window is what the tolerance above
-    just widened. The step counter of the last accepted code is recorded and
-    anything at or below it is rejected.
+    valid for its whole window. The tolerance above just widened that window.
+    The step counter of the last accepted code is recorded and anything at or
+    below it is rejected.
     """
     import pyotp
 

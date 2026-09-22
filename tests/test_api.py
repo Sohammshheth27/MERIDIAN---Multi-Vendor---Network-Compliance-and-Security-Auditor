@@ -100,7 +100,7 @@ def test_remediation_separates_deferred_steps():
 
 def test_unreadable_file_is_a_result_not_a_crash(tmp_path):
     """The tool refusing an encrypted backup is behaviour to surface, with
-    the reason attached -- not a 500."""
+    the reason attached, not a 500."""
     bad = tmp_path / "encrypted.bin"
     bad.write_bytes(b"Salted__" + os.urandom(4096))
     with bad.open("rb") as fh:
@@ -151,7 +151,7 @@ def test_console_is_served_by_the_same_process():
     itself, so a deployment is a single process.
 
     The console moved to /app when the landing page took /. Asserting on "/"
-    would now pass against the landing page instead -- the test would still be
+    would now pass against the landing page instead, so the test would still be
     green while the thing it names was broken.
     """
     r = client.get("/app")
@@ -180,7 +180,7 @@ def test_landing_page_is_self_contained():
                    + client.get("/static/landing.js").text
                    + client.get("/static/graphics.js").text)
 
-    # The SVG namespace is an identifier, not a fetch -- nothing is requested
+    # The SVG namespace is an identifier, not a fetch. Nothing is requested
     # from w3.org. Everything else pointing offsite is a real dependency.
     page = page.replace("http://www.w3.org/2000/svg", "")
     for host in ("http://", "https://", "//fonts.", "cdn."):
@@ -193,8 +193,8 @@ def test_landing_page_capability_figures_come_from_the_engine():
 
     A landing page carrying its own copy of "5,376 controls" drifts the moment
     a framework is added, and then the product's own front page is the thing
-    stating a number nobody measured. SVG geometry is exempt -- a viewBox
-    coordinate is not a claim -- so this checks rendered TEXT, not markup.
+    stating a number nobody measured. SVG geometry is exempt, because a viewBox
+    coordinate is not a claim, so this checks rendered TEXT, not markup.
     """
     html = client.get("/").text
     js = client.get("/static/landing.js").text
@@ -248,8 +248,8 @@ def test_the_hero_terminal_shows_a_real_assessment():
 
     It is the one place the page prints specific numbers, so they have to be
     numbers the engine actually produces for that device. Illustrative output
-    that nobody checked is exactly the failure this product argues against --
-    and if it were invented, this is where a reviewer would catch us.
+    that nobody checked is exactly the failure this product argues against, and
+    if it were invented, this is where a reviewer would catch us.
     """
     html = client.get("/").text
     m = re.search(r"(\d+) controls</b>\s*&middot;\s*<b>(\d+) decided", html)
@@ -318,7 +318,7 @@ def test_glass_never_dims_a_label_below_readable():
 
     The glass direction layers rgba text over an rgba panel over a
     gradient. Both alphas composite, so a token that looks fine in the palette
-    can land far below AA once rendered -- `--label-3` at .40 measured 3.28:1,
+    can land far below AA once rendered: `--label-3` at .40 measured 3.28:1,
     and it carries every uppercase micro-label and table header at 10-11px.
 
     This is not a styling preference. The tool exists to be believed, and a
@@ -432,7 +432,7 @@ def test_recertification_returns_due_reviews_and_deletion_candidates():
     assert r.status_code == 200
     body = r.json()
     assert isinstance(body["due"], list)
-    # Two different return shapes -- RecertFinding objects vs plain dicts --
+    # Two different return shapes, RecertFinding objects vs plain dicts,
     # which is exactly the mismatch that broke this route the first time.
     assert all(isinstance(d, dict) for d in body["deletion_candidates"])
 
@@ -460,7 +460,7 @@ def test_diff_says_so_when_there_is_nothing_to_compare_against():
     from pathlib import Path
 
     # meridian.diff re-exports a function named "compare", which shadows the
-    # submodule of the same name -- "import meridian.diff.compare as m" binds the
+    # submodule of the same name, so "import meridian.diff.compare as m" binds the
     # FUNCTION, not the module. sys.modules is the unambiguous handle.
     compare_mod = sys.modules["meridian.diff.compare"]
     original = compare_mod.STORE
@@ -491,7 +491,7 @@ def test_topology_rejects_an_empty_device_list():
 def test_topology_reports_a_reason_for_every_skipped_device():
     """A device dropped silently would shrink the fabric without saying so.
 
-    A redacted upload has no addressing, so it cannot be placed -- that is a
+    A redacted upload has no addressing, so it cannot be placed. That is a
     reason, and it has to be visible next to the devices that were placed.
     """
     r = client.post("/assess?redact=true",

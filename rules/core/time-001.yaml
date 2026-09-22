@@ -10,8 +10,8 @@ rationale: >-
 frameworks:
   nist_800_53: [AC-12, SC-10]
   iso_27001_2022: [A.8.20]
-  # STIG Vuln IDs are per-platform. Derived from the downloaded
-  # XCCDF files, not recalled -- a control may map to several.
+  # STIG Vuln IDs are per-platform. Extracted from the downloaded
+  # XCCDF files, not recalled, and one control may map to several.
   # Threshold-profiled (crosswalks/profiles.yaml): these STIG rules ask for
   # 5 minutes; the STIG score judges them by that, not by MERIDIAN's own value.
   stig_by_platform:

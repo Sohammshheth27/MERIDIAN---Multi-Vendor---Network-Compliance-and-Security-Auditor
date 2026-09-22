@@ -21,7 +21,7 @@ DEFAULT_PACKS = "packs"
 #:
 #: Derived from this file's own location rather than written as a literal. It
 #: was previously hardcoded as an absolute path on one developer's machine,
-#: which meant a clone ran nowhere else -- the packs, the rule catalogue and
+#: which meant a clone ran nowhere else. The packs, the rule catalogue and
 #: the framework corpus were all addressed through a directory that exists on
 #: exactly one computer.
 #:

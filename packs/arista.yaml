@@ -1,8 +1,8 @@
-# Arista EOS mapping pack -- Reader 1 (indented)
+# Arista EOS mapping pack (Reader 1, indented)
 #
 # Source artifact: `show running-config` / `show startup-config`.
 #
-# EOS is close to IOS in shape, which is why it reuses the indented reader --
+# EOS is close to IOS in shape, which is why it reuses the indented reader,
 # but the differences are exactly where a copied Cisco pack would go wrong:
 #
 #   * management services are STANZAS, not one-line toggles. `management ssh`
@@ -19,7 +19,7 @@
 # tests/fixtures/arista_eos.cfg was written from Arista's published EOS CLI
 # syntax; it is not a real `show running-config` from a real switch. That makes
 # the fixture and this pack agree by construction, which is weaker evidence
-# than the Palo Alto pack has -- that one is validated against a genuine export
+# than the Palo Alto pack has. That one is validated against a genuine export
 # and found a reader bug because of it.
 #
 # Every mapping here should be re-verified against a real EOS config before
@@ -37,7 +37,7 @@ supported_domains: [device, platform, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
+# in OUR pack, not a fact about the device, and now resolves to UNKNOWN,
 # which keeps it in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
@@ -158,8 +158,8 @@ mappings:
     value: {group: 1, as: str}
 
 not_applicable_fields:
-  # {field: reason}. The reason is published as the finding's justification --
-  # an auditor asked to accept an exclusion needs to know why, and "verified
+  # {field: reason}. The reason is published as the finding's justification.
+  # An auditor asked to accept an exclusion needs to know why, and "verified
   # against the setting inventory" asserts a check without stating its result.
   authentication.enable_secret: "EOS has no IOS-style enable secret"
   management.aux.exec_disabled: "no AUX port on EOS platforms"

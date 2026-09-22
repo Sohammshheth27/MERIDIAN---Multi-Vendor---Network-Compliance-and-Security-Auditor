@@ -8,7 +8,7 @@ Vulnerabilities catalogue, and writes compacted copies under reference/cve/
 stamped with the fetch time.
 
 The check itself never touches the network. That keeps assessments
-reproducible and air-gap friendly -- and it is why every CVE result states the
+reproducible and air-gap friendly, and it is why every CVE result states the
 date of the data it was matched against. A snapshot is a claim about the past.
 """
 from __future__ import annotations

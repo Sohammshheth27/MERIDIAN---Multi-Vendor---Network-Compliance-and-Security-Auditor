@@ -77,7 +77,7 @@ def test_thresholds_over_several_instances_need_every_one():
 
 def test_junos_idle_timeout_is_judged_per_class(tmp_path: Path):
     """Junos has no system-wide idle timeout. One lax class leaves sessions
-    open, so the worst class decides -- in both export forms."""
+    open, so the worst class decides, in both export forms."""
     p = tmp_path / "srx.conf"
     # `show configuration` layout: Junos never prints a block on one line.
     p.write_text(JUNOS.format(login="""        class ops {

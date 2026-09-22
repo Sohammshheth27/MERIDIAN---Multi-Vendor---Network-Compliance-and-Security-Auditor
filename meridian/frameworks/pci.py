@@ -1,4 +1,4 @@
-"""PCI DSS v4.0.1 — identifiers only.
+"""PCI DSS v4.0.1: identifiers only.
 
 PCI DSS is copyrighted by the PCI Security Standards Council, so this loader
 follows the same rule as CIS and ISO: **we store requirement numbers
@@ -10,7 +10,7 @@ requirements document. No requirement text is stored, embedded, or indexed.
 
 What that buys: a finding can legitimately cite "PCI DSS v4.0.1 Requirement
 1.2.6" without redistributing anything the SSC licenses. What it costs: we
-cannot show a reader *what* 1.2.6 says — they need their own copy. That is the
+cannot show a reader *what* 1.2.6 says. They need their own copy. That is the
 correct trade, and it is the same one already made for CIS.
 
 Source: PCI DSS v4.0.1 Requirements and Testing Procedures.
@@ -24,7 +24,7 @@ from .models import Automatability, Catalog, CatalogEntry, Framework, License
 
 SOURCE_DOC = "PCI DSS v4.0.1"
 
-# The twelve requirements. Section headings only — never the requirement text.
+# The twelve requirements. Section headings only, never the requirement text.
 REQUIREMENTS: dict[str, str] = {
     "1": "Install and Maintain Network Security Controls",
     "2": "Apply Secure Configurations to All System Components",
@@ -91,7 +91,7 @@ def load(path: str | Path) -> Catalog:
 def _sub_requirement_ids(path: Path) -> list[str]:
     """Pull `1.2.6`-style identifiers out of the requirements PDF.
 
-    Identifiers only — the surrounding prose is never captured. Returns an
+    Identifiers only, and the surrounding prose is never captured. Returns an
     empty list if the document is missing or unreadable, because a partial
     catalogue is better than a crash and far better than invented numbers.
     """

@@ -1,7 +1,7 @@
 """The Security Baseline Model as JSON.
 
 The machine-readable counterpart to the PDF report. Where the report is read by
-a person, this is consumed by a pipeline -- which makes one property
+a person, this is consumed by a pipeline, which makes one property
 load-bearing above all others:
 
     EVERY FIELD CARRIES ITS OBSERVATION STATE.
@@ -111,7 +111,7 @@ def test_scoped_instances_are_preserved_not_collapsed(sw):
     """A firewall has many rules, and each is a separate object.
 
     Collapsing them to one `firewall.rules.action` would discard which rule
-    was which -- and the whole point of a per-rule finding is that it names
+    was which, and the whole point of a per-rule finding is that it names
     the rule.
     """
     _da, d = sw

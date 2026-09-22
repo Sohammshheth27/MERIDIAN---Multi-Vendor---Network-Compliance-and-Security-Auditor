@@ -7,8 +7,8 @@ got wrong: this index authors MAPPINGS. It does not decide compliance.
     assessment time  config --> readers --> SBM --> engine(rules/*.yaml) --> findings
 
 The engine never calls retrieval. If it did, the same configuration could score
-differently on two runs -- a different index build, a re-embed, a tie broken the
-other way -- and an assessment nobody can reproduce is an assessment nobody can
+differently on two runs: a different index build, a re-embed, a tie broken the
+other way. An assessment nobody can reproduce is an assessment nobody can
 audit. Retrieval is allowed to be fuzzy precisely because a human freezes its
 output into YAML before any device is ever judged by it.
 """

@@ -7,8 +7,8 @@ severity: critical
 tier: category
 # No applies_to: these controls read exposure.*/firewall.* which ANY vendor
 # whose pack builds an object graph can populate. Platform applicability is
-# already handled by supported_domains -- a platform with no 'exposure' domain
-# gets NOT_APPLICABLE automatically. Pinning them to security_groups was a
+# already handled by supported_domains, so a platform with no 'exposure'
+# domain gets NOT_APPLICABLE automatically. Pinning them to security_groups was a
 # Day-2 artefact from when only AWS could produce these fields.
 rationale: >-
   An any/any ingress rule defeats the purpose of the security group and silently exposes every service the instance ever runs.

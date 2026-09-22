@@ -6,7 +6,7 @@ tests/fixtures/fortios_edge.conf is CONSTRUCTED from Fortinet's published CLI
 syntax. It is not a captured "show full-configuration" from a real FortiGate.
 
 That makes these tests weaker than test_panos_graph.py, which validates
-against a genuine export -- and which found two real bugs precisely because
+against a genuine export, and which found two real bugs precisely because
 the config was real. A fixture written alongside its builder agrees with it by
 construction: it proves the builder is self-consistent, not that it matches a
 real device.
@@ -87,7 +87,7 @@ def test_a_source_port_range_is_not_read_as_the_destination(graph):
     """"set tcp-portrange 1433:1024-65535" is dst 1433, src 1024-65535.
 
     Folding the source range in would answer a destination-port question with
-    the client's port numbers -- and 1024-65535 matches almost everything.
+    the client's port numbers, and 1024-65535 matches almost everything.
     """
     assert graph.lookup("sql-with-source").values == ["tcp/1433"]
 

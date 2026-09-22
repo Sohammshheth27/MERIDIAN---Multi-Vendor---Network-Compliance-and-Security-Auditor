@@ -6,7 +6,7 @@ The catalogue is worth more than its 130 requirements: every control links to
 back-matter resources whose titles are **800-53 control identifiers**. That is
 the official 800-53 -> 800-171 crosswalk, shipped inside the same file. We
 extract it, which means an existing rule that already cites a NIST 800-53
-control gains its 800-171 requirement for free -- exactly the pattern
+control gains its 800-171 requirement for free. It is the same pattern
 `iso.py` uses to reach ISO 27001 through the OLIR crosswalk.
 
     our control -> NIST 800-53 -> [crosswalk in this file] -> 800-171

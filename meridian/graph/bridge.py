@@ -5,8 +5,8 @@ Before this module there were two parallel analyses of the same file:
     pack  -> SBM  -> rule engine -> findings -> report      (scalar settings)
     graph -> facts -> (nowhere)                             (policy analysis)
 
-The graph produced the best finding the system makes -- "rdp/3389 from internet
-to 10.10.10.10/32", resolved through named objects -- and it could not reach a
+The graph produced the best finding the system makes: "rdp/3389 from internet
+to 10.10.10.10/32", resolved through named objects. It could not reach a
 report, because nothing wrote it into the SBM. Meanwhile the SBM declared
 firewall.rules.* fields that no pack could populate, so they sat DEAD.
 
@@ -18,8 +18,8 @@ UNCERTAINTY IS PRESERVED, NOT FLATTENED
 ---------------------------------------
 A fact computed over an unresolved reference is recorded UNPARSED, which the
 engine turns into UNKNOWN. Recording it as a clean empty list would let a typo
-in a group name satisfy "no admin ports exposed" -- a false PASS manufactured
-from a broken config -- the worst case available. Section 9 of the
+in a group name satisfy "no admin ports exposed". That is a false PASS
+manufactured from a broken config, the worst case available. Section 9 of the
 parser architecture doc says the same thing: UNRESOLVED_REFERENCE means the
 finding may be incomplete.
 """
@@ -90,7 +90,7 @@ def merge(sbm: SecurityBaselineModel, graph: ObjectGraph, cfg=None) -> SecurityB
         # `allow-web-out` as the proof that the default is permit-all. On a
         # device with a permit-all default and NO rules there was nothing to
         # borrow, so the observation degraded to an assumption and the control
-        # went UNKNOWN -- losing the finding on precisely the configuration
+        # went UNKNOWN, losing the finding on precisely the configuration
         # that most needs it.
         ev_dp = list(getattr(graph, "default_action_evidence", []) or [])
 
@@ -108,7 +108,7 @@ def merge(sbm: SecurityBaselineModel, graph: ObjectGraph, cfg=None) -> SecurityB
                                      field_path="firewall.default_action")
                 if ev_dp else
                 # A builder may know the default from a platform invariant
-                # rather than from a line -- an AWS security group cannot be
+                # rather than from a line: an AWS security group cannot be
                 # configured to default-allow. That is still not something we
                 # READ, so it stays an assumption here and cannot carry a FAIL.
                 Observation.default_assumed(action,
@@ -132,7 +132,7 @@ def merge(sbm: SecurityBaselineModel, graph: ObjectGraph, cfg=None) -> SecurityB
         hits, evidence, skipped = fn(graph, resolver)
 
         if hits:
-            # We found real violations. Report them -- they are provable
+            # We found real violations, so report them. They are provable
             # regardless of what else in the policy was unreadable. Skipped
             # rules are surfaced separately rather than suppressing findings.
             sbm.set(field, Observation.observed(hits, evidence, field_path=field))
@@ -142,7 +142,7 @@ def merge(sbm: SecurityBaselineModel, graph: ObjectGraph, cfg=None) -> SecurityB
             sbm.set(field, Observation.unparsed(
                 [_skip_evidence(sbm, skipped)], field_path=field))
         else:
-            # Nothing found and every rule was readable -- a provable clean pass.
+            # Nothing found and every rule was readable: a provable clean pass.
             sbm.set(field, Observation.observed(
                 hits, evidence, field_path=field) if evidence
                 else Observation.default_assumed(hits, field_path=field))
@@ -190,7 +190,7 @@ def _skip_evidence(sbm: SecurityBaselineModel, skipped):
         file=(origin.file if origin else sbm.source_file),
         line=(origin.line if origin else None),
         raw=f"rule {s.rule} not evaluable: {s.reason}",
-        # Prefer the rule's own record id where it has one -- on a key-value
+        # Prefer the rule's own record id where it has one. On a key-value
         # export that is the setting ordinal, which is the real locator.
         record_id=(origin.record_id if origin and origin.record_id
                    else str(s.rule)),

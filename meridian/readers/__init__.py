@@ -1,4 +1,4 @@
-"""Interpretation layer -- readers turn vendor formats into SBM observations."""
+"""Interpretation layer: readers turn vendor formats into SBM observations."""
 from .json_reader import JsonDocument, load, loads
 from .pack import DERIVATIONS, Pack, apply_json_pack, load_pack
 

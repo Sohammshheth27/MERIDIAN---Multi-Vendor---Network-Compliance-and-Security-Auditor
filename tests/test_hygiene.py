@@ -1,7 +1,7 @@
 """Rule hygiene: dead, shadowed, redundant, over-broad policy.
 
-The capability every comparable product leads with -- Batfish,
-firewall-orchestrator, ManageEngine, AlgoSec -- and the one MERIDIAN had none of
+The capability every comparable product leads with (Batfish,
+firewall-orchestrator, ManageEngine, AlgoSec) and the one MERIDIAN had none of
 while holding all the data required.
 
 Nothing here is probabilistic. Shadowing is set containment evaluated in policy
@@ -82,7 +82,7 @@ def rep_kinds(rep):
 
 
 def test_order_matters_a_specific_rule_first_is_not_shadowed():
-    """Correct policy -- specific before general -- must produce no finding."""
+    """Correct policy, specific before general, must produce no finding."""
     g = _graph([_rule("deny-one", 1, "deny", dst=("10.0.0.1",)),
                 _rule("allow-all", 2, "allow")])
     assert not analyse(g).by_kind("shadowed_rule")
@@ -95,7 +95,7 @@ def test_different_zones_are_not_shadowing():
 
 
 def test_zero_hit_rule_is_reported_with_the_reset_caveat():
-    """A hit counter resets on reboot, so zero hits is evidence of disuse --
+    """A hit counter resets on reboot, so zero hits is evidence of disuse,
     not proof a rule is unnecessary."""
     g = _graph([_rule("dr-failover", 1, hits=0)])
     f = analyse(g).by_kind("unused_rule")
@@ -154,7 +154,7 @@ def test_containment_findings_beat_the_base_rate_of_unused_rules():
 def test_the_device_can_still_refute_us_and_we_say_so():
     """SonicOS auto-sorts rules by specificity, so policy order is not the
     priority field. Rule #13 (any/any/any) covers #18 by set logic while #18
-    has 4.1M matches -- impossible if #13 ran first. Those cases must surface
+    has 4.1M matches, impossible if #13 ran first. Those cases must surface
     as disputes, not be quietly dropped or quietly kept."""
     rep = analyse(assess(SW).graph)
     disputed = rep.by_kind("disputed_shadow")

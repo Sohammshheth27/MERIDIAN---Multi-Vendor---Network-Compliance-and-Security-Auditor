@@ -1,7 +1,7 @@
 """Mappings added by reading real device output, and the bugs that exposed.
 
 Phase 3's finding was not that the packs were thin. It was that we hold exactly
-ONE substantial real configuration -- a 92,635-setting SonicWall export -- and
+ONE substantial real configuration, a 92,635-setting SonicWall export, and
 that every other artifact is a fragment or a constructed fixture of 16-112
 records. On those, an UNKNOWN mostly means "this file does not contain the
 setting", which no amount of pack work can fix.
@@ -30,8 +30,8 @@ def _finding(result, field):
 def test_external_auth_is_true_when_any_server_type_is_enabled():
     """The device runs LDAP with RADIUS off, and we reported "no AAA".
 
-    Two mappings targeted `authentication.aaa_enabled` -- one reading RADIUS,
-    one reading LDAP -- onto a single boolean. Whichever applied last won, so
+    Two mappings targeted `authentication.aaa_enabled`, one reading RADIUS,
+    one reading LDAP, onto a single boolean. Whichever applied last won, so
     the verdict depended on pack ORDER rather than on the device: RADIUS is
     off here, so a box with external authentication configured reported
     exactly the opposite.
@@ -53,7 +53,7 @@ def test_a_field_with_no_source_present_stays_undecided():
 
     Absence of every source is a question the configuration does not answer.
     Returning False there would turn our own coverage gap into a finding
-    against the device -- the same mistake as the domain-level N/A.
+    against the device, the same mistake as the domain-level N/A.
     """
     from meridian.readers.path_pack import derive_path_any_true
 
@@ -74,7 +74,7 @@ def test_local_only_authentication_is_a_finding_not_an_assumption():
     """`aaa authentication ssh console LOCAL` says there is no AAA server.
 
     The pack expressed that with `if_absent: false`, which produces a
-    DEFAULT_ASSUMED value -- correctly reported as UNKNOWN, because an assumed
+    DEFAULT_ASSUMED value, correctly reported as UNKNOWN, because an assumed
     value cannot decide a control. The result was that a device plainly stating
     what it does produced no finding at all. Reading the LOCAL form directly
     makes it an observation, with the line attached.

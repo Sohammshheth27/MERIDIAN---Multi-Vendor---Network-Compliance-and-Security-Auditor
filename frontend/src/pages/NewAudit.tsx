@@ -132,7 +132,7 @@ const NewAudit: FC = () => {
           </h3>
           <p className="text-xs text-[var(--color-slate-gray)] max-w-lg mb-5 font-medium">
             {vendors
-              ? `${platforms!.length} mapping packs loaded — ${vendors}. Several files at once are fine; each is assessed separately.`
+              ? `${platforms!.length} mapping packs loaded: ${vendors}. Several files at once are fine; each is assessed separately.`
               : 'Several files at once are fine; each is assessed separately.'}
           </p>
 
@@ -284,7 +284,7 @@ const NewAudit: FC = () => {
         <span>
           Assessment runs entirely on this machine. Configurations are parsed
           locally and nothing is transmitted off-premises. Copyrighted benchmark
-          text is never emitted — CIS, ISO and PCI controls are cited by
+          text is never emitted. CIS, ISO and PCI controls are cited by
           identifier only.
         </span>
       </div>

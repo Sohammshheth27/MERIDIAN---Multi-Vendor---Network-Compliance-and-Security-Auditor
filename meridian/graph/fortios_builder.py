@@ -10,7 +10,7 @@ CONSTRUCTED FIXTURE, NOT CAPTURED DEVICE OUTPUT.
 tests/fixtures/fortios_edge.conf is written from Fortinet's published CLI
 syntax; it is not a real "show full-configuration". That makes this builder and
 its fixture agree by construction, which is weaker evidence than the Palo Alto
-builder has -- that one is validated against a genuine export, and the real
+builder has. That one is validated against a genuine export, and the real
 config immediately exposed an XML reader bug that no fixture had found.
 
 Every mapping here should be re-verified against a real FortiGate config
@@ -21,7 +21,7 @@ FORTIOS SEMANTICS THAT A NAIVE READING GETS WRONG
 -------------------------------------------------
 1. AN ABSENT "status" MEANS ENABLED.
    FortiOS writes "set status disable" only to turn a policy off; an enabled
-   policy carries no status line at all. SonicOS is the exact opposite -- an
+   policy carries no status line at all. SonicOS is the exact opposite: an
    absent enabled flag there means off. Carrying the SonicOS assumption across
    would silently disable a live rulebase and report a permissive firewall as
    harmless, which is the most dangerous direction for this error to run.
@@ -71,7 +71,7 @@ _IFACE = re.compile(r"^system interface/(?P<name>[^/]+)/(?P<leaf>.+)$")
 UNTRUSTED_ROLES = {"wan"}
 UNTRUSTED_NAMES = {"wan", "untrust", "internet", "outside", "public", "external"}
 
-#: Documented FortiOS predefined services. NOT exhaustive -- FortiOS ships
+#: Documented FortiOS predefined services. NOT exhaustive, since FortiOS ships
 #: roughly a hundred. A name absent from this table stays unresolved, which is
 #: the safe direction: the rule becomes unevaluable and says so, rather than
 #: being silently treated as unconstrained.
@@ -269,7 +269,7 @@ def _zones_and_interfaces(cfg: BlockConfig, g: ObjectGraph) -> None:
 
     # An interface not claimed by a zone is its own policy scope on FortiOS,
     # so it is recorded as an interface node. Its "role wan" is the device's
-    # own statement that it faces the internet -- stronger evidence than
+    # own statement that it faces the internet. That is stronger evidence than
     # guessing from the name, though the name is used as a fallback.
     for name, leaves in _leaf_values(cfg, _IFACE).items():
         role = (leaves.get("role") or ("",))[0].lower()
@@ -293,7 +293,7 @@ def _predefined(g: ObjectGraph) -> None:
     """
     # Group members count as references. A service group listing HTTP and
     # HTTPS is the common way a policy reaches a predefined service, and
-    # looking only at rules would leave the group's members unresolved --
+    # looking only at rules would leave the group's members unresolved,
     # making every policy that uses the group unevaluable.
     referenced = {s for r in g.rules for s in r.services}
     referenced |= {m for n in g.nodes.values()
@@ -346,7 +346,7 @@ def _rules(cfg: BlockConfig, g: ObjectGraph) -> None:
             id=f"policy:{pid}",
             name=f"{name} [#{pid}]",
             # Document order is evaluation order on FortiOS. The policyid is
-            # an identifier, not a position -- policies can be reordered
+            # an identifier, not a position. Policies can be reordered
             # without renumbering, so sorting by id would evaluate the
             # rulebase in an order the device does not use.
             order=position,

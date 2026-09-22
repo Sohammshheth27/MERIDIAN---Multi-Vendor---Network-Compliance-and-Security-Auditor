@@ -61,14 +61,14 @@ class Control(BaseModel):
     tier: str = Field(default="core", description="core | extended | category")
 
     # Deliverable 4c. Keyed by platform, so the fix for a Cisco router and the
-    # fix for an SRX live beside the control they both satisfy -- and adding a
+    # fix for an SRX live beside the control they both satisfy. Adding a
     # vendor stays a YAML edit, not a code change (requirement 5).
     # Each block: {commands: [...], verify: str, phase: int,
     #              management_impact: none|disables_http|disables_telnet|disables_ssh}
     remediation: dict = Field(default_factory=dict)
 
     # Preconditions. A control whose feature is switched off is NOT_APPLICABLE,
-    # not FAIL -- see evaluate_control. Each entry:
+    # not FAIL (see evaluate_control). Each entry:
     #   {field: snmp.enabled, equals: true, because: "..."}
     #   {field: snmp.version, not_in: [disabled, off]}
     requires: list = Field(default_factory=list)

@@ -3,7 +3,7 @@
 # GROUNDED IN THE DEVICE. Every path below is a key decoded from a real
 # NSA 3700 export (92,635 settings / 4,708 distinct names). SonicWall publishes
 # no CLI grammar in the vendor-doc set we hold, so the device itself is the
-# authority -- which also means this pack is validated against a file nobody
+# authority, which also means this pack is validated against a file nobody
 # authored to suit it.
 #
 # This artifact is often written off as an obfuscated, unusable dump. It is base64 of
@@ -24,8 +24,8 @@ version: "3.0"
 # different result.
 verified_versions: ["7.3.0"]
 
-# The `.exp` lists EVERY setting the appliance has -- 92,635 of them, whether
-# configured or not -- so a mapping that matches no record is a key WE named
+# The `.exp` lists EVERY setting the appliance has, 92,635 of them, whether
+# configured or not, so a mapping that matches no record is a key WE named
 # wrongly, never a setting the device lacks. Three mappings are in that state
 # (`policyNgName*`, `uuidIpsObjEnable`, `uuidGavObjEnable`) and each produced a
 # verdict from silence: two FAILs asserting a violation we had no evidence for,
@@ -41,8 +41,8 @@ supported_domains: [device, management, authentication, authorization,
 # finding's justification.
 #
 # Deliberately short. A domain merely absent from `supported_domains` is a gap
-# in OUR pack, not a fact about the device, and now resolves to UNKNOWN --
-# which keeps it in the denominator where it belongs.
+# in OUR pack, not a fact about the device, so the verdict is UNKNOWN and
+# the domain stays in the denominator where it belongs.
 not_applicable_domains:
   cloud: "this is an on-premises appliance, not a cloud resource"
 
@@ -99,20 +99,20 @@ mappings:
     path: "adminLoginOtpRequire"
     value: {as: bool}
   # userRadiusSelect names the external auth source; absence means local-only.
-  # authentication.aaa_enabled is derived from ALL its sources -- see the
+  # authentication.aaa_enabled is derived from ALL its sources. See the
   # path_any_true derivation below. A single-source mapping here reported a
   # device running LDAP as having no external authentication, because RADIUS
   # happened to be the source that was mapped.
 
   # --- crypto --------------------------------------------------------------
   # The real SSH crypto policy: a JSON blob of permitted kex/cipher/mac.
-  # sshCipherControlConfig is JSON, not a scalar -- see the derivation below,
+  # sshCipherControlConfig is JSON, not a scalar. See the derivation below,
   # which reports WHICH algorithms are enabled rather than that it exists.
   - field: crypto.tls.minimum_version
     path: "tlsMinVersion"
 
   # --- logging -------------------------------------------------------------
-  # syslogServerName EMPTY means no remote collector -- that is a
+  # syslogServerName EMPTY means no remote collector, and that is a
   # provable absence, not an assumption.
   - field: logging.servers
     path: "syslogServerName"
@@ -177,7 +177,7 @@ mappings:
     value: {as: list}
   - field: authentication.local_accounts
     path: "adminName*"
-  # One `iface_port_disabled_N` per physical port -- 36 on this appliance,
+  # One `iface_port_disabled_N` per physical port, 36 on this appliance,
   # which is precisely the per-interface shape the note further down predicted
   # and then went looking for under the wrong key (iface_enable_PD, a single
   # IPv6 prefix-delegation flag). Reading the list STATES each port's
@@ -186,13 +186,13 @@ mappings:
     path: "iface_port_disabled_*"
     value: {as: list}
   # authorization.role_based was mapped to `radiusDfltUserGroup`, a key that
-  # does not occur once in a 92,635-setting export -- so it matched nothing and
+  # does not occur once in a 92,635-setting export, so it matched nothing and
   # reported UNKNOWN while appearing, in this file, to be mapped. Withdrawn:
   # a mapping that cannot fire is worse than an absent one, because it stops
   # anybody looking again. The real evidence is userGroupObjPrivMask_* (16
   # groups, values mixed 0 and non-zero) and needs an "any group holds a
   # non-zero privilege mask" derivation, which does not exist yet.
-  # snmp.version comes from a derivation -- SonicOS has no version key, it is
+  # snmp.version comes from a derivation. SonicOS has no version key, it is
   # implied by Snmp3_Mand_Required + whether a community string exists.
   - field: logging.log_denied
     path: "loginFailLockoutLog"
@@ -221,7 +221,7 @@ mappings:
     path: "iface_comment_*"
     value: {as: str}
   # 0/1 per interface. `zoneObjExtAAAHttpsRedirect` is the AAA login redirect,
-  # a different setting -- choosing it would report the wrong control.
+  # a different setting, and choosing it would report the wrong control.
   - field: management.http.redirect_https
     path: "iface_http_redirect_rule_*"
     value: {as: bool}
@@ -266,14 +266,14 @@ mappings:
     value: {as: bool}
 
   # `encUsernamePassword` governs whether stored credentials are encrypted in
-  # the saved configuration -- which is what a leaked backup exposes.
+  # the saved configuration, which is what a leaked backup exposes.
   - field: platform.stored_credentials_encrypted
     path: "encUsernamePassword"
     value: {as: bool}
 
   # --- snmp, continued ------------------------------------------------------
   # NOTE: snmp_Enable is ON here. `snmpStateEnable` is PER-INTERFACE (8 of them,
-  # all off), so it must not be read as a global disable -- doing so would
+  # all off), so it must not be read as a global disable. Doing so would
   # report a device running a v2c agent as having SNMP switched off.
   - field: snmp.views
     path: "Snmp3_View_Name_*"
@@ -323,7 +323,7 @@ not_applicable_fields:
   management.ssh.strict_host_key: "SonicOS is not acting as an SSH client here"
   crypto.rsa_modulus: "key size is not represented anywhere in the export"
   l2.dhcp_snooping: "not a SonicOS feature; its equivalent control is MAC-IP anti-spoof"
-  l2.arp_inspection: "as above -- the equivalent is MAC-IP anti-spoof, mapped at l2.ip_source_guard"
+  l2.arp_inspection: "as above: the equivalent is MAC-IP anti-spoof, mapped at l2.ip_source_guard"
   management.telnet.enabled: "SonicOS exposes no telnet management service"
   management.ssh.version: "SonicOS speaks SSHv2 only; no version selector exists"
   management.ssh.enabled: "SSH management is bound per zone rather than globally toggled"
@@ -333,14 +333,14 @@ derivations:
   # External authentication is in use if ANY server type is enabled. Confirmed
   # on the reference device: ldapSrvrEnabled_0=on with a populated
   # ldapSrvrHostName, while RADIUS is off. Keys are indexed (_0, _1 ...), so
-  # these are globs -- an exact path silently matches nothing.
+  # these are globs: an exact path silently matches nothing.
   - field: authentication.aaa_enabled
     op: path_any_true
     params:
       paths: ["ldapSrvrEnabled*", "userRadiusSelect*", "tacEnabled*"]
   # `syslogServerName=` (blank) is the device stating that NO remote syslog
   # server is configured. A bool cast of "" yields None, which the engine
-  # honestly reports as UNKNOWN -- and a high-severity control then vanishes
+  # honestly reports as UNKNOWN, and a high-severity control then vanishes
   # from the report. This reads the blank as the fact it is: not configured.
   - field: logging.remote_syslog
     op: path_non_empty
@@ -358,8 +358,8 @@ derivations:
   # all, which is the same question `aaa_enabled` answers from the same keys.
   # Verified on this export: ldapSrvrEnabled_0=on with ldapSrvrHostName_0 and
   # ldapSrvrPort_0=389 populated. The per-ZONE keys (zoneObjEnableLDAP_*) are
-  # all 0 and are a different setting -- user authentication per zone, not the
-  # appliance's admin authentication source -- so they are deliberately not
+  # all 0 and are a different setting: user authentication per zone, not the
+  # appliance's admin authentication source. They are deliberately not
   # part of this.
   - field: authentication.aaa_authentication
     op: path_any_true
@@ -369,7 +369,7 @@ derivations:
   # 36 ports, and the collector is configured (swFlowServerAddress set,
   # swFlowServerPort=2055, the registered NetFlow port). Distinct from
   # flowReportingViaHgms, which is reporting to the management system and is
-  # correctly off here -- the earlier rejection read only that key and
+  # correctly off here. The earlier rejection read only that key and
   # concluded the feature was absent.
   - field: logging.netflow
     op: path_any_true

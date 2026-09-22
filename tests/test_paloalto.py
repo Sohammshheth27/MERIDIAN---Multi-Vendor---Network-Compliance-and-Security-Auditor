@@ -3,7 +3,7 @@
 The fixture is not written by us. That matters: a hand-made fixture tends to be
 written to match the pack, which makes the pack look correct against its own
 assumptions. The real export immediately exposed two things an invented one
-would not have —
+would not have:
 
   * PAN-OS names every interface `ethernet1/1` and every address `81.81.0.1/24`,
     and the slash inside the entry name was splitting the path segment apart;
@@ -69,7 +69,7 @@ def test_entry_names_containing_a_slash_stay_in_one_segment(cfg):
 
     Before this was fixed the path had 11 segments instead of 9, every
     interface and every IP address was unreachable by any mapping, and the
-    failure was silent — the fields simply came back NOT_OBSERVED.
+    failure was silent: the fields simply came back NOT_OBSERVED.
     """
     iface = [p for p in cfg.paths if "layer3/ip" in p]
     assert iface, "fixture should contain a layer3 interface address"
@@ -100,7 +100,7 @@ def test_every_validatable_mapping_resolves(cfg):
     """Each mapping not in UNVALIDATED must hit the real export.
 
     A path with a typo returns NOT_OBSERVED, which is indistinguishable from a
-    device that genuinely lacks the setting — so it is asserted, not trusted.
+    device that genuinely lacks the setting, so it is asserted, not trusted.
     """
     raw = yaml.safe_load(open("packs/paloalto.yaml", encoding="utf-8"))
     missing = []
@@ -137,7 +137,7 @@ def test_negative_booleans_are_inverted(result):
     """`<disable-telnet>yes</disable-telnet>` means telnet is OFF.
 
     Read literally it would set `telnet.enabled = True` and report a hardened
-    device as insecure — a false positive on the most basic control there is.
+    device as insecure, a false positive on the most basic control there is.
     """
     for field, expected in (("management.telnet.enabled", False),
                             ("management.http.enabled", False)):

@@ -1,20 +1,20 @@
 """Rule hygiene: dead, shadowed, redundant and over-broad policy.
 
-THE GAP THIS CLOSES. Every comparable product -- Batfish, firewall-orchestrator,
-ManageEngine, AlgoSec -- leads with this analysis, and MERIDIAN did none of it while
+THE GAP THIS CLOSES. Every comparable product (Batfish, firewall-orchestrator,
+ManageEngine, AlgoSec) leads with this analysis, and MERIDIAN did none of it while
 sitting on all the data required. One real appliance in this repo carries 329
 rules, ordering for all of them, and a per-rule packet counter; 227 enabled
 rules on it have never matched a single packet.
 
 None of this is machine learning and none of it should be. Shadowing is set
 containment over resolved address and service sets, evaluated in policy order.
-It is decidable, explainable, and either right or wrong -- which is what an
+It is decidable, explainable, and either right or wrong, which is what an
 auditor needs from a finding that says "delete this rule".
 
 WHAT IS DELIBERATELY NOT CLAIMED
 A hit counter resets when the device reboots or when an operator clears it. A
 rule with zero hits is therefore evidence of DISUSE SINCE THE COUNTER RESET,
-not proof the rule is unnecessary -- a disaster-recovery rule may be correctly
+not proof the rule is unnecessary. A disaster-recovery rule may be correctly
 unused for years. Findings say so, and carry the counter, so a reviewer can
 weigh it against uptime rather than trust a label.
 
@@ -29,13 +29,13 @@ assumption is FALSE on SonicOS, which auto-sorts access rules by specificity
 within a zone pair, so a broad rule with a lower priority number does not
 necessarily precede a narrow one. The device's own counters exposed this: rule
 #13 (any/any/any, priority 14) covers rule #18 by pure set logic, and #18 has
-4,150,371 matches -- impossible if #13 were truly evaluated first.
+4,150,371 matches. That is impossible if #13 were truly evaluated first.
 
 Those cases are reported as `disputed_shadow` rather than dropped, because they
 say something true and useful: on this platform a containment finding is
 ADVISORY. The corroboration is what makes that visible. Measured on a real
 appliance, 31 of 31 containment findings had zero hits against an 85% base rate
-(p < 0.01), so the signal is real -- but the four disputes are the honest edge
+(p < 0.01), so the signal is real. But the four disputes are the honest edge
 of it, and hiding them would have hidden the ordering bug too.
 """
 from __future__ import annotations
@@ -193,8 +193,8 @@ def analyse(graph, resolver=None, *, max_pairs=20000) -> HygieneReport:
 
     # ------------------------------------------- shadowed and redundant ----
     # Skipped entirely on platforms with no positional evaluation. Windows
-    # Firewall matches by precedence -- a block rule beats an allow rule
-    # wherever it sits -- so "this rule is shadowed by the one above it"
+    # Firewall matches by precedence (a block rule beats an allow rule
+    # wherever it sits), so "this rule is shadowed by the one above it"
     # describes semantics the device does not have, and would be a finding
     # invented by our own assumption rather than read from the policy.
     if getattr(graph, "unordered", False):
@@ -219,7 +219,7 @@ def analyse(graph, resolver=None, *, max_pairs=20000) -> HygieneReport:
                 continue
             # An IPv4 rule and an IPv6 rule are in SEPARATE policy tables and
             # cannot shadow one another. Comparing across families called a
-            # rule with 2,308,325 matches unreachable -- the device's own
+            # rule with 2,308,325 matches unreachable: the device's own
             # counter refuted the claim, which is how this was found.
             if _family(earlier) != _family(later):
                 continue
@@ -264,7 +264,7 @@ def analyse(graph, resolver=None, *, max_pairs=20000) -> HygieneReport:
     # rule that matched packets is by definition reachable.
     #
     # This is the strongest validation available here, and neither comparable
-    # approach has both halves -- Batfish computes containment without hit
+    # approach has both halves. Batfish computes containment without hit
     # counters, and the appliance reports counters without containment.
     by_name = {(x.name or x.id): x for x in rules}
     for f in rep.findings:

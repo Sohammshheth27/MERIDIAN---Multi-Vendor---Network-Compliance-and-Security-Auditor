@@ -49,8 +49,8 @@ def test_a_value_that_is_not_boolean_shaped_has_no_spelling():
 
 # ------------------------------------------------------------- the type guard
 def test_a_boolean_control_over_a_string_record_is_refused():
-    """THE GUARD. An earlier version wrote `syslogServerName=on` -- a boolean
-    word into a server ADDRESS field -- because the control says `equals True`
+    """THE GUARD. An earlier version wrote `syslogServerName=on`, a boolean
+    word into a server ADDRESS field, because the control says `equals True`
     and the record was empty. That is an invented value, and it would have put
     nonsense into a production firewall."""
     control = _Control("logging.remote_syslog", "equals", True)
@@ -141,8 +141,8 @@ def test_a_dead_mapping_never_produces_a_change(emitted):
     This used to be caught HERE, as an emitter refusal. It is now caught a
     layer earlier: the pack declares itself `exhaustive`, so a mapping that
     matches nothing leaves its field unset and the control reports UNKNOWN.
-    The emitter only ever considers FAIL, so these never reach it at all --
-    a better place to stop it, and the reason this no longer looks for a
+    The emitter only ever considers FAIL, so these never reach it at all, which
+    is a better place to stop it and the reason this no longer looks for a
     refusal.
     """
     da, em = emitted
@@ -206,7 +206,7 @@ def test_the_gain_is_measured_not_predicted(emitted):
     assert result["after"]["score_pct"] > result["before"]["score_pct"]
     assert result["score_delta"] == round(
         result["after"]["score_pct"] - result["before"]["score_pct"], 1)
-    # Hardening cannot RESOLVE an unknown -- there is nothing on the device to
+    # Hardening cannot RESOLVE an unknown: there is nothing on the device to
     # correct for a setting we never read. It can, however, REVEAL one:
     # enabling HTTPS management activates MERIDIAN-HTTPS-001, which was moot while
     # the service was off, and whose `tlsMinVersion` mapping matches no record

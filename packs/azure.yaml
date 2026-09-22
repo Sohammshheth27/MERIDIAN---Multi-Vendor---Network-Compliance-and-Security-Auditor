@@ -4,8 +4,8 @@
 # (also `az network nsg show`, and the ARM/REST form with `properties`).
 #
 # A sibling of packs/aws.yaml: a mapping file, not code. The policy semantics
-# that differ from a security group -- priority order, deny rules, service
-# tags, default rules -- live in meridian/graph/azure_builder.py, and the exposure
+# that differ from a security group (priority order, deny rules, service
+# tags, default rules) live in meridian/graph/azure_builder.py, and the exposure
 # findings come from the graph, not from keyword matching here.
 #
 # VALIDATED ON A FIXTURE (samples/azure/nsg-list.json), built in the documented
@@ -27,7 +27,7 @@ not_applicable_domains:
   time: "clock and NTP are VM-level, not properties of an NSG"
   snmp: "an NSG runs no SNMP agent"
   logging: "NSG flow logs are a Network Watcher resource; this artifact is the rule set alone"
-  management: "an NSG has no management plane of its own -- it is configured through Azure Resource Manager"
+  management: "an NSG has no management plane of its own; it is configured through Azure Resource Manager"
   crypto: "an NSG terminates nothing, so it has no cipher or TLS configuration"
   interfaces: "an NSG is associated with subnets and NICs but does not define them"
   l2: "layer 2 is not exposed to the tenant in a virtual network"

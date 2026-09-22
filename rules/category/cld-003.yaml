@@ -7,8 +7,8 @@ severity: medium
 tier: category
 # No applies_to: these controls read exposure.*/firewall.* which ANY vendor
 # whose pack builds an object graph can populate. Platform applicability is
-# already handled by supported_domains -- a platform with no 'exposure' domain
-# gets NOT_APPLICABLE automatically. Pinning them to security_groups was a
+# already handled by supported_domains. A platform with no 'exposure'
+# domain gets NOT_APPLICABLE automatically. Pinning them to security_groups was a
 # Day-2 artefact from when only AWS could produce these fields.
 rationale: >-
   Public services legitimately need open ingress; the count is reported so each instance can be reviewed rather than assumed correct.

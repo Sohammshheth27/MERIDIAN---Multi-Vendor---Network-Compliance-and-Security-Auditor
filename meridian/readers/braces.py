@@ -1,4 +1,4 @@
-"""Reader 3 -- curly braces / set-lines.
+"""Reader 3: curly braces / set-lines.
 
 Vendors: Juniper Junos, Ubiquiti EdgeOS, VyOS.
 
@@ -52,7 +52,7 @@ def _strip_trailing_comment(raw: str) -> str:
         encrypted-password "$6$..."; ## SECRET-DATA
 
     The line grammar requires a statement to END in `;`, so every such line
-    -- encrypted passwords, RADIUS secrets, NTP authentication keys -- was
+    (encrypted passwords, RADIUS secrets, NTP authentication keys) was
     silently dropped and read as absent. A whole-line comment is left alone
     (it is skipped later); a `#` inside a quoted string is not a comment.
     """
@@ -72,7 +72,7 @@ def _statements(lines: list[str]):
 
     `class ops { idle-timeout 5; }` is valid Junos on one line. The line
     grammar expects one statement per line, so it matched neither a block
-    opener nor a leaf and the setting was silently dropped -- read as absent,
+    opener nor a leaf and the setting was silently dropped and read as absent,
     which a lockout or timeout control then reports as not configured.
 
     Splitting happens only when a brace shares its line with other content,
@@ -110,8 +110,8 @@ class BracesConfig:
         self.lines = text.splitlines()
         self.values: dict[str, tuple[str, int, str]] = {}
         # Every occurrence of a repeated path. Junos writes sibling leaves with
-        # the SAME key -- `address A 10.0.0.0/8;` then `address B 10.1.0.0/16;`
-        # -- and a last-write-wins map silently kept one of them. A group whose
+        # the SAME key: `address A 10.0.0.0/8;` then `address B 10.1.0.0/16;`.
+        # A last-write-wins map silently kept one of them. A group whose
         # membership is under-reported produces a confident, wrong finding, so
         # duplicates accumulate here and `values` stays a convenience view.
         self.multi: dict[str, list[tuple[str, int, str]]] = {}
@@ -211,7 +211,8 @@ class BracesConfig:
         section export does not, so `administration/http-management` and
         `sonicos/administration/http-management` are the same setting. Hard-
         coding one prefix into the pack would make it fail on the other export
-        mode -- precisely the brittleness the problem statement complains about.
+        mode. That is precisely the brittleness the problem statement
+        complains about.
 
         The fallback fires ONLY when exactly one stored path ends with the
         requested one. Two candidates means the request is genuinely ambiguous,

@@ -1,4 +1,4 @@
-"""Vendor mapping packs -- the executable artifact for a vendor.
+"""Vendor mapping packs: the executable artifact for a vendor.
 
 Adding a vendor is a YAML file, not a code change. The pack IS the Parser
 Specification, restricted to field mappings and *interpreted* rather than
@@ -7,7 +7,7 @@ compiled. Same architecture, one box simplified.
 Safety: a pack never contains executable code. It declares
 JSONPath expressions and named ``derivations`` chosen from an ALLOW-LIST
 implemented here. A pack author cannot introduce new behaviour, only new
-mappings -- which is what makes accepting a community-authored or AI-generated
+mappings, which is what makes accepting a community-authored or AI-generated
 pack safe.
 """
 from __future__ import annotations
@@ -89,7 +89,7 @@ class Mapping(BaseModel):
 
 
 class Derivation(BaseModel):
-    """A computed security fact -- facts are computed, not matched."""
+    """A computed security fact. Facts are computed, not matched."""
 
     field: str
     op: str
@@ -259,7 +259,7 @@ def derive_admin_ports_open_to_world(doc: JsonDocument, params: dict):
 
 
 def derive_any_any_rules(doc: JsonDocument, params: dict):
-    """Rules permitting all protocols from anywhere -- category tier."""
+    """Rules permitting all protocols from anywhere (category tier)."""
     hits, evidence = [], []
     for gid, gname, perm, path in _sg_ingress_rules(doc):
         world = _world_sources(perm)
@@ -284,7 +284,7 @@ def derive_unrestricted_ingress(doc: JsonDocument, params: dict):
 
 
 def derive_default_sg_in_use(doc: JsonDocument, params: dict):
-    """A default security group carrying rules -- AWS ships one per VPC."""
+    """A default security group carrying rules. AWS ships one per VPC."""
     hits, evidence = [], []
     for gpath, g in doc.query("$[*]", count=False):
         if isinstance(g, dict) and g.get("GroupName") == "default":
@@ -342,11 +342,12 @@ def apply_json_pack(
             # Index alignment breaks the moment a scope contains a variable
             # number of children: 3 groups holding 1+3+2 ingress rules gave
             # 6 hits against 3 ids, and the overflow silently invented scope
-            # ids "3", "4", "5" -- three security groups that do not exist.
+            # ids "3", "4", "5", naming three security groups that do not
+            # exist.
             scope_map = _scope_index(doc, m.scope)
             # Collect first, write once per scope. Writing per hit made each
             # later rule overwrite the previous one, so a group with three
-            # ingress rules reported one -- silently dropping two real rules
+            # ingress rules reported one, silently dropping two real rules
             # from the assessment.
             grouped: dict[str, list[tuple[str, Any]]] = {}
             for path, value in hits:

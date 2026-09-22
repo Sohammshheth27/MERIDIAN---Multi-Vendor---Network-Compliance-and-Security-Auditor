@@ -6,12 +6,12 @@ expected: 2
 severity: medium
 tier: core
 rationale: >-
-  Logs held only on the device are lost precisely when they matter -- on compromise. Two collectors survive one failing.
+  Logs held only on the device are lost precisely when they matter, on compromise. Two collectors survive one failing.
 frameworks:
   nist_800_53: [AU-4, AU-9, AU-6]
   iso_27001_2022: [A.5.25, A.5.33, A.6.8, A.8.15, A.8.6]
-  # STIG Vuln IDs are per-platform. Derived from the downloaded
-  # XCCDF files, not recalled -- a control may map to several.
+  # STIG Vuln IDs are per-platform. Every id below was looked up in
+  # the downloaded XCCDF files. A control may map to several.
   stig_by_platform:
     cisco_iosxe_router: [V-220139]
     cisco_iosxe_switch: [V-220568]

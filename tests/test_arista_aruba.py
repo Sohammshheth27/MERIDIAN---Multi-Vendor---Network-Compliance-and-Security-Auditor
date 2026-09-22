@@ -6,7 +6,7 @@ Both fixtures are CONSTRUCTED from published vendor CLI syntax. Neither is
 captured output from a real device.
 
 That makes these tests weaker than `test_paloalto.py`, which validates against
-a genuine PAN-OS export — and which found a reader bug precisely because the
+a genuine PAN-OS export, and which found a reader bug precisely because the
 config was real. A fixture written alongside its pack agrees with it by
 construction; it proves the pack is self-consistent, not that it matches a
 real switch.
@@ -37,7 +37,7 @@ CASES = [
     ("aruba", "aruba_aoscx.cfg", "hpe_aruba", "aruba_aoscx", "AOS-CX", "acx-access-01"),
 ]
 
-#: Settings the fixtures deliberately omit — a hardened switch has no telnet
+#: Settings the fixtures deliberately omit. A hardened switch has no telnet
 #: server and usually only one banner. Absence here is correct behaviour, not
 #: a broken regex, and listing them keeps the two apart.
 ABSENT_BY_DESIGN = {
@@ -61,7 +61,7 @@ def test_the_fingerprint_selects_this_pack_on_platform(
     """Selection must key on PLATFORM, not fall through to the vendor branch.
 
     The Arista pack originally declared `platform: eos` while the fingerprinter
-    emits `arista_eos`. It still worked — but only via `select_pack`'s
+    emits `arista_eos`. It still worked, but only via `select_pack`'s
     vendor-name fallback, which picks arbitrarily the moment a second pack for
     the same vendor exists. Aruba failed outright for the same reason plus a
     vendor-name mismatch (`aruba` vs `hpe_aruba`) and reported UNSUPPORTED.
@@ -81,7 +81,7 @@ def test_every_regex_matches_except_those_absent_by_design(
     It is indistinguishable from a device that genuinely lacks the setting, so
     it has to be asserted. Two real bugs were caught this way: Arista's SSH MAC
     line is `mac <algorithms>` not `mac hmac <algorithms>`, and Aruba puts the
-    VRF *between* the host and the severity — `logging H vrf mgmt severity S` —
+    VRF *between* the host and the severity (`logging H vrf mgmt severity S`),
     so a regex expecting them adjacent never matches a real switch.
     """
     raw = yaml.safe_load(open(f"packs/{name}.yaml", encoding="utf-8"))

@@ -1,11 +1,11 @@
 """Every framework identifier we cite must be the catalogue's own spelling.
 
-Two tests already checked that cited NIST ids exist -- but they normalised
+Two tests already checked that cited NIST ids exist, but they normalised
 `SC-8(1)` to `SC-8.1` before looking, because the rules wrote enhancements one
 way and the catalogue another. The scoring code does no such normalisation, so
 those two spellings became two separate requirements: one control, its evidence
 split in half, scored twice. On the SonicWall that showed as SC-8(1) at 67% and
-SC-8.1 at 0% in the same report -- from the same device, about the same control.
+SC-8.1 at 0% in the same report, from the same device, about the same control.
 
 The lesson is that a normalising test hides exactly the defect it looks for. So
 this file asserts the identifier VERBATIM. If a rule writes a spelling the
@@ -67,8 +67,8 @@ def test_every_cited_iso_id_is_an_annex_a_control(catalogues):
 
     ISO/IEC 27001 clauses 4-10 govern the organisation: planning, review,
     competence. Annex A holds the controls a firewall can actually satisfy.
-    EXT-029 cited clauses 8.1 and 9.3.3 -- operational planning and management
-    review results -- which no config could ever demonstrate, and which
+    EXT-029 cited clauses 8.1 and 9.3.3, operational planning and management
+    review results, which no config could ever demonstrate, and which
     inflated the device's ISO requirement count with rows it was bound to fail.
     """
     cited = _cited("iso_27001_2022")
@@ -89,7 +89,7 @@ def test_every_cited_iso_id_exists(catalogues):
 def test_the_extended_checks_use_the_same_spelling(catalogues):
     """VPN, wireless and CVE checks carry their own ids, and drifted too.
 
-    vpn.py wrote SC-8(1) while wireless.py wrote AC-18.1 -- the codebase
+    vpn.py wrote SC-8(1) while wireless.py wrote AC-18.1: the codebase
     disagreeing with itself about one catalogue's notation.
     """
     ids = {e.id for e in catalogues["nist_800_53"].entries}
@@ -111,7 +111,7 @@ def test_the_extended_checks_use_the_same_spelling(catalogues):
 
 def test_the_framework_enum_covers_what_the_rules_cite():
     """A rule citing a framework nothing reports would be evidence going
-    nowhere -- it would never appear in any score."""
+    nowhere. It would never appear in any score."""
     # `stig_by_platform` is deliberate, not a typo: a STIG Vuln ID is specific
     # to one platform's benchmark, so a rule cites V-215833 for IOS-XE and a
     # different id for ASA rather than one id pretending to cover both.

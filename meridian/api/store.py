@@ -1,7 +1,7 @@
 """Assessments that survive a restart.
 
-The store used to be a dict, so every restart -- and a low-memory kill is a
-restart -- silently emptied the console. Now each assessment is recorded in
+The store used to be a dict, so every restart (and a low-memory kill is a
+restart) silently emptied the console. Now each assessment is recorded in
 SQLite with the configuration it came from and the options it was made with
 (redaction, frameworks). The full result stays in memory while it is used;
 after a restart it is rebuilt on first access by assessing the SAME file with
@@ -9,7 +9,7 @@ the SAME options under the SAME id, which is deterministic, so the rebuilt
 assessment is the one the operator saw.
 
 Only what is needed to re-run is stored: the file path, its display name and
-the options -- plus the headline numbers so the list renders without
+the options, plus the headline numbers so the list renders without
 re-assessing anything. Configurations stay on this machine, under the data
 directory, which is excluded from git.
 """
@@ -55,8 +55,8 @@ class AssessmentStore(dict):
         self._lock = threading.Lock()
         with self._conn() as c:
             c.execute(_SCHEMA)
-            # Each framework's own score, for the fleet view -- added after
-            # the first schema, so older databases gain the column in place.
+            # Each framework's own score, for the fleet view. Added after the
+            # first schema, so older databases gain the column in place.
             cols = {r[1] for r in c.execute("PRAGMA table_info(assessments)")}
             if "frameworks_json" not in cols:
                 c.execute("ALTER TABLE assessments ADD COLUMN frameworks_json TEXT")
@@ -138,7 +138,7 @@ class AssessmentStore(dict):
             return c.execute("SELECT COUNT(*) FROM assessments").fetchone()[0]
 
     def summaries(self) -> list[dict]:
-        """The list view, from the database -- nothing is re-assessed to show it."""
+        """The list view, from the database. Nothing is re-assessed to show it."""
         with self._conn() as c:
             c.row_factory = sqlite3.Row
             rows = c.execute("SELECT * FROM assessments ORDER BY created_at").fetchall()

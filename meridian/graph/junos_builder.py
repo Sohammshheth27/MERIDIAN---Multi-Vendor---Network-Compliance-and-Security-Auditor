@@ -1,7 +1,7 @@
 """Build an ObjectGraph from a parsed Junos configuration.
 
 The vendor adapter of doc section 3: vendor-specific in, vendor-neutral graph
-out. A sibling builder per vendor is the whole extension mechanism -- the
+out. A sibling builder per vendor is the whole extension mechanism: the
 resolver, the facts and the checks never learn any vendor syntax.
 
 Reads ``cfg.multi`` rather than ``cfg.values``: Junos writes sibling leaves with
@@ -19,7 +19,7 @@ from .model import Node, NodeKind, ObjectGraph, SecurityRule
 # an address is NOT always a CIDR. The documented forms are a prefix, a
 # dns-name, or a range-address. Handling only prefixes meant DNS and range
 # objects parsed to an object with NO values, which the resolver then reported
-# as UNRESOLVED -- an unreadable config rather than a readable one.
+# as UNRESOLVED, turning a perfectly readable config into an unreadable one.
 _ADDR = re.compile(r"^security/address-book/(?:[^/]+/)?address/([^/]+)$")
 _ADDR_SUB = re.compile(
     r"^security/address-book/(?:[^/]+/)?address/([^/]+)/(dns-name|range-address|ip-prefix|wildcard-address)$")
@@ -27,7 +27,7 @@ _SET_MEMBER = re.compile(
     r"^security/address-book/(?:[^/]+/)?address-set/([^/]+)/(?:address|address-set)$"
 )
 # `set applications application <name> term <t> custom-options protocol udp`
-# -- the documented syntax nests options under a TERM. A single-term
+# The documented syntax nests options under a TERM. A single-term
 # application omits it, so both shapes must be accepted or multi-term
 # applications silently lose their ports.
 _APP = re.compile(
@@ -155,8 +155,8 @@ def build(cfg: BracesConfig) -> ObjectGraph:
                 rule.logging = True
 
     # `set security policies default-policy permit-all` is valid and documented.
-    # Assuming deny would report a permit-all device as compliant -- a false
-    # PASS on a high-severity control, from a single wrong assumption.
+    # Assuming deny would report a permit-all device as compliant. That is a
+    # false PASS on a high-severity control, from a single wrong assumption.
     dp = cfg.get("security/policies/default-policy")
     if dp is not None:
         val, ln, raw = dp
@@ -164,7 +164,7 @@ def build(cfg: BracesConfig) -> ObjectGraph:
         g.default_action_observed = True
         # The default policy's OWN line. The bridge used to borrow an arbitrary
         # rule's evidence for this, which cited an unrelated policy as the
-        # proof -- and left a permit-all device with no rules unable to
+        # proof, and left a permit-all device with no rules unable to
         # evidence its own default at all.
         g.default_action_evidence = [cfg.evidence(ln, raw)]
     else:

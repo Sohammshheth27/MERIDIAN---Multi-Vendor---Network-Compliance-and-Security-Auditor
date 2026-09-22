@@ -4,13 +4,13 @@ import { useId } from 'react';
  * The MERIDIAN mark: eight meridians converging on a pole.
  *
  * A meridian is the fixed line a position is measured against, which is what
- * this tool does to a configuration -- so the coloured element is the
+ * this tool does to a configuration, so the coloured element is the
  * reference, not decoration.
  *
  * WHY THE LINES ARE CUT OUT OF A DISC RATHER THAN DRAWN AS PETALS
  * ---------------------------------------------------------------
  * The obvious way to draw a radial mark is eight petals radiating from the
- * centre. Rendered at 16px that is a four-point sparkle -- indistinguishable
+ * centre. Rendered at 16px that is a four-point sparkle, indistinguishable
  * from the icon every product now puts on its AI button, and the last thing a
  * compliance auditor's mark should borrow. Adding a solid pole disc did not
  * save it; the disc is swallowed by the petal bases.

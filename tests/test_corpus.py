@@ -1,11 +1,11 @@
 """The golden corpus, run as a test.
 
 Every accuracy claim MERIDIAN makes is unfalsifiable without this file. It is not
-a unit test of a function -- it is the assertion that the whole pipeline still
+a unit test of a function. It is the assertion that the whole pipeline still
 produces the answers a human verified against the configuration by hand.
 
 When one of these fails, the question is NOT "how do I make it pass". It is
-"which is wrong, the tool or the expectation?" -- and the answer has gone both
+"which is wrong, the tool or the expectation?", and the answer has gone both
 ways in a single run: `contains_none` was giving partial credit to a
 telnet-reachable device, while `min_count` was right and the expectation was
 too harsh.

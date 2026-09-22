@@ -1,7 +1,7 @@
 """Azure NSG and GCP VPC firewall support.
 
 Both validated on FIXTURES (samples/azure, samples/gcp) built in the documented
-CLI output shapes -- not on real exports, and the packs say so.
+CLI output shapes, not on real exports, and the packs say so.
 
 Each test pins a way cloud rules differ from an AWS security group, because
 reading one with the other's semantics produces confident, wrong findings:
@@ -54,7 +54,7 @@ def test_both_exports_are_recognised():
 
 
 def test_an_arbitrary_azure_resource_list_is_not_an_nsg():
-    """The old fingerprint accepted anything with `properties` -- half of ARM."""
+    """The old fingerprint accepted anything with `properties`, half of ARM."""
     fp = fingerprint_json([{"name": "vm1", "properties": {"hardwareProfile": {}}}])
     assert fp.platform != "network_security_groups"
 
@@ -148,7 +148,7 @@ def test_gcp_deny_wins_at_equal_priority():
     ]
     g = gcp_builder.build(loads(json.dumps(rules), "g.json"))
     # The rules target the NETWORK (no targetTags), which resolves to its
-    # identifier -- so the question names it, as AWS questions name a group.
+    # identifier, so the question names it, as AWS questions name a group.
     a = ask(g, Query(source=INTERNET_HOST, destination="default", port=22,
                      protocol="tcp", destination_zone="default"))
     assert a.permitted is False and "deny-ssh" in a.decided_by
@@ -159,7 +159,7 @@ def test_gcp_unmatched_traffic_is_undecidable_not_denied(gcp):
     a = ask(gcp.graph, Query(source=INTERNET_HOST, destination="default", port=8080,
                              protocol="tcp", destination_zone="default"))
     assert a.permitted is None
-    # And the same question on a port a rule DOES answer is decided -- so the
+    # And the same question on a port a rule DOES answer is decided, so the
     # None above is the missing implied rule, not a query that matched nothing.
     ssh = ask(gcp.graph, Query(source=INTERNET_HOST, destination="default", port=22,
                                protocol="tcp", destination_zone="default"))

@@ -5,7 +5,7 @@ Observed for real, and it is the nastiest failure this codebase has produced:
     A pack referenced a derivation the running process did not have. load_pack
     raised. `load_packs` caught the exception and moved on. The SonicWall pack
     was therefore absent, the device was assessed with no pack at all, and the
-    report showed 50 UNKNOWN controls instead of 20 -- with no error, no note,
+    report showed 50 UNKNOWN controls instead of 20, with no error, no note,
     and nothing anywhere to distinguish it from a device we genuinely could not
     read.
 
@@ -107,7 +107,7 @@ def test_health_reports_pack_failures(restore_pack):
     assert sick["pack_load_errors"][0]["pack"] == "sonicwall_exp.yaml"
 
     # NOTE the platform list does NOT shrink here, and that is correct:
-    # `sonicwall_sonicos` is declared by two packs -- sonicwall.yaml reads the
+    # `sonicwall_sonicos` is declared by two packs: sonicwall.yaml reads the
     # CLI export and sonicwall_exp.yaml reads the .exp backup. Losing one
     # leaves the platform name present while silently removing the ability to
     # read that FORMAT. Which is precisely why the error list has to exist:

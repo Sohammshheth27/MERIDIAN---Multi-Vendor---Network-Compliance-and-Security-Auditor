@@ -1,7 +1,7 @@
 """The remediation catalogue: every step must be runnable where it claims.
 
-A remediation keyed by a misspelt platform is silently never offered -- the
-plan just reports "unavailable" -- so the key is checked against the platforms
+A remediation keyed by a misspelt platform is silently never offered. The
+plan just reports "unavailable", so the key is checked against the platforms
 the packs actually declare.
 """
 import glob

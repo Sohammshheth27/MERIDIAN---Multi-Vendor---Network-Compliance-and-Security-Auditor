@@ -25,7 +25,7 @@ _CONFIRMS = {
 }
 
 # Field-specific, and checked first. The presence of ANY v1/v2c community
-# confirms "a community string traverses the network in cleartext" -- which is
+# confirms "a community string traverses the network in cleartext", which is
 # a different question from whether its NAME is a default one, and the pack can
 # legitimately pass the second while the detector correctly flags the first.
 _CONFIRMS_BY_FIELD = {
@@ -142,7 +142,7 @@ def reconcile(device_assessment, universal_findings) -> ConsensusReport:
         # "insecure" is spelled differently per field: false for password
         # encryption, but a NON-EMPTY LIST for snmp.communities. Keying on the
         # detector alone applied `v is False` to a list of community strings,
-        # which never matches -- so a correctly detected cleartext community
+        # which never matches. A correctly detected cleartext community
         # was reported as a dispute with a pack that agreed with it.
         confirms = _CONFIRMS_BY_FIELD.get(u.field_hint) or _CONFIRMS.get(u.detector)
         agrees = bool(confirms(pack.observed)) if confirms else \

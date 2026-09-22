@@ -5,18 +5,18 @@ for every query, using only the setting NAME. Two things were being discarded,
 and both carry more information than the similarity function does:
 
 THE VALUE'S TYPE is a constraint on the schema, not a hint. Measured over 400
-real SonicWall settings, 214 are integers -- and only 8 of the 119 schema
+real SonicWall settings, 214 are integers, and only 8 of the 119 schema
 fields are integer-typed. For over half the device the candidate space
 collapses from 119 to 8 before any model runs.
 
 THE WORDS INSIDE THE NAME are compressed past the point of being language.
 `IdleVpnDpdInterval` and "dead peer detection interval" share no tokens, so a
-lexical matcher scores zero and an embedding model -- trained on sentences --
+lexical matcher scores zero and an embedding model (trained on sentences)
 gets a weak vector from four glued fragments. Expanding the abbreviations is
 what lets either method see the two as the same thing.
 
 A NOTE ON THE GATE BEING SOFT. The first instinct is a hard filter: drop every
-field whose type does not match. That is wrong, and dangerously so -- a value
+field whose type does not match. That is wrong, and dangerously so: a value
 of `7` might be an int field or a version STRING, and a hard filter removes the
 right answer permanently, with no way to recover it. Type is applied as a
 multiplier on the score instead, so a mismatch is heavily penalised but never
@@ -133,7 +133,7 @@ def type_multiplier(value_type: str, field_type: str) -> float:
 def describe_fields(rules_dir="rules") -> dict:
     """A natural-language description per schema field.
 
-    Built from the CONTROL TITLES that test each field -- prose a human already
+    Built from the CONTROL TITLES that test each field, prose a human already
     wrote about what the setting means. This is the asymmetry that makes dense
     retrieval work here: a vendor writes `IdleVpnDpdInterval`, a framework
     writes "idle sessions must time out", and the two only meet if one side is

@@ -1,6 +1,6 @@
 """Load control definitions from YAML.
 
-One rulebook, four labels. Rules are data, not code -- the same
+One rulebook, four labels. Rules are data, not code: the same
 principle ComplianceAsCode/OpenSCAP uses, and the reason a new
 framework label never requires a redeploy.
 
@@ -105,7 +105,7 @@ def load_rules(
 def validate_rules(controls: list[Control], registry) -> list[str]:
     """Check every rule against the loaded catalogues and the SBM field list.
 
-    Returns a list of problems. Existence is checked, not meaning -- a Vuln ID
+    Returns a list of problems. Existence is checked, not meaning. A Vuln ID
     can exist and still be the wrong rule, which is how the plan came to cite
     V-215807 for SSH version. Semantic fit stays a human review step.
     """

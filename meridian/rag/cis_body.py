@@ -1,7 +1,7 @@
 """Extract per-recommendation body text from the CIS Benchmark PDFs.
 
 ``frameworks/cis.py`` reads the table of contents, which yields the identifier
-and title -- enough to CITE a recommendation. It is not enough to RETRIEVE one:
+and title, enough to CITE a recommendation. It is not enough to RETRIEVE one:
 "Ensure 'aaa new-model' is enabled" shares almost no vocabulary with the SBM
 field it should match.
 
@@ -24,7 +24,7 @@ from pathlib import Path
 # CIS changed this vocabulary partway through: benchmarks published before
 # ~2020 tag each recommendation (Scored)/(Not Scored), newer ones use
 # (Automated)/(Manual). Accepting only the new pair made six older benchmarks
-# -- including CIS Cisco Firewall v4.1.0 and CIS Cisco IOS 16 -- extract ZERO
+# (including CIS Cisco Firewall v4.1.0 and CIS Cisco IOS 16) extract ZERO
 # recommendations and report no error, which is the worst way to lose data:
 # `Enable 'aaa new-model'` was simply missing from the index.
 _HEADING = re.compile(
@@ -90,7 +90,7 @@ def build_cache(cis_dir="reference/cis_benchmarks",
 
     ``resume=True`` skips benchmarks already present and APPENDS. Two things
     forced this: the run takes ~30 minutes, and an earlier attempt was launched
-    twice by accident -- two processes opening the same path in "w" mode wrote
+    twice by accident. Two processes opening the same path in "w" mode wrote
     608 duplicate records into one file. Keying on the benchmark name makes a
     second run converge instead of compounding.
     """

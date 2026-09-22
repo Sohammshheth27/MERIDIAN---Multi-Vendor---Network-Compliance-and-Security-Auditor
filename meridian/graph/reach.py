@@ -2,7 +2,7 @@
 
 Batfish's central idea, at the scope we can honestly support. It does not ask
 "is there a rule mentioning SSH"; it asks "can this packet get from here to
-there", and answers by evaluating the policy the way the device does -- in
+there", and answers by evaluating the policy the way the device does: in
 order, first match wins.
 
 That distinction is the product's whole thesis. A config can contain a deny
@@ -10,7 +10,7 @@ rule for a host and still permit traffic to it, because an allow above it
 matches first. This repo's own SonicWall does exactly that: rule #28 permits
 any/any/any LAN to WAN, and rule #35 tries to deny one host below it. Asking
 "does a deny exist" returns yes. Asking "can the packet through" returns yes
-too -- and only the second question is the one that matters.
+too. Only the second question is the one that matters.
 
 SCOPE, STATED PLAINLY, because the gap to Batfish is real:
 
@@ -63,8 +63,8 @@ class Answer:
     evaluated: int = 0
     skipped: list = field(default_factory=list)
     #: True when the deciding rule is scoped to zones the query did not name.
-    #: The verdict then rests on an assumption -- that the traffic traverses
-    #: that boundary -- rather than on anything the caller stated.
+    #: The verdict then rests on an assumption that the traffic traverses that
+    #: boundary rather than on anything the caller stated.
     zone_assumed: bool = False
 
     def to_json(self) -> dict:
@@ -90,7 +90,7 @@ class Answer:
         if self.zone_assumed:
             # On FortiOS and PAN-OS every rule is scoped to zones or
             # interfaces, so an unzoned question is decided by whichever
-            # scoped rule comes first -- even one carrying traffic that never
+            # scoped rule comes first, even one carrying traffic that never
             # crosses that boundary. Saying so is the difference between an
             # answer and an answer the reader can trust.
             out.append("   caveat: the deciding rule is scoped to zones this "
@@ -105,7 +105,7 @@ def _addr_in(value: str, candidate: str) -> bool:
     v, c = value.strip(), candidate.strip()
     # Only the RULE side being "any" makes a match. A QUERY of "any" asks
     # "can an arbitrary host reach this", and an arbitrary host is covered
-    # only by a rule that accepts anything -- not by a rule listing specific
+    # only by a rule that accepts anything, never by one listing specific
     # addresses. Treating a query of "any" as matching every rule made a
     # deny rule scoped to a malicious-IP list appear to block all inbound
     # traffic on every port, which would have reported a wide-open firewall
@@ -162,7 +162,7 @@ def _side_matches(resolutions, candidate: str) -> bool | None:
     arbitrary host reach this" is answered only by rules whose own side accepts
     anything.
 
-    An unresolved reference yields None -- undecidable. Rule #5 on this
+    An unresolved reference yields None (undecidable). Rule #5 on this
     appliance points at a group whose membership the export does not fully
     publish, and a rule we cannot read must never be reported as the one that
     decided the answer.
@@ -242,7 +242,7 @@ def ask(graph, query: Query, resolver=None) -> Answer:
         ans.decided_by = rule.name or rule.id
         ans.action = rule.action
         # The zone matcher lets an unzoned query match a zone-scoped rule,
-        # which is the only workable default -- but on FortiOS and PAN-OS
+        # which is the only workable default. But on FortiOS and PAN-OS
         # every rule is zone-scoped, so that default quietly decides the
         # answer. Record it so the caveat can be stated instead of assumed.
         ans.zone_assumed = bool(
@@ -253,7 +253,7 @@ def ask(graph, query: Query, resolver=None) -> Answer:
                          if ans.skipped else ""))
         return ans
 
-    # Nothing matched. The default policy decides -- if we observed one.
+    # Nothing matched. If we observed a default policy, it decides.
     default = getattr(graph, "default_action", None)
     observed = getattr(graph, "default_action_observed", False)
     if default and observed:

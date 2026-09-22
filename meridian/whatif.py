@@ -9,9 +9,9 @@ either.
 
 TWO KINDS OF CHANGE
 -------------------
-  * fix a control   -- set the field it reads to a value that satisfies it.
-  * disable a rule  -- take a firewall rule out of the policy, then recompute
-                       every policy fact and the blast radius from the graph.
+  * fix a control:   set the field it reads to a value that satisfies it.
+  * disable a rule:  take a firewall rule out of the policy, then recompute
+                     every policy fact and the blast radius from the graph.
 
 WHAT IT REFUSES, AND WHY
 ------------------------
@@ -21,7 +21,7 @@ declined with a reason rather than approximated:
   * Only FAIL and PARTIAL controls can be "fixed". Turning an UNKNOWN into a
     PASS would claim we know the answer to a question we could not read.
   * Findings computed from the firewall POLICY (exposure.*, per-rule checks)
-    are not fixed by overwriting their field -- that would make an exposure
+    are not fixed by overwriting their field. That would make an exposure
     vanish without changing the rule that causes it. They are simulated by
     disabling the rules named in their evidence, which the refusal suggests.
   * Operators with no single compliant value (not_equals, not_in, matches)

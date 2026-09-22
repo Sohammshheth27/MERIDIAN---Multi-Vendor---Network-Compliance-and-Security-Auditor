@@ -33,7 +33,7 @@ import { TrainingWorkbench } from '../training/TrainingWorkbench';
  * Each panel obeys the same contract as the engine behind it: when an analysis
  * could not run, it says so and says why. None of them renders an empty chart
  * or a zero, because on this product a zero means "we looked and found
- * nothing" -- and claiming that when we never looked would undo the engine's
+ * nothing", and claiming that when we never looked would undo the engine's
  * central guarantee at the last layer.
  */
 
@@ -125,7 +125,7 @@ const HygienePanel: FC<{ id: string }> = ({ id }) => {
   if (!data) return null;
 
   // The load-bearing branch. `analysis_ran: false` means no rule-graph builder
-  // exists for this platform, so nothing was attempted -- which is a different
+  // exists for this platform, so nothing was attempted, which is a different
   // thing from a policy with no problems.
   if (!data.analysis_ran || !data.summary) {
     return (
@@ -170,7 +170,7 @@ const HygienePanel: FC<{ id: string }> = ({ id }) => {
               resolved.
             </strong>{' '}
             Their references point at objects this export does not contain, so
-            any conclusion about them is incomplete — they are counted here
+            any conclusion about them is incomplete. They are counted here
             rather than treated as clean.
           </p>
         )}
@@ -360,7 +360,7 @@ const ReachPanel: FC<{ id: string }> = ({ id }) => {
               <strong className="font-mono text-[var(--color-ink-navy)]">
                 {a.decided_by}
               </strong>{' '}
-              ({a.action}) — {a.reason}
+              ({a.action}): {a.reason}
             </p>
           )}
 
@@ -411,7 +411,7 @@ const RecertPanel: FC<{ id: string }> = ({ id }) => {
       <Card variant="default" className="overflow-hidden p-0">
         <div className="border-b border-[var(--color-hairline)] p-4">
           <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-            Due for review — {data.due.length}
+            Due for review ({data.due.length})
           </h4>
           <p className="mt-0.5 text-xs text-[var(--color-slate-gray)]">
             Rules with no recorded owner, or whose certification has expired.
@@ -451,7 +451,7 @@ const RecertPanel: FC<{ id: string }> = ({ id }) => {
       <Card variant="default" className="overflow-hidden p-0">
         <div className="border-b border-[var(--color-hairline)] p-4">
           <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-            Deletion candidates — {data.deletion_candidates.length}
+            Deletion candidates ({data.deletion_candidates.length})
           </h4>
           {/* Three independent signals must agree before a rule is even a
               candidate, and it is still a candidate for review rather than an
@@ -599,8 +599,8 @@ const InterfacesPanel: FC<{ id: string }> = ({ id }) => {
 
   // A note with NO interfaces means addressing genuinely could not be read:
   // the engine says why, and repeating it beats an empty table. A note WITH
-  // interfaces is the redaction advisory -- the rows are real and only the
-  // numbers are pseudonyms -- so it goes ABOVE the table, never in place of
+  // interfaces is the redaction advisory: the rows are real and only the
+  // numbers are pseudonyms, so it goes ABOVE the table, never in place of
   // it. Returning early on any note at all put a "not run" panel over ten
   // perfectly good interfaces the moment redaction started pseudonymising
   // instead of blanking, which is the blank Interfaces tab all over again.
@@ -613,7 +613,7 @@ const InterfacesPanel: FC<{ id: string }> = ({ id }) => {
     <Card variant="default" className="overflow-hidden p-0">
       <div className="border-b border-[var(--color-hairline)] p-4">
         <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-          Interfaces — {data.interfaces.length}
+          Interfaces ({data.interfaces.length})
         </h4>
         <p className="mt-0.5 text-xs text-[var(--color-slate-gray)]">
           The addressing that multi-device topology is inferred from. Adjacency
@@ -762,12 +762,12 @@ export const TrainingPanel: FC<{ id: string }> = ({ id }) => {
     <Card variant="default" className="overflow-hidden p-0">
       <div className="border-b border-[var(--color-hairline)] p-4">
         <h4 className="text-sm font-bold text-[var(--color-ink-navy)]">
-          Unrecognised settings — {data.length}
+          Unrecognised settings ({data.length})
         </h4>
         <p className="mt-0.5 text-xs text-[var(--color-slate-gray)]">
           Settings the pack does not map yet, ordered by how likely the proposed
           field is. Approving one must pass the golden-corpus regression gate
-          before it is accepted — and a high confidence is a reason to look
+          before it is accepted, and a high confidence is a reason to look
           first, never a reason to accept unread.
         </p>
       </div>

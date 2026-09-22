@@ -1,4 +1,4 @@
-/* MERIDIAN landing — the graphics layer.
+/* MERIDIAN landing: the graphics layer.
  *
  * Motion vocabulary: gradient · parallax · marquee · full bleed · 3d.
  * Applied to EVERY section,
@@ -25,7 +25,7 @@
     for (const k in a) e.setAttribute(k, a[k]); return e; };
 
   /* Run `fn` only while `node` is on screen and the tab is visible. Every
-     animated graphic on this page goes through here -- a landing page that
+     animated graphic on this page goes through here. A landing page that
      keeps six canvases running in a background tab is just heat. */
   function whileVisible(node, start, stop) {
     let on = false;
@@ -115,7 +115,7 @@
     row.querySelectorAll(':scope > div').forEach((cell, ci) => {
       const bar = document.createElement('div');
       bar.className = 'spark-bars';
-      // Deterministic per cell -- no Math.random, so the page looks the same
+      // Deterministic per cell: no Math.random, so the page looks the same
       // on every load and a screenshot in the deck matches the live site.
       let html = '';
       for (let i = 0; i < 26; i++) {
@@ -277,7 +277,7 @@
       cv.width = W * d; cv.height = H * d;
       ctx.setTransform(d, 0, 0, d, 0, 0);
       const n = Math.ceil(H / ROWH) + 2;
-      // Deterministic widths and verdicts -- a rule table that reshuffles on
+      // Deterministic widths and verdicts. A rule table that reshuffles on
       // every load looks like decoration; this looks like a policy.
       rows = Array.from({ length: n }, (_, i) => ({
         w: [.30, .17, .12, .22, .09][i % 5],
@@ -291,8 +291,8 @@
       const LEFT = W * .07, RIGHT = W * .93;
       rows.forEach((r, i) => {
         const y = i * ROWH + 14;
-        // the rule, drawn as fields rather than as text -- legible as a table,
-        // never as fake content someone could try to read
+        // the rule, drawn as fields rather than as text (legible as a table,
+        // never as fake content someone could try to read)
         ctx.fillStyle = 'rgba(226,234,248,.07)';
         ctx.fillRect(LEFT, y, (RIGHT - LEFT) * r.w, 7);
         ctx.fillRect(LEFT + (RIGHT - LEFT) * (r.w + .04), y,
@@ -318,8 +318,8 @@
       ctx.beginPath(); ctx.moveTo(0, cursor); ctx.lineTo(W, cursor); ctx.stroke();
 
       // Punch a soft hole in the middle so the headline sits on clear ground.
-      // Without it the rule rows run straight through the type -- the graphic
-      // was competing with the one thing the section exists to say.
+      // Without it the rule rows run straight through the type, and the
+      // graphic was competing with the one thing the section exists to say.
       ctx.globalCompositeOperation = 'destination-out';
       const hole = ctx.createRadialGradient(W / 2, H / 2, 0,
                                             W / 2, H / 2, Math.min(W, H) * .62);

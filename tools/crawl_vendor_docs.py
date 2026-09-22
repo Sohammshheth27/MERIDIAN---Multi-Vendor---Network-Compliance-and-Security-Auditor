@@ -5,16 +5,16 @@ WHY A BROWSER IS NEEDED
 Most vendor documentation is a JavaScript application. A plain HTTP fetch of
 F5's techdocs returns 382 KB of HTML containing 51 characters of readable text;
 Palo Alto returns a 228 KB shell with the actual rule model absent. The syntax
-and the semantic tables ARE published on the site -- they are simply rendered
+and the semantic tables ARE published on the site. They are simply rendered
 client-side, section by section.
 
 WHAT IS EXTRACTED
 -----------------
 Two things, because vendors document grammar in two different shapes:
 
-  * CLI statements  -- code blocks and `set`/`config` lines (Fortinet, Junos,
+  * CLI statements:  code blocks and `set`/`config` lines (Fortinet, Junos,
     Arista, SONiC style)
-  * SEMANTIC TABLES -- field/description grids (Palo Alto, Check Point style),
+  * SEMANTIC TABLES: field/description grids (Palo Alto, Check Point style),
     which are the authoritative object model even where no CLI is shown
 
 Each page is saved with its URL so a pack rule can cite the section it came
@@ -35,7 +35,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 OUT = _ROOT / "reference" / "vendor_docs" / "rendered"
 
 # Section-wise entry points. These are documentation *sections*, not landing
-# pages -- the earlier fetch failed partly because it grabbed one page per
+# pages. The earlier fetch failed partly because it grabbed one page per
 # vendor instead of the tree.
 TARGETS: dict[str, list[str]] = {
     "panos": [
@@ -74,8 +74,8 @@ CLI_RE = re.compile(
 
 def extract(page) -> dict:
     return page.evaluate("""() => {
-        // Pick the container with the MOST text rather than the first match --
-        // a wrong selector returned 122 characters on Palo Alto while the real
+        // Pick the container with the MOST text rather than the first match.
+        // A wrong selector returned 122 characters on Palo Alto while the real
         // content sat in a sibling node.
         const cands = Array.from(document.querySelectorAll(
             'main, article, [role=main], .content, #content, .body, #main-content, body'));
@@ -116,7 +116,7 @@ def main() -> None:
                 try:
                     page.goto(url, wait_until="domcontentloaded", timeout=45000)
                     # networkidle never fires on sites that hold connections
-                    # open (analytics sockets, chat widgets) -- Arista and F5
+                    # open (analytics sockets, chat widgets). Arista and F5
                     # both timed out on it. Wait for CONTENT instead of silence.
                     try:
                         page.wait_for_selector("table, pre, code, article, .content",

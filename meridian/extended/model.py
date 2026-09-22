@@ -4,7 +4,7 @@ WHY THESE SIT OUTSIDE THE COMPLIANCE SCORE
 ------------------------------------------
 The compliance score is PASS / decided over the 88-control catalogue, and
 coverage is decided / 88. Adding a VPN or wireless control to that catalogue
-would move every device's score and coverage -- including assessments already
+would move every device's score and coverage, including assessments already
 reported and signed off. So the extended checks are reported beside the score,
 never inside it, with the same seven result states and the same evidence
 discipline. A reader sees both; neither silently changes the other.
@@ -36,7 +36,7 @@ SEVERITIES = ("critical", "high", "medium", "low", "info")
 
 @dataclass
 class ExtendedFinding:
-    """One check, against one object -- a tunnel, a wireless network, a device."""
+    """One check, against one object: a tunnel, a wireless network, a device."""
 
     check_id: str
     title: str
@@ -83,14 +83,14 @@ class DomainResult:
     """Everything one extended domain found on one device."""
 
     domain: str
-    #: True / False / None. None means we could not tell -- which is different
-    #: from the device having none, and is reported as such.
+    #: True / False / None. None means we could not tell. That is different
+    #: from the device having none, and it is reported as such.
     present: bool | None
     summary: str
     findings: list = field(default_factory=list)        # list[ExtendedFinding]
     inventory: list = field(default_factory=list)       # plain dicts
     notes: list = field(default_factory=list)
-    #: Where this adapter has been validated. "real device" or "fixture" --
+    #: Where this adapter has been validated. "real device" or "fixture", and
     #: the project rule is to say which, every time.
     validated_on: str = ""
 

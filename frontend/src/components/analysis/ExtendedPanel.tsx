@@ -29,7 +29,7 @@ const META: Record<string, { label: string; icon: typeof Bug; blurb: string }> =
     icon: Bug,
     blurb:
       'Published flaws that affect the exact firmware and model this device ' +
-      'reports. Being listed does not mean the device has been attacked — it ' +
+      'reports. Being listed does not mean the device has been attacked. It ' +
       'means a fix exists and this device has not had it.',
   },
   vpn: {
@@ -44,7 +44,7 @@ const META: Record<string, { label: string; icon: typeof Bug; blurb: string }> =
     label: 'Wireless',
     icon: Wifi,
     blurb:
-      'Wireless networks this firewall controls — encryption, guest isolation ' +
+      'Wireless networks this firewall controls: encryption, guest isolation ' +
       'and management access over the air.',
   },
 };
@@ -65,7 +65,7 @@ const COUNT_WORD: Record<string, string> = {
  * vocabulary of one.
  *
  * The engine records these checks with the same states as every other check,
- * which is right internally -- but rendered with the shared words, a CVE reads
+ * which is right internally, but rendered with the shared words, a CVE reads
  * as "FAIL: this device failed a test it should have passed". It did not fail
  * anything. Its firmware matches the affected configuration NVD publishes for
  * a known flaw, and a fix exists that has not been applied. "Affected" says
@@ -91,8 +91,8 @@ const countWord = (domain: string, state: string): string =>
   DOMAIN_WORD[domain]?.[state] ?? COUNT_WORD[state] ?? state.replace('_', ' ').toLowerCase();
 
 /**
- * The engine's summary ends with a roll-call of check ids and states --
- * "MERIDIAN-X-VPN-001: PARTIAL; MERIDIAN-X-VPN-002: PARTIAL" -- which is precise and
+ * The engine's summary ends with a roll-call of check ids and states,
+ * "MERIDIAN-X-VPN-001: PARTIAL; MERIDIAN-X-VPN-002: PARTIAL", which is precise and
  * unreadable. The findings below already say each one in words, so the tail is
  * dropped here and the sentence before it kept.
  */
@@ -197,7 +197,7 @@ const DomainCard: FC<{ name: string; d: ExtendedDomain }> = ({ name, d }) => {
           <strong className="text-[var(--color-ink-navy)]">Affected</strong> means
           this device's firmware matches the configuration NVD publishes as
           vulnerable for that CVE. It is not a failed configuration check and
-          there is no setting to correct — the remedy is to apply the firmware
+          there is no setting to correct. The remedy is to apply the firmware
           update the vendor has released.
         </p>
       )}

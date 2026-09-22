@@ -1,10 +1,10 @@
-"""12.5 -- Similarity matching. Tier 2 of the router.
+"""Similarity matching (12.5). Tier 2 of the router.
 
 Two complementary measures, which is what "Pattern Recognition **and** NLP"
 means in practice: TF-IDF over normalised tokens (semantic-ish) combined with
-BM25 keyword scoring -- hybrid retrieval.
+BM25 keyword scoring: hybrid retrieval.
 
-Config lines are not prose. They share EXACT keywords -- `ssh`, `telnet`,
+Config lines are not prose. They share EXACT keywords like `ssh`, `telnet`,
 `snmp-server`. Keyword search beats pure semantic search on technical text, so
 hybrid beats either alone.
 
@@ -80,7 +80,7 @@ class NlpMatcher:
         # RAW cosine similarity, deliberately not rescaled to the best hit.
         # Normalising by max() pinned the top score at 1.00 for every query,
         # so NLP_ACCEPT could never reject anything and every line looked
-        # confidently resolved -- including the ones we got wrong.
+        # confidently resolved, including the ones we got wrong.
         if self._bm25 is not None:
             import numpy as np
 
@@ -165,7 +165,7 @@ def _disambiguate(examples: list[Example]) -> list[Example]:
     `logging host 10.0.0.5` satisfies both the `logging.enabled` presence rule
     and the `logging.servers` extraction rule. Both are correct as PARSING
     rules, but as TRAINING examples they teach the matcher that one line means
-    two different things -- and it then picks one at random.
+    two different things. It then picks one at random.
 
     Keep the label whose own field name shares the most tokens with the line;
     that is the more specific of the two ("servers" appears in the line,
@@ -189,7 +189,7 @@ def _disambiguate(examples: list[Example]) -> list[Example]:
             leaf = ex.field.rsplit(".", 1)[-1]
             leaf_tok = set(normalize(tokenize(leaf)))
             # The LEAF is what the mapping actually extracts. `ntp server ...`
-            # names a server, so time.servers beats time.ntp_enabled -- both
+            # names a server, so time.servers beats time.ntp_enabled. Both
             # share the token `ntp`, but only one has its leaf in the line.
             # Without this the tiebreak fell to field-name length and picked
             # the boolean presence flag, a confident wrong answer at 0.78.

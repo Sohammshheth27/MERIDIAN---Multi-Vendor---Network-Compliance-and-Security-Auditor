@@ -10,7 +10,7 @@ hold, so the device is the authority):
     addrObjIp1_N/Ip2_N range start / end
     addrObjZone_N      owning zone
     addrObjType_N      8 = group, otherwise a leaf address
-    addro_atomToGrp_N  member name   ]  PAIRED BY INDEX -- entry N says
+    addro_atomToGrp_N  member name   ]  PAIRED BY INDEX: entry N says
     addro_grpToGrp_N   group name    ]  "member N belongs to group N"
 
     svcObjId_N         service name
@@ -69,7 +69,7 @@ def _idx(values: dict, prefix: str, *, exp=None) -> dict[int, str]:
 
     Records read here are marked consumed on the export, so the completeness
     accounting counts what the GRAPH read and not only what a pack mapping
-    matched -- see SonicOsExport.consume_keys.
+    matched (see SonicOsExport.consume_keys).
     """
     out, keys = {}, []
     rx = re.compile(rf"^{re.escape(prefix)}_(\d+)$")
@@ -144,8 +144,8 @@ def build(exp, *, include_ipv6: bool = True) -> ObjectGraph:
         # bookkeeping, NOT a port range: "Ping" carries 49520-65144 and
         # IpType 170, which is not an IP protocol at all. Reading those as
         # ports produced a 15,000-port range that then matched every
-        # administrative and database port -- 225 fabricated critical findings
-        # from one misread type code.
+        # administrative and database port. That was 225 fabricated critical
+        # findings from one misread type code.
         if str(stypes.get(i, "")) == SVC_TYPE_GROUP:
             # The export contains no service-group membership table, so the
             # members are genuinely undeterminable. No values AND no members
@@ -208,7 +208,7 @@ def build(exp, *, include_ipv6: bool = True) -> ObjectGraph:
                 destination=[dst] if dst and dst not in ANY_SENTINEL else ["any"],
                 services=[svc] if svc and svc not in ANY_SENTINEL else ["any"],
                 # The device counts matches per rule. 148 enabled rules on
-                # this appliance have never matched a packet -- dead policy
+                # this appliance have never matched a packet: dead policy
                 # that every comparable product reports and we were
                 # discarding at the reader.
                 hit_count=(int(hits[i]) if str(hits.get(i, "")).isdigit()

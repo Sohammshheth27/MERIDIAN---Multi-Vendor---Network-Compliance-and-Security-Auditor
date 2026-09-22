@@ -1,4 +1,4 @@
-"""The training loop, end to end -- deliverable 2 and the 'Dynamic Adaptation'
+"""The training loop, end to end: deliverable 2 and the 'Dynamic Adaptation'
 the problem statement is built around.
 
 Two journeys are proven, and neither involves a code change or a restart:
@@ -6,7 +6,7 @@ Two journeys are proven, and neither involves a code change or a restart:
   * A STRUCTURED vendor the tool has never been taught (SONiC's JSON
     config_db, from a fixture built in the documented shape). It is refused,
     taught four mappings through the approval path, and on re-assessment it
-    is assessed -- with real verdicts: two NTP servers PASS, one of two
+    is assessed, with real verdicts: two NTP servers PASS, one of two
     required syslog servers PARTIAL, a `public` SNMP community FAIL.
   * A TEXT vendor nothing recognises at all ("AcmeOS"). The first approval
     creates its pack with a signature; its next file is recognised by that
@@ -118,7 +118,7 @@ def test_teaching_sonic_makes_it_assessable_with_real_verdicts(clean_packs):
                                                  "1.debian.pool.ntp.org"]
     assert _state(da, "MERIDIAN-EXT-027").state.value == "PASS"     # two time sources
     # One of the two required syslog servers is PARTIAL by the engine's own
-    # definition of min_count -- genuinely half met, neither pass nor fail.
+    # definition of min_count: genuinely half met, neither pass nor fail.
     assert _state(da, "MERIDIAN-LOG-002").state.value == "PARTIAL"
     assert _state(da, "MERIDIAN-SNMP-002").state.value == "FAIL"    # `public` community
     # Every verdict cites the file it came from.

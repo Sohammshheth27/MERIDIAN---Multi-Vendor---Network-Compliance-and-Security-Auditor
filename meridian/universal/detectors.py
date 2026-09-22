@@ -1,4 +1,4 @@
-"""Vendor-agnostic security detectors -- what we can assert with NO pack.
+"""Vendor-agnostic security detectors: what we can assert with NO pack.
 
 The problem statement's hardest requirement is the one about hardware nobody
 has described to us: "the application must ideally be designed to support any
@@ -17,8 +17,8 @@ Three rules keep this honest, because a detector that fires on every vendor is
 a detector that can be wrong on every vendor:
 
  1. POSITIVE EVIDENCE ONLY. A universal detector may report "this file contains
-    a weak cipher", never "this file lacks logging". Absence needs a grammar --
-    the setting could be three lines further on in a syntax we cannot read, or
+    a weak cipher", never "this file lacks logging". Absence needs a grammar.
+    The setting could be three lines further on in a syntax we cannot read, or
     in a section we did not receive. Every finding here cites a line.
 
  2. NEGATION AWARE. `no ip http server` and `set telnet disable` contain the
@@ -103,7 +103,7 @@ DETECTORS = [
         # ordinary words and names: an interface described as
         # `DES-MOINES-UPLINK` on a line that mentions `cipher` was reported as
         # a weak-cipher finding. These may not be followed by a hyphen and a
-        # letter -- except for the real cipher spellings, listed explicitly.
+        # letter, except for the real cipher spellings, listed explicitly.
         #
         # LONG AND UNAMBIGUOUS (`dh-group1`, `sslv3`) contain their own
         # hyphens and need no such guard.
@@ -111,7 +111,7 @@ DETECTORS = [
             r"(?<![a-z0-9-])(?:"
             # IPsec transform sets write the algorithm hyphen-prefixed
             # (`esp-des esp-md5-hmac`), which the leading boundary otherwise
-            # blocks -- a real weak-crypto line on Cisco read as clean.
+            # blocks. A real weak-crypto line on Cisco read as clean.
             r"(?:esp|ah)-(?:des|3des|md5|sha1|null)(?:-hmac)?"
             r"|(?:des-cbc|des-ede3|3des-cbc|rc4-md5|rc4-sha)"
             r"|(?:des|3des|rc4|md5|sha1|wep|anon)(?![a-z0-9]|-[a-z])"
@@ -130,8 +130,8 @@ DETECTORS = [
         title="Telnet (cleartext remote administration) appears to be enabled",
         severity="high",
         pattern=re.compile(r"(?<![a-z-])telnet(?![a-z-])", re.I),
-        # `telnet timeout 5` configures a timer and does not permit telnet --
-        # the real Cisco ASA in this repo has exactly that line and no telnet
+        # `telnet timeout 5` configures a timer and does not permit telnet.
+        # The real Cisco ASA in this repo has exactly that line and no telnet
         # access. Timers and client commands are excluded.
         excludes=re.compile(
             r"\b(timeout|client|no-telnet|disable|deny|reverse)\b", re.I),
@@ -145,7 +145,7 @@ DETECTORS = [
             r"(?<![a-z-])http(?!s)(?![a-z-])", re.I),
         requires=re.compile(
             r"\b(server|management|mgmt|admin|web|gui|enable)\b", re.I),
-        # `ip http secure-server` is HTTPS -- the hardened form -- and the
+        # `ip http secure-server` is HTTPS (the hardened form) and the
         # negative lookahead on `https` does not catch it, because the "s" is
         # in the NEXT word. Flagging it inverted the meaning of the one line
         # that proves the device is configured correctly, on the fixture built
@@ -226,7 +226,7 @@ def _cleartext_credentials(lines) -> list:
         # The hint depends on WHICH credential, not just that one was found.
         # A fixed hint of `authentication.password_encryption` made every SNMP
         # community line dispute against a pack that had correctly observed
-        # `service password-encryption` -- two methods talking about different
+        # `service password-encryption`: two methods talking about different
         # settings and appearing to contradict each other. A wrong hint
         # manufactures disagreement, which is worse than no hint at all
         # because it erodes trust in the disputes that are real.

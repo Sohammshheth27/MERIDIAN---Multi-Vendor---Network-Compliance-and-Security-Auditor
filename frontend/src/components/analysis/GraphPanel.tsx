@@ -10,13 +10,13 @@ import { useApi } from '../../lib/useApi';
  *
  * It was computed on every assessment and visible nowhere. Rule hygiene,
  * reachability and recertification are all conclusions drawn from it, so a
- * reviewer could see the verdicts but not the reconstruction behind them --
+ * reviewer could see the verdicts but not the reconstruction behind them,
  * and the object count was the only evidence it existed.
  *
  * The point of this panel is the RESOLUTION. A rule says "LAN Subnets"; the
  * graph followed that name to 10.10.0.0/24, and showing the arrow is what lets
  * someone check our work instead of trusting it. A name that did NOT resolve is
- * shown as such, never as an empty set -- an unresolved group rendered blank is
+ * shown as such, never as an empty set: an unresolved group rendered blank is
  * how a policy reads as tidier than it is.
  */
 
@@ -122,7 +122,7 @@ export const GraphPanel: FC<{ id: string }> = ({ id }) => {
           <p className="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-3 text-xs text-[var(--color-slate-gray)]">
             <strong className="text-[var(--color-ink-navy)]">Unordered platform.</strong> Rules
             here are not evaluated top to bottom, so none can shadow another.
-            Shadow and redundancy analysis is suppressed — its absence from the
+            Shadow and redundancy analysis is suppressed. Its absence from the
             findings is correct, not a clean result.
           </p>
         )}

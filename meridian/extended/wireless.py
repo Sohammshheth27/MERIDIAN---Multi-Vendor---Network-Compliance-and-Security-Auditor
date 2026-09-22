@@ -8,13 +8,13 @@ the checks never learn vendor syntax. Two adapters exist:
   * Cisco Catalyst 9800 (IOS-XE `wlan` blocks). Semantics taken from Cisco's
     published 9800 configuration guides, quoted in the comments where a
     default matters. Validated on a FIXTURE built from those documented
-    commands -- not on a real controller export, and reported as such.
+    commands, not on a real controller export, and reported as such.
 
   * SonicWall SonicOS. Validated on the REAL NSA 3700, where the honest
     answer is that no access point is provisioned: the only SonicPoint object
     carries the placeholder MAC 00:00:00:00:00:00 and no interface sits in the
-    WLAN zone. The file does contain wireless profile settings -- including
-    WEP keys -- but they are unused defaults. Failing them would report
+    WLAN zone. The file does contain wireless profile settings (including
+    WEP keys), but they are unused defaults. Failing them would report
     networks that do not exist, so every check comes back NOT_APPLICABLE with
     that evidence.
 
@@ -195,7 +195,7 @@ def sonicos_provisioning(da) -> tuple[bool, str, list]:
     """Is any access point actually provisioned on this SonicWall?
 
     Returns (provisioned, reason, evidence). Read from the SonicPoint object
-    table and from the interface zone assignments -- both are needed, because
+    table and from the interface zone assignments. Both are needed, because
     a wired interface placed in the WLAN zone would also make the zone live.
     """
     exp = da.document

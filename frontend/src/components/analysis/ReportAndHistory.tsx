@@ -16,7 +16,7 @@ const FRAMEWORKS: [string, string][] = [
 const pct = (v: number | null | undefined) => (v === null || v === undefined ? '—' : `${v}%`);
 
 /**
- * The formal report -- whole, or scoped to one framework -- and the device's
+ * The formal report, whole or scoped to one framework, and the device's
  * framework scores over time. Snapshots are recorded only when asked for:
  * viewing history never writes one.
  */
@@ -64,7 +64,7 @@ const ReportAndHistory: FC<{ aid: string }> = ({ aid }) => {
             }}
           >
             {downloadingFull ? <Loader2 className="h-3 w-3 animate-spin inline-block mr-1" /> : null}
-            PDF — all frameworks
+            PDF: all frameworks
           </button>
           {FRAMEWORKS.map(([key, label]) => (
             <button
@@ -84,7 +84,7 @@ const ReportAndHistory: FC<{ aid: string }> = ({ aid }) => {
               }}
             >
               {downloadingFramework === key ? <Loader2 className="h-3 w-3 animate-spin inline-block mr-1" /> : null}
-              PDF — {label} only
+              PDF: {label} only
             </button>
           ))}
         </div>

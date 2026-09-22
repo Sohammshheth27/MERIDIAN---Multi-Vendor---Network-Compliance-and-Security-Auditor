@@ -1,7 +1,7 @@
 """Run every extended check against one assessed device.
 
 Each domain is isolated: one adapter failing becomes that domain's ERROR, not
-an exception that loses the others -- the same rule bulk ingestion follows for
+an exception that loses the others. Bulk ingestion follows the same rule for
 files.
 """
 from __future__ import annotations

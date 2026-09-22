@@ -14,7 +14,7 @@ WHERE GCP DIFFERS
    applies to; no target means every instance in the network. Which instances
    carry a tag is runtime state, so a tag resolves to its IDENTIFIER, as an
    AWS security group does. That keeps "0.0.0.0/0 -> tag:db on 5432" an
-   exposure finding instead of an unevaluable rule -- the tagged instances
+   exposure finding instead of an unevaluable rule. The tagged instances
    are unknown, but the exposure of whichever they are is not.
 
 3. THE IMPLIED RULES ARE NOT IN THE EXPORT.
@@ -155,7 +155,7 @@ def build(doc) -> ObjectGraph:
             logging=(bool(log.get("enable")) if isinstance(log, dict) else None),
             evidence=ev))
 
-    # Implied rules are not in the file, and egress defaults to ALLOW -- so a
+    # Implied rules are not in the file, and egress defaults to ALLOW, so a
     # single graph-wide default must not be claimed. See point 3 above.
     g.default_action = "deny"
     g.default_action_observed = False

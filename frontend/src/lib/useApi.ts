@@ -14,7 +14,7 @@ export interface AsyncState<T> {
  * Run an engine call and expose loading / error / data.
  *
  * Errors are kept as ApiError rather than a string, because an engine refusal
- * carries structure the UI needs to render honestly -- the reason, and which
+ * carries structure the UI needs to render honestly: the reason, and which
  * platforms could have answered. Flattening it to a message would throw that
  * away and leave the user staring at "422".
  */

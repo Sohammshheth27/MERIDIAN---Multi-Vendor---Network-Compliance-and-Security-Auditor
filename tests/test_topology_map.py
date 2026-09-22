@@ -1,7 +1,7 @@
 """The 2-D topology figure.
 
 Validated on the real NSA 3700. The figure is only useful if it is true, so
-the tests pin what it shows against the configuration -- and pin the two
+the tests pin what it shows against the configuration, and pin the two
 honesty properties: it never presents configured structure as live discovery,
 and it never publishes a public IP or a site name unless asked to.
 """

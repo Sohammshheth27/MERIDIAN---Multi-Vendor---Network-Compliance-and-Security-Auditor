@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MERIDIAN — Network Compliance &amp; Security Auditor</title>
+<title>MERIDIAN: Network Compliance &amp; Security Auditor</title>
 <meta name="description" content="Vendor-agnostic network configuration compliance.
   Every finding carries the file and the line it came from.">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
@@ -65,7 +65,7 @@
     <h1>Know what your <span class="hl">firewall</span><br>
       <em>actually says.</em></h1>
     <p class="lede">Vendor-agnostic configuration compliance. Every finding is
-      traced to the file and the line it came from &mdash; and where the device
+      traced to the file and the line it came from, and where the device
       could not be read, we say so instead of scoring it.</p>
 
     <div class="acts">
@@ -76,7 +76,7 @@
 
   <!-- The hero object: the device being audited, rendered. The console
        screenshot that briefly lived here is the SAME image already used in
-       the capabilities section below -- showing it twice made the page look
+       the capabilities section below. Showing it twice made the page look
        padded, and it belongs next to the copy that explains it. -->
   <div class="rig"><canvas id="appliance" aria-hidden="true"></canvas></div>
 
@@ -149,12 +149,12 @@
          like one that mostly passed.</p></article>
     <article><div class="lab sm">EVIDENCE ON EVERY ROW</div>
       <p>Each finding cites the file and the line it came from. Absence is
-         reported as absence &mdash; a setting that simply is not present is
+         reported as absence. A setting that simply is not present is
          never scored as a passing one.</p></article>
     <article><div class="lab sm">UNKNOWN VENDORS</div>
       <p>An unrecognised platform is not an error. It routes to vendor-agnostic
          detectors, and whatever could not be mapped is deduplicated by setting
-         name into one reviewable queue &mdash; one approval covers every
+         name into one reviewable queue, so one approval covers every
          instance of that name on every device of the platform.</p></article>
     <article><div class="lab sm">REGRESSION-GATED LEARNING</div>
       <p>Teaching it a new setting re-runs a verified corpus first. A change
@@ -176,11 +176,11 @@
   <div class="sec-head">
     <div class="lab">REAL PROVENANCE, NOT SIMILARITY</div>
     <h2>Four frameworks, one chain of custody</h2>
-    <p>A control maps through published crosswalks &mdash; STIG to CCI to NIST to
-      ISO &mdash; so every citation can be followed back to its source.</p>
+    <p>A control maps through published crosswalks (STIG to CCI to NIST to
+      ISO) so every citation can be followed back to its source.</p>
   </div>
   <!-- The crosswalk, animated. A signal leaves a STIG rule and arrives at an
-       ISO clause through CCI and NIST -- the actual path a citation takes. -->
+       ISO clause through CCI and NIST: the actual path a citation takes. -->
   <figure class="fig chain">
     <svg viewBox="0 0 1180 210" class="chainsvg" aria-hidden="true">
       <g id="chain" fill="none" stroke="currentColor" stroke-width="1"></g>
@@ -215,7 +215,7 @@
   <div class="two">
     <div>
       <p>Most tools report a single percentage. That number only means something
-        beside how much of the device was actually assessed &mdash; a config we
+        beside how much of the device was actually assessed. A config we
         could barely read otherwise looks like a config that mostly passed.</p>
       <p><b>So UNKNOWN is a first-class result.</b> It carries no risk score, it
         is never coloured as a pass, and coverage travels beside compliance

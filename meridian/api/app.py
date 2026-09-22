@@ -11,7 +11,7 @@ device.
 UPLOADS ARE UNTRUSTED. A configuration file arrives from whoever runs the
 device, and this project has already found injection-shaped content inside real
 device data. Files are written to a temp directory, never executed, never
-interpolated into a prompt, and redaction is ON by default -- a decoded
+interpolated into a prompt, and redaction is ON by default: a decoded
 SonicOS export carries password hashes and real addressing.
 """
 from __future__ import annotations
@@ -34,7 +34,7 @@ from .schemas import (ApprovalIn, ApprovalOut, AssessmentOut, AuthStatusOut,
                       TrainingCandidateOut)
 
 app = FastAPI(
-    title="MERIDIAN -- Network Compliance & Security Auditor",
+    title="MERIDIAN: Network Compliance & Security Auditor",
     version="0.1.0",
     description="Vendor-agnostic configuration compliance. Every finding "
                 "carries the file and line it came from.")
@@ -63,7 +63,7 @@ _PUBLIC = ("/", "/app", "/health", "/docs", "/openapi.json", "/redoc",
            "/report-signing-key",
            # Sign-in itself cannot require being signed in. `/auth/status`
            # tells the console whether to draw the page at all, and
-           # `/auth/enroll` is what pairs the authenticator -- it is gated
+           # `/auth/enroll` is what pairs the authenticator. It is gated
            # separately, on whether pairing has already happened.
            "/auth/login", "/auth/status", "/auth/enroll")
 _LOOPBACK = {"127.0.0.1", "::1", "localhost",
@@ -87,7 +87,7 @@ def _console_auth_on() -> bool:
     """Whether the API requires a console sign-in.
 
     ON by default, so a demo is protected without anyone remembering to set a
-    variable -- the opposite default would mean the console ships unlocked and
+    variable. The opposite default would mean the console ships unlocked and
     nobody notices until it is on a network.
 
     The test suite sets MERIDIAN_CONSOLE_AUTH=0. Its calls go straight to the API
@@ -149,7 +149,7 @@ app.add_middleware(CORSMiddleware, allow_origins=_origins(),
 # code works in both places and the page never needs to know which it is in.
 # Registered after the CORS middleware, therefore outermost: the path is
 # normalised before the access check and before routing, so /api/assessments is
-# the same request as /assessments -- same auth, same handler, no duplicate
+# the same request as /assessments: same auth, same handler, no duplicate
 # route table to keep in step.
 @app.middleware("http")
 async def _strip_api_prefix(request: Request, call_next):
@@ -184,7 +184,7 @@ def console():
 
 
 # The React dashboard (frontend/), built into this package by
-# `npm run build` -- see frontend/vite.config.ts for the output path. Built
+# `npm run build`. See frontend/vite.config.ts for the output path. Built
 # assets are committed so the engine still needs one command at demo time.
 _DASHBOARD = _STATIC / "dashboard"
 
@@ -202,7 +202,7 @@ def dashboard(rest: str = ""):
     index = _DASHBOARD / "index.html"
     if not index.exists():
         return JSONResponse(
-            {"detail": "the dashboard is not built -- run `npm install && "
+            {"detail": "the dashboard is not built. Run `npm install && "
                        "npm run build` in frontend/, which writes "
                        "meridian/api/static/dashboard"},
             status_code=503)
@@ -227,7 +227,7 @@ _DATA_DIR = Path(_os.environ.get("MERIDIAN_DATA_DIR")
 _STORE = AssessmentStore(_DATA_DIR)
 _UPLOADS = _STORE.uploads
 
-#: The hash-chained log of every approved mapping -- the product's audit trail.
+#: The hash-chained log of every approved mapping, the product's audit trail.
 #: A module constant so tests can point it elsewhere: a test approval written
 #: here is a fabricated entry in a record auditors are told to trust.
 APPROVALS_LOG = Path("reference/approved_mappings.jsonl")
@@ -263,7 +263,7 @@ def auth_enroll(request: Request):
     """The QR code that pairs an authenticator app.
 
     Open only until the first successful sign-in. After that it needs a valid
-    session -- otherwise anyone who can reach the console could fetch the
+    session. Otherwise anyone who can reach the console could fetch the
     shared secret and pair their own phone, which would make the second factor
     a formality rather than a factor.
 
@@ -343,7 +343,7 @@ async def assess_upload(files: list[UploadFile] = File(...),
                         frameworks: list[str] | None = Query(None)):
     """Deliverable 1: single or bulk ingestion.
 
-    One unreadable file must never abort a batch -- an administrator uploading
+    One unreadable file must never abort a batch: an administrator uploading
     forty devices should get thirty-nine assessments and one clear error, not
     a stack trace.
     """
@@ -474,7 +474,7 @@ def _warn_pairing_open():
         logging.getLogger("uvicorn.error").warning(
             "MERIDIAN_SHOW_PAIRING=1: the authenticator pairing QR stays on the "
             "sign-in page and /auth/enroll serves the shared TOTP secret to "
-            "anonymous callers. Demonstration only -- do not deploy this way.")
+            "anonymous callers. Demonstration only; do not deploy this way.")
 
 
 @app.on_event("startup")
@@ -489,14 +489,14 @@ def _warm_imports():
     """Import the heavy modules once, here, in the main thread.
 
     Endpoints declared with `def` run in a threadpool, and a dashboard page
-    calls several of them at once -- the Frameworks page opens with five. Two
+    calls several of them at once (the Frameworks page opens with five). Two
     threads importing the same module for the FIRST time is a real deadlock in
     CPython's per-module import lock, and it surfaced as `_DeadlockError` and a
     500 on a page that answered perfectly when called one request at a time.
     The concurrency was always allowed; nothing had exercised it before.
 
     Importing them here means no request is ever the first, so the race cannot
-    happen. This is import cost only -- no catalogue is parsed and no file is
+    happen. This is import cost only. No catalogue is parsed and no file is
     read; `load_all()` still decides that when a route asks for it.
     """
     from ..engine import rules  # noqa: F401
@@ -628,7 +628,7 @@ def get_hardened(aid: str, measure: bool = Query(True)):
     """A hardened configuration, and the compliance gain it measures.
 
     Only records a FAIL finding CITES are rewritten; PASS is never touched and
-    UNKNOWN never changed -- a setting the engine could not read cannot be
+    UNKNOWN never changed. A setting the engine could not read cannot be
     corrected, only disturbed. Everything declined is returned in `refused`
     with its reason, because an unlisted gap reads as a solved one.
 
@@ -709,12 +709,12 @@ def get_report(aid: str, format: str = Query("pdf", pattern="^(pdf|html)$"),
 
     Monochrome and typeset for print, because this is the artefact an auditor
     signs against. Every figure is computed from the assessment when the
-    report is rendered -- nothing is cached, and nothing is written by hand.
+    report is rendered. Nothing is cached, and nothing is written by hand.
 
     `framework` (cis, nist_800_53, stig, iso_27001) produces the report for
     ONE framework: the same configuration re-assessed with only that
-    framework selected -- exactly what selecting it at upload does, so the
-    scoped report cannot disagree with a scoped assessment.
+    framework selected. That is exactly what selecting it at upload does, so
+    the scoped report cannot disagree with a scoped assessment.
     """
     from fastapi.responses import HTMLResponse
 
@@ -763,7 +763,7 @@ _SIGNERS: dict = {}
 
 
 def _signer():
-    """One signer per data directory, created on first use -- so a test
+    """One signer per data directory, created on first use, so a test
     suite pointed at a temporary store never touches the real signing key."""
     from ..report.signing import ReportSigner
 
@@ -796,7 +796,7 @@ def get_blast_radius(aid: str, origin_zone: str = Query(""),
     """If this segment is compromised, what else can be reached?
 
     Walks the policy outward from a foothold and names the rule permitting
-    each step. Exposure only -- policy permitting a packet says nothing about
+    each step. Exposure only: policy permitting a packet says nothing about
     whether a service is listening, patched or authenticated.
     """
     from ..topology.blast import blast_radius
@@ -815,7 +815,7 @@ def get_blast_radius(aid: str, origin_zone: str = Query(""),
 
     try:
         known = load_techniques()
-    except Exception:            # noqa: BLE001 -- bundle absent is not a finding
+    except Exception:            # noqa: BLE001 (bundle absent is not a finding)
         known = {}
     for step in out.get("reachable", []):
         tags = []
@@ -831,7 +831,7 @@ def get_blast_radius(aid: str, origin_zone: str = Query(""),
 def _zone_members(da, zone: str):
     """What sits in a zone today: interfaces, plus access points for WLAN.
 
-    None when the device model is unavailable -- "could not tell" must not
+    None when the device model is unavailable: "could not tell" must not
     be reported as "empty", or every path would be mislabelled latent.
     """
     from ..topology.blast import zone_members
@@ -924,13 +924,13 @@ def get_topology_svg(aid: str, redact: bool = Query(True),
 
 @app.get("/assessment/{aid}/graph", tags=["analyse"])
 def get_graph(aid: str, limit: int = Query(500, le=5000)):
-    """The policy object graph itself -- objects, rules and how they resolve.
+    """The policy object graph itself: objects, rules and how they resolve.
 
     Everything else in the analyse group is a CONCLUSION drawn from this graph:
     rule hygiene, reachability and recertification all read it. Until now it
     was computed on every assessment and visible nowhere, so a reviewer could
-    see the verdicts but not the reconstruction they came from -- and the
-    number of objects was the only evidence it existed at all.
+    see the verdicts but not the reconstruction they came from. The number of
+    objects was the only evidence it existed at all.
 
     Each rule is returned with its references RESOLVED, so a reader can check
     `LAN Subnets -> 10.10.0.0/24` rather than take the verdict on trust. A
@@ -965,7 +965,7 @@ def get_graph(aid: str, limit: int = Query(500, le=5000)):
             "destination": resolve_side(rule.destination),
             "services": resolve_side(rule.services),
             "logging": rule.logging, "hit_count": rule.hit_count,
-            # Why a port question cannot be decided by this rule alone --
+            # Why a port question cannot be decided by this rule alone:
             # App-ID, negation, a schedule, or a program on a host firewall.
             "undecidable_for_ports": rule.program,
             "evidence": [e.model_dump(mode="json") for e in rule.evidence[:2]],
@@ -1058,7 +1058,7 @@ def approve_mapping(body: ApprovalIn):
     The mapping is written, the golden corpus is re-run, and if any verified
     result would change the write is REVERTED and the approval refused with
     the specific expectation that broke. A blocked approval leaves nothing
-    behind -- otherwise the gate itself becomes a way to poison the tool.
+    behind. Otherwise the gate itself becomes a way to poison the tool.
     """
     from ..ai.registry import MappingRegistry
     from ..training.apply import approve
@@ -1132,7 +1132,7 @@ def _check_new_vendor(body) -> str | None:
         if not matches(other):
             continue
         # A sample of the SAME vendor matching is the signature working. Only
-        # a file recognised as some OTHER platform is a capture -- the first
+        # a file recognised as some OTHER platform is a capture. The first
         # version refused SONiC's own sample as "another vendor".
         try:
             theirs = fingerprint_file(other).platform
@@ -1141,7 +1141,7 @@ def _check_new_vendor(body) -> str | None:
         if theirs in (body.platform, da.identity.platform):
             continue
         return (f"the signature also matches {other.as_posix()}, which is "
-                f"recognised as {theirs!r} -- too generic to identify this vendor")
+                f"recognised as {theirs!r}, too generic to identify this vendor")
     return None
 
 
@@ -1174,7 +1174,7 @@ def learned_mappings():
 @app.get("/schema/fields", tags=["training"])
 def schema_fields():
     """The vendor-neutral fields a setting can be mapped to, with the
-    controls that read each one -- so an administrator can see what an
+    controls that read each one, so an administrator can see what an
     approval will actually change."""
     from ..engine.rules import load_rules
     from ..schema.sbm import FIELD_TYPES
@@ -1291,8 +1291,8 @@ def build_topology(body: TopologyIn):
                 "assessment_id": aid,
                 "device": da.identity.hostname or da.identity.source_file})
         except Exception as exc:                          # noqa: BLE001
-            # Whatever the cause -- unreadable addressing, an unsupported
-            # platform -- it is a REASON, and reporting it beats silently
+            # Whatever the cause (unreadable addressing, an unsupported
+            # platform), it is a REASON, and reporting it beats silently
             # dropping the device from the fabric.
             skipped.append({"assessment_id": aid,
                             "reason": f"{type(exc).__name__}: {exc}"})
@@ -1322,7 +1322,7 @@ def get_interfaces(aid: str):
     da, _ = _get(aid)
     try:
         # strict: never answer "no interfaces" for a device that has them. This
-        # is now a backstop rather than the expected path -- redaction used to
+        # is now a backstop rather than the expected path. Redaction used to
         # blank octets, which made every address unparseable and turned a
         # ten-interface firewall into an empty table.
         out = {"interfaces": [i.to_json() for i in extract(da, strict=True)]}
@@ -1337,7 +1337,7 @@ def get_interfaces(aid: str):
         return {"interfaces": [],
                 "note": "No addressing could be read from this redacted "
                         "upload, so topology cannot be inferred from it. The "
-                        "device may well have interfaces -- we cannot see them "
+                        "device may well have interfaces, we simply cannot see them "
                         "here. Re-run the assessment with redaction off."}
 
 
@@ -1526,7 +1526,7 @@ def assess_this_host(enable: bool = Query(
     """Assess the firewall of the machine RUNNING THIS API.
 
     Behind an explicit opt-in flag because, unlike every other endpoint, it
-    reads the server itself rather than an uploaded file -- it shells out to
+    reads the server itself rather than an uploaded file: it shells out to
     `netsh`/`Get-NetFirewallRule` on Windows or `iptables-save` on Linux. That
     is a different trust decision from parsing an upload and is not something
     a caller should be able to trigger by accident.
@@ -1555,13 +1555,13 @@ def assess_this_host(enable: bool = Query(
 # -------------------------------------------------------------- frameworks
 @app.get("/ai-governance", tags=["meta"])
 def ai_governance():
-    """How the AI *we* run is governed -- MITRE ATLAS and the NIST AI RMF.
+    """How the AI *we* run is governed: MITRE ATLAS and the NIST AI RMF.
 
     Deliberately NOT part of /frameworks. Those catalogues describe how a
     device should be configured; these describe how an AI system should be
     governed, and the AI system here is our own mapping suggester. Presenting
     them together would imply we audit firewalls against ATLAS, which would be
-    meaningless -- ATLAS catalogues attacks on machine-learning systems.
+    meaningless. ATLAS catalogues attacks on machine-learning systems.
     """
     from ..frameworks.ai_security import (GUARDRAIL_COVERAGE,
                                           INJECTION_SIGNATURES, load_atlas)
@@ -1584,7 +1584,7 @@ def ai_governance():
         by_function.setdefault(g["ai_rmf"], []).append(g["guardrail"])
 
     return {
-        "scope": "Governs the AI inside Meridian -- the mapping suggester that "
+        "scope": "Governs the AI inside Meridian: the mapping suggester that "
                  "reads untrusted configuration text. It does NOT assess the "
                  "audited device against these frameworks.",
         "atlas": {"techniques": techniques, "mitigations": mitigations,
@@ -1607,7 +1607,7 @@ def ai_governance():
 # changes. The framework registry takes ~2 minutes to load even from its own
 # cache, and ATT&CK coverage recomputes over every rule. Both were rebuilt on
 # EVERY request, so a dashboard page that opens five panels at once paid the
-# full price each time -- and paid it again on the next visit.
+# full price each time, and paid it again on the next visit.
 #
 # The stamp is the source files' size and mtime, so a catalogue rebuild or an
 # edited rule is picked up on the next request without restarting the engine.
@@ -1625,8 +1625,8 @@ def _stamp(*paths: Path) -> tuple:
 
     The remaining limit: a file rewritten IN PLACE to the same size within one
     filesystem clock tick (~16 ms on Windows) lands on an identical stamp, and
-    the held answer stays. Nothing here changes that fast -- the catalogue
-    cache is rewritten after a ~20 minute parse and rules are edited by hand --
+    the held answer stays. Nothing here changes that fast (the catalogue
+    cache is rewritten after a ~20 minute parse and rules are edited by hand),
     so the alternative, hashing several megabytes on every request, would buy
     nothing real. Stated rather than hidden, because a cache that silently
     answers from a superseded catalogue is exactly the kind of confident wrong
@@ -1686,10 +1686,10 @@ def attack_coverage():
 
 @app.get("/framework-controls", tags=["meta"])
 def framework_controls(framework: str, ids: str = Query("")):
-    """What a cited identifier actually says -- as far as its licence allows.
+    """What a cited identifier actually says, as far as its licence allows.
 
     "AU-2" tells an operator nothing. The catalogue knows it is "Event
-    Logging", and for NIST and DISA STIG -- both public domain -- we may say
+    Logging", and for NIST and DISA STIG (both public domain) we may say
     so. CIS and ISO are identifier-only, so `citation()` returns the source
     document and the number and never the prose. That is the same rule the PDF
     report follows, enforced in one place rather than re-decided per surface.
@@ -1741,8 +1741,8 @@ def platforms():
 def health():
     """Liveness, plus what this build can actually answer.
 
-    Deliberately more than {"ok": true}. Several analyses -- rule hygiene,
-    reachability, recertification -- need an object graph, and a graph is only
+    Deliberately more than {"ok": true}. Several analyses (rule hygiene,
+    reachability, recertification) need an object graph, and a graph is only
     built for platforms with a registered builder. Every other platform gets a
     truthful refusal instead. Publishing that list here means a caller can see
     the boundary before hitting it, and means the boundary is read from the
@@ -1806,7 +1806,7 @@ def _sbm_for(da, path, *, redact: bool = True):
     property of the parsed device rather than of the findings.
 
     IT TAKES THE PATH. This used to locate the file by scanning the store for
-    an object IDENTICAL to `da` -- but the store rebuilds assessments from
+    an object IDENTICAL to `da`, but the store rebuilds assessments from
     SQLite on access, so a rebuilt assessment is a different object each time
     and the scan matched nothing. It then returned None, `build_plan` saw no
     live transports, and every lockout check was skipped SILENTLY. Measured on

@@ -5,13 +5,13 @@
 # account has a default security group with real rules.
 #
 # This is a mapping pack, not code. Adding Azure or GCP means writing
-# a sibling of this file -- no Python, no redeploy.
+# a sibling of this file: no Python, no redeploy.
 #
 # Note on what a security group IS: it is a stateful ingress/egress filter, not
 # a device. It has no SSH version, no banner, no NTP. Most Core-20 controls are
 # therefore NOT_APPLICABLE here, and that is the correct answer, not a gap.
 # What it does have is exposure, which is where the real findings
-# live -- see `derivations`.
+# live (see `derivations`).
 
 vendor: aws
 platform: security_groups
@@ -31,7 +31,7 @@ supported_domains: [cloud, firewall, exposure, device]
 # and nothing else: it has no console, no shell, no clock and no user database.
 #
 # NOTE what is deliberately NOT listed. `authentication` and `authorization`
-# are real concerns for AWS -- they live in IAM. They are absent from THIS
+# are real concerns for AWS, but they live in IAM. They are absent from THIS
 # ARTIFACT rather than from the platform, so their controls resolve to UNKNOWN,
 # which is the honest answer: we did not look at IAM. Calling them
 # NOT_APPLICABLE would remove them from the denominator and quietly raise the
@@ -41,7 +41,7 @@ not_applicable_domains:
   time: "clock and NTP are instance-level, not properties of a security group"
   snmp: "a security group runs no SNMP agent"
   logging: "flow logs are a VPC resource; this artifact is the rule set alone"
-  management: "there is no management plane on a security group -- access is via the AWS API"
+  management: "a security group has no management plane; access is via the AWS API"
   crypto: "a security group terminates nothing, so it has no cipher or TLS configuration"
   interfaces: "a security group attaches to interfaces but does not define them"
   l2: "layer 2 is not exposed to the tenant in a VPC"
@@ -50,7 +50,7 @@ not_applicable_domains:
   security: "IPS, antivirus and content filtering are separate AWS services"
   services: "a security group runs no services of its own"
 
-# Plan step 2 -- fingerprint. These JSONPaths existing identifies the artifact.
+# Plan step 2 is the fingerprint. These JSONPaths existing identifies the artifact.
 fingerprint:
   - "$[*].GroupId"
   - "$[*].IpPermissions"

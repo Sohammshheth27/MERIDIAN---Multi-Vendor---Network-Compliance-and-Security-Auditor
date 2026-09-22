@@ -3,7 +3,7 @@
 Everything stays on the machine: the CIS and ISO shards are copyrighted and a
 hosted embedding API would be redistribution. nomic-embed-text is 137M
 parameters and runs on CPU at ~12 texts/sec here, so the full 4-framework
-catalogue embeds in minutes and then never again -- the cache is keyed by a
+catalogue embeds in minutes and then never again. The cache is keyed by a
 hash of the text, so re-running after a catalogue change only embeds the diff.
 """
 from __future__ import annotations

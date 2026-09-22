@@ -45,7 +45,7 @@ const CATALOGUE: Record<FrameworkKey, string> = {
 const FRAMEWORK_TABS: { key: FrameworkKey; label: string }[] = [
   // No "all" option on purpose: an organisation aligns to a framework, and the
   // question this page answers is "what does MINE require of this device".
-  // Anything failing badly still appears whatever is chosen -- see isUrgent.
+  // Anything failing badly still appears whatever is chosen (see isUrgent).
   { key: 'nist_800_53', label: 'NIST 800-53' },
   { key: 'iso_27001', label: 'ISO 27001' },
   { key: 'cis_ids', label: 'CIS' },
@@ -111,8 +111,8 @@ const AssessmentDetail: FC = () => {
   /** Every identifier the selected framework cites on this device, resolved to
    *  what it actually says. "AU-2" is not an answer to "why does this matter";
    *  "AU-2: Event Logging" is. The engine resolves it only as far as each
-   *  licence allows -- CIS and ISO come back as the document and number, never
-   *  their prose -- so this shows whatever it is given and nothing more. */
+   *  licence allows: CIS and ISO come back as the document and number, never
+   *  their prose, so this shows whatever it is given and nothing more. */
   const citedIds = useMemo(() => {
     const seen = new Set<string>();
     (data?.findings ?? []).forEach((f) =>
@@ -137,7 +137,7 @@ const AssessmentDetail: FC = () => {
   // ISO because those catalogues group the evidence differently.
   //
   // A null score is not a zero. It means the framework publishes nothing for
-  // this platform -- there is no CIS benchmark or DISA STIG for SonicOS -- and
+  // this platform. There is no CIS benchmark or DISA STIG for SonicOS, and
   // rendering that as 0% would report a failure the device never had. Scored
   // frameworks sort first so the card leads with real numbers.
   const frameworkScores = [...(data.framework_coverage ?? [])].sort(
@@ -600,7 +600,7 @@ const AssessmentDetail: FC = () => {
                           </tr>
                           {/* The detail gets the full table width. Inside the
                               title cell it was ~280px wide, which broke field
-                              names mid-word and squeezed the evidence lines --
+                              names mid-word and squeezed the evidence lines,
                               the one thing here that has to be read exactly. */}
                           {isExpanded && (
                             <tr className="bg-[var(--color-cloud)]">

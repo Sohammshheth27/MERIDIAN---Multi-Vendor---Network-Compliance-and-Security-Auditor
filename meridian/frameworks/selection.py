@@ -3,7 +3,7 @@
 The problem statement asks for evaluation "against user-selected benchmarks
 (CIS, NIST, STIGs, ISO)". Every control already carries the identifiers of
 each framework that asks for it, so selecting a framework means evaluating the
-controls that framework cites -- and computing the score and coverage over
+controls that framework cites, and computing the score and coverage over
 THOSE, so "CIS: 71%" is a statement about CIS and nothing else.
 
 Selecting nothing means every framework, which is the assessment exactly as
@@ -59,7 +59,7 @@ def requirement_state(states: list[str]) -> str:
     """One framework requirement, judged from the MERIDIAN checks that cite it.
 
     MET only when EVERY citing check passed. Any FAIL or PARTIAL makes it
-    NOT_MET -- a requirement is not half-satisfied because one of its tests
+    NOT_MET. A requirement is not half-satisfied because one of its tests
     passed. No failure but an undecided check leaves it UNDECIDED: unknown is
     not a pass, at the requirement level exactly as at the check level.
     """
@@ -163,8 +163,8 @@ def framework_coverage(findings, platform: str | None = None) -> list[dict]:
     """Per framework: its own score, over its own requirements.
 
     THE FRAMEWORK SCORE (`framework_score_pct`, method "average"): each of the
-    framework's own requirements -- NIST controls such as AC-17(2), ISO/IEC
-    27001 Annex A controls such as A.8.20, STIG Vuln IDs -- is scored by the
+    framework's own requirements (NIST controls such as AC-17(2), ISO/IEC
+    27001 Annex A controls such as A.8.20, STIG Vuln IDs) is scored by the
     share of its decided checks that passed, and the framework's score is the
     average over its requirements. Because each framework groups the checks
     into different requirements, each gets its own number; a requirement with
@@ -172,10 +172,10 @@ def framework_coverage(findings, platform: str | None = None) -> list[dict]:
 
     Reported beside it, so nothing is hidden:
 
-    * `requirements_met` / `requirements_not_met` / undecided -- how many
+    * `requirements_met` / `requirements_not_met` / undecided: how many
       requirements are FULLY satisfied (every citing check passed), the view
       an auditor signs off against. `not_met_ids` names the rest.
-    * CHECK level (`controls`, `decided`, `passed`, `score_pct`) -- how the
+    * CHECK level (`controls`, `decided`, `passed`, `score_pct`) shows how the
       MERIDIAN checks citing the framework came out. Every check cites NIST, so
       at this level NIST equals the overall score.
 

@@ -6,7 +6,7 @@
 WHY HOLD OUT A WHOLE VENDOR. Random pair splits leak: the same schema field is
 mapped by several vendors, so a random test pair usually has its answer sitting
 in the training set under a different spelling. Holding out an entire vendor is
-the only split that reproduces the real question -- "a device from a vendor
+the only split that reproduces the real question: "a device from a vendor
 nobody here has described".
 
 WHAT THE NUMBERS ARE FOR. Every accuracy claim about matching should cite this

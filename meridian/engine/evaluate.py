@@ -1,9 +1,9 @@
-"""The rule engine -- evaluate controls against an SBM.
+"""The rule engine: evaluate controls against an SBM.
 
 This layer is the Policy layer and must never know vendor syntax.
 It reads the SBM and the control set; nothing else.
 
-The important behaviour here is not the comparisons -- it is what happens when
+The important behaviour here is not the comparisons. It is what happens when
 a value is *absent*, because most compliance failures are
 absences, and getting that wrong is how a compliance tool starts lying.
 """
@@ -25,7 +25,7 @@ class Assessment(BaseModel):
     platform: str | None = None
     findings: list[Finding] = Field(default_factory=list)
 
-    # Defence 5 -- a later approval must never silently change a
+    # Defence 5: a later approval must never silently change a
     # past report, so every assessment records the versions it ran against.
     versions: dict[str, str] = Field(default_factory=dict)
 
@@ -47,7 +47,7 @@ class Assessment(BaseModel):
         denominator and reported separately. Auditors attack undefined scores;
         defining ours costs one sentence.
 
-        PARTIAL counts as half credit -- it is genuinely half-met, and either
+        PARTIAL counts as half credit. It is genuinely half-met, and either
         rounding would misstate it.
         """
         passed = failed = 0.0
@@ -83,7 +83,7 @@ def evaluate_control(
     not_applicable_domains: dict[str, str] | None = None,
     not_applicable_fields: list[str] | None = None,
 ) -> Finding:
-    """Evaluate one control. Never raises -- failures become ERROR findings."""
+    """Evaluate one control. Never raises; failures become ERROR findings."""
     labels = control.frameworks
     if iso_resolver is not None and labels.nist_800_53 and not labels.iso_27001:
         labels = labels.model_copy(
@@ -111,7 +111,7 @@ def evaluate_control(
             f"control does not apply to platform {platform!r}",
         )
 
-    # A concept VERIFIED absent from the platform -- not merely unmapped.
+    # A concept VERIFIED absent from the platform, not merely unmapped.
     #
     # `not_applicable_fields` may be a bare list or a {field: reason} mapping.
     # The reason form is preferred and is what the pack should carry: an
@@ -134,8 +134,8 @@ def evaluate_control(
     # determine" would imply we should have been able to.
     #
     # But that claim must be MADE, not inferred. This used to fall out of
-    # `supported_domains` -- a list whose real meaning is "domains this pack
-    # models" -- and the two are not the same thing. Measured across 11 real
+    # `supported_domains` (a list whose real meaning is "domains this pack
+    # models"), and the two are not the same thing. Measured across 11 real
     # configs, 242 of 269 NOT_APPLICABLE verdicts came from that inference,
     # none of them carrying any justification, and several were plainly false:
     # cisco.yaml declared IOS-XE to have no `l2` capability, on the platform
@@ -163,7 +163,7 @@ def evaluate_control(
 
     # A sub-property of a DISABLED feature cannot fail. On a real hardened
     # SonicWall with `snmp_Enable = off` and all eight `snmpStateEnable_N` off,
-    # "SNMPv3 authentication must be enabled" reported FAIL -- a finding about
+    # "SNMPv3 authentication must be enabled" reported FAIL: a finding about
     # a protocol the device does not run. The same shape made "HTTPS
     # management must use TLS 1.2" fail on a device with HTTPS management
     # switched off. Both are the M0-interface mistake again: a setting that is
@@ -180,8 +180,8 @@ def evaluate_control(
         #
         # The first version suppressed on `None` too, which meant "we never
         # mapped this field" was read as "the feature is switched off". On the
-        # weak Junos XML -- a device with `public` and `private` communities
-        # plainly in the file -- `snmp.version` is simply not in that pack, so
+        # weak Junos XML (a device with `public` and `private` communities
+        # plainly in the file), `snmp.version` is simply not in that pack, so
         # the SNMPv3 controls silently became NOT_APPLICABLE. A false negative
         # manufactured from a gap in our own coverage is far worse than the
         # false positive it was meant to fix, and it is the same
@@ -211,7 +211,7 @@ def evaluate_control(
     # every instance and keep the WORST result.
     #
     # Without this, "management lines must accept SSH only" silently returned
-    # UNKNOWN on a device whose vty lines all permitted telnet -- a critical
+    # UNKNOWN on a device whose vty lines all permitted telnet, a critical
     # finding lost to a path-shape mismatch rather than to any real ambiguity.
     if obs is None:
         scoped = sbm.scoped_instances(control.field)
@@ -243,7 +243,7 @@ def evaluate_control(
         # Absent. Whether that is a FAIL depends on the control: for
         # "telnet must be disabled" absence is compliant; for "a banner must
         # exist" absence IS the violation. The operator decides, with None as
-        # the observed value -- we do not shortcut to PASS.
+        # the observed value. We do not shortcut to PASS.
         state = run_operator(control.operator, None, control.expected)
         if state is ResultState.PASS:
             reason = (f"{control.field} is not configured on this device, and "
@@ -272,7 +272,7 @@ def evaluate_control(
 
     # Every verdict carries a sentence. PASS and FAIL used to carry none, so
     # the report's "why" was blank for most findings and populated only for the
-    # unusual ones -- which read as though the tool had nothing to say about
+    # unusual ones, which read as though the tool had nothing to say about
     # the results that mattered most.
     # `control` is passed so the value can be worded for the KIND of check:
     # a falsy value under a count requirement means "none are configured",
@@ -288,7 +288,7 @@ def evaluate_control(
     elif state is ResultState.PARTIAL:
         # Nothing that is absent can be met "in part". Where the value is not
         # configured at all, PARTIAL comes from the operator counting zero
-        # instances, and the honest sentence says the requirement is unmet --
+        # instances, and the honest sentence says the requirement is unmet:
         # "logging.servers is not configured, which meets the requirement in
         # part" is a contradiction an auditor would rightly challenge.
         said = _stated(obs.value, control)
@@ -320,7 +320,7 @@ _SEVERITY_ORDER = {
 
 #: An operator, said the way a requirement is written in an audit finding.
 #:
-#: The engine's own vocabulary -- `lte`, `max_count`, `contains_none` -- is
+#: The engine's own vocabulary (`lte`, `max_count`, `contains_none`) is
 #: exact and belongs in the rule files. It does not belong in the sentence an
 #: administrator reads to understand why a control failed, where it reads as
 #: machine output rather than a statement about their device.
@@ -346,14 +346,14 @@ _REQUIREMENT = {
 _COUNTING = {"min_count", "max_count"}
 
 #: How many members of a list to name before summarising. MERIDIAN-CAT-004 reports
-#: every unresolved policy reference on the device -- fifty of them -- and
+#: every unresolved policy reference on the device (fifty of them), and
 #: interpolating all of them produced a three-thousand-character sentence that
 #: was less readable than the blank it replaced.
 _MAX_NAMED = 4
 
 
 def _requirement(control) -> str:
-    """"must be no more than 120" -- the control's requirement, in words."""
+    """The control's requirement, in words: "must be no more than 120"."""
     phrase = _REQUIREMENT.get(control.operator, f"must satisfy {control.operator}")
     expected = control.expected
     if control.operator == "is_set" or expected is None:
@@ -412,8 +412,8 @@ def _worst_of(control, scoped: dict, finding, labels):
     same = [p for st, p, _ in results if st is state]
     named = ", ".join(_scope_label(p) for p in same[:3])
     more = f" and {len(same) - 3} other(s)" if len(same) > 3 else ""
-    # The device configures this setting per instance -- per interface, per
-    # VTY line, per tunnel -- so the control is judged on the weakest of them:
+    # The device configures this setting per instance (per interface, per
+    # VTY line, per tunnel), so the control is judged on the weakest of them:
     # one interface outside a zone leaves that interface outside a zone,
     # whatever the other thirty-five do.
     reason = (
@@ -434,8 +434,8 @@ def _scope_label(path: str) -> str:
 
     `firewall.rules[Test_SSH [IPv4#1]].source` -> `Test_SSH [IPv4#1]`.
 
-    A scope id may itself contain brackets -- SonicOS names a rule
-    `Test_SSH [IPv4#1]` -- so matching the FIRST `[...]` stopped at the inner
+    A scope id may itself contain brackets: SonicOS names a rule
+    `Test_SSH [IPv4#1]`, so matching the FIRST `[...]` stopped at the inner
     closing bracket and produced `Test_SSH [IPv4#1`, a name with its bracket
     hanging open. Take the outermost bracketed span instead, by finding the
     first `[` and the last `]` that closes it.

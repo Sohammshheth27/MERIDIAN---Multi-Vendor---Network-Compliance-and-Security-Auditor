@@ -1,4 +1,4 @@
-"""Step 2 -- identify the device.
+"""Step 2: identify the device.
 
 Scans the first ~200 lines for vendor signatures and decides:
 vendor, platform, OS, version, hostname, serial.
@@ -8,7 +8,7 @@ which controls apply, which fix commands get generated.
 
 The governing rule: **if fingerprinting fails, mark the vendor
 UNKNOWN and route straight to the AI path.** A wrong guess is worse than no
-guess -- it would apply the wrong pack and produce confident nonsense. So every
+guess. It would apply the wrong pack and produce confident nonsense. So every
 signature carries a score, and a weak best-match is reported as UNKNOWN rather
 than forced.
 """
@@ -70,7 +70,7 @@ SIGNATURES: list[Signature] = [
     Signature(
         # ASA must be matched BEFORE the IOS-XE signature. Both are indented
         # Cisco CLI and share `interface GigabitEthernet`, so an ASA file
-        # scored 0.25 against IOS-XE -- below the confidence floor, which
+        # scored 0.25 against IOS-XE, below the confidence floor, which
         # correctly produced UNKNOWN rather than a wrong pack, but also meant a
         # real firewall could not be assessed at all.
         vendor="cisco", platform="cisco_asa", reader="indented", os="ASA",
@@ -159,7 +159,7 @@ def fingerprint_text(text: str) -> Fingerprint:
             best = fp
 
     # A weak match is UNKNOWN, not a guess. Applying the wrong pack
-    # produces a confident, wrong report -- the worst outcome available.
+    # produces a confident, wrong report. That is the worst outcome available.
     if best is None or best.confidence < 0.5:
         return Fingerprint(
             vendor="UNKNOWN", platform="UNKNOWN",
@@ -210,8 +210,8 @@ def fingerprint_xml(text: str) -> "Fingerprint | None":
 
     This is the accuracy tier that matters. `show configuration | display xml`
     on Junos and the PAN-OS running config are both already parsed by the
-    device that wrote them, so there is no grammar left to guess -- which is
-    why they are matched before any of the CLI signatures.
+    device that wrote them, so there is no grammar left to guess. That is why
+    they are matched before any of the CLI signatures.
     """
     head = text[:4000]
     if "xml.juniper.net" in head or "<rpc-reply" in head:
@@ -237,7 +237,7 @@ def fingerprint_file(path: str | Path) -> Fingerprint:
     p = Path(path)
     raw = p.read_bytes()
 
-    # Try JSON first -- it is decidable, unlike regex sniffing.
+    # Try JSON first: it is decidable, unlike regex sniffing.
     stripped = raw.lstrip()[:1]
     if stripped in (b"{", b"["):
         try:
@@ -267,8 +267,8 @@ def fingerprint_file(path: str | Path) -> Fingerprint:
 
     # ...and a real `.exp` straight off the appliance is BASE64 of that blob,
     # which is what an administrator actually uploads. Only the already-decoded
-    # form was recognised, so the genuine article -- the file the product is
-    # meant to accept -- fingerprinted as UNKNOWN and was refused.
+    # form was recognised, so the genuine article (the file the product is
+    # meant to accept) fingerprinted as UNKNOWN and was refused.
     decoded = _try_base64(raw)
     if decoded is not None:
         exp = fingerprint_sonicos_exp(decoded)
@@ -302,7 +302,7 @@ def learned_fingerprint(*, text: str | None = None, data=None,
 
     Consulted only after every built-in signature has failed, so a taught
     signature can never capture a vendor the tool already knows. EVERY
-    signature of a taught pack must match -- one loose regex must not be
+    signature of a taught pack must match. One loose regex must not be
     enough to hand a stranger's file to the wrong pack.
     """
     import yaml
@@ -346,7 +346,7 @@ _EXP_MARKERS = ("shortProdName=", "buildNum=", "allowHttpMgmt=", "serialNumber="
 
 # A serial that is all zeros, all Fs, or a word like "unknown" is a
 # PLACEHOLDER the device emitted because it had nothing to report. Treating it
-# as an identifier merged unrelated appliances under one key -- and here it did
+# as an identifier merged unrelated appliances under one key, and here it did
 # the opposite, splitting two exports of one appliance apart, because a
 # sanitised export carries 000000000000 where the real one carries a serial.
 _PLACEHOLDER_SERIAL = re.compile(
@@ -361,7 +361,7 @@ def is_real_serial(value) -> bool:
 def _try_base64(raw: bytes, limit: "int | None" = 4096) -> "str | None":
     """Decode a base64 body, or return None.
 
-    Only the first block is decoded for sniffing -- a 3.5 MB export does not
+    Only the first block is decoded for sniffing. A 3.5 MB export does not
     need to be fully decoded twice just to identify it, and the markers all
     appear in the first few hundred bytes.
     """
