@@ -230,18 +230,28 @@ that cannot be decoded is reported as undecided rather than guessed.
 
 ## Frameworks
 
-**5,785 requirements**, across:
+**6,492 requirements loaded**, across six frameworks:
 
-| Framework | Scope |
+| Framework | Requirements | Scope |
+|---|---:|---|
+| CIS Benchmarks | 4,081 | Cited by identifier and short title |
+| NIST SP 800-53 | 1,196 | Security and privacy controls |
+| DISA STIG | 685 | Defense hardening guidance |
+| PCI DSS 4.0 | 279 | Payment card data security |
+| NIST SP 800-171 r3 | 130 | Controlled unclassified information |
+| ISO/IEC 27001:2022 | 121 | Cited by clause number and short title |
+
+Two more are wired but load nothing today, and the engine says so rather than
+reporting them as zero:
+
+| Framework | What it still needs |
 |---|---|
-| NIST SP 800-53 | Security and privacy controls |
-| DISA STIG | Defense hardening guidance |
-| CIS Benchmarks | Cited by identifier and short title |
-| ISO/IEC 27001 | Cited by clause number and short title |
-| NIST SP 800-171 r3 | Controlled unclassified information |
-| PCI DSS 4.0 | Payment card data security |
-| CMMC | Cybersecurity maturity model certification |
-| NERC CIP | Critical infrastructure protection |
+| CMMC | An 800-171 Rev 2 OSCAL catalogue. NIST publishes OSCAL for Rev 3 only, and CMMC Level 2 is defined against Rev 2 |
+| NERC CIP | A control list at `reference/nerc_cip/nerc_cip_controls.json` |
+
+That distinction is the same rule the result model follows. A framework that
+published nothing for a platform is reported as such, never as a zero score,
+because a zero would read as a failure rather than as an absence.
 
 Provenance is chained rather than asserted: STIG to CCI to 800-53 to ISO 27001
 and 800-171.
